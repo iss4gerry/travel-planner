@@ -1,0 +1,103 @@
+  generator client {
+    provider = "prisma-client-js"
+  }
+
+  datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+  }
+
+model User {
+  id               String       @id @default(uuid())
+  profilePicture   String?      
+  name             String
+  email            String?      @unique
+  password         String    
+  role             String       @default("user")
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  isEmailVerified  Boolean      @default(false)
+  bannerAds        BannerAds[]
+  plans            Plan[]
+}
+
+model Plan {
+  id                  String       @id @default(uuid())
+  name                String
+  startDate           DateTime
+  endDate             DateTime
+  city                String @default("bali")
+  travelCompanion     String
+  budget              Int
+  travelTheme         String
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  userId              String
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planDetails PlanDetail[]
+}
+
+model PlanDetail {
+  id          String      @id @default(uuid())
+  day         Int         
+  date        DateTime   
+  planId      String
+  plan        Plan        @relation(fields: [planId], references: [id], onDelete: Cascade)
+  activities  Activity[]
+}
+
+model Activity {
+  id                  String         @id @default(uuid())
+  planDetailId      String
+  planDetail        PlanDetail   @relation(fields: [planDetailId], references: [id], onDelete: Cascade) 
+  destinationId       String
+  destination         Destination    @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  time                String
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+}
+
+model Destination {
+  id            String      @id @default(uuid())
+  imageUrl      String?
+  name          String
+  description   String
+  address       String
+  cost          String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  categoryId    String
+  category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  activity    Activity[]
+}
+
+model Category {
+  id            String      @id @default(uuid())
+  name          String
+  imageUrl     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  destination   Destination[]
+  bannerAds     BannerAds[]
+}
+
+model BannerAds {
+  id                String       @id @default(uuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imageUrl          String       
+  title             String
+  description       String
+  startDate         String
+  address           String
+  cost              Float
+  categoryId        String
+  category          Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  targetUrl         String
+  bannerDuration    Int 
+  validUntil        DateTime
+  isActive          Boolean      @default(false)
+  isPaid            Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
