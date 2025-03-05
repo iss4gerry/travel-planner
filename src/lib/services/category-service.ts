@@ -1,3 +1,4 @@
+import { ApiError } from '@/app/utils/apiError';
 import { prisma } from '../db';
 import { Category } from '@/types/category';
 
@@ -11,6 +12,7 @@ export class CategoryService {
 		});
 	}
 	static async deleteCategory(id: string): Promise<Category> {
+		await this.getCategory(id);
 		return await prisma.category.delete({
 			where: {
 				id: id,
@@ -26,8 +28,20 @@ export class CategoryService {
 		});
 
 		if (!result) {
-			throw new Error('Category not found');
+			throw new ApiError(404, 'Category not found');
 		}
+
+		return result;
+	}
+
+	static async updateCategory(id: string, body: Category): Promise<Category> {
+		await this.getCategory(id);
+		const result = await prisma.category.update({
+			where: {
+				id: id,
+			},
+			data: body,
+		});
 
 		return result;
 	}

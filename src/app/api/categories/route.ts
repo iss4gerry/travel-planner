@@ -1,3 +1,4 @@
+import { ApiError } from '@/app/utils/apiError';
 import { CategoryService } from '@/lib/services/category-service';
 import { Category } from '@/types/category';
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,8 +12,15 @@ export async function GET() {
 			data: result,
 		});
 	} catch (error) {
+		if (error instanceof ApiError) {
+			return NextResponse.json(
+				{ message: error.message },
+				{ status: error.statusCode }
+			);
+		}
+
 		return NextResponse.json(
-			{ message: 'Get all category failed' },
+			{ message: 'Internal server error' },
 			{ status: 500 }
 		);
 	}
@@ -30,11 +38,15 @@ export async function POST(req: NextRequest) {
 			data: result,
 		});
 	} catch (error) {
-		if (error instanceof Error) {
-			return NextResponse.json({ message: error.message }, { status: 500 });
+		if (error instanceof ApiError) {
+			return NextResponse.json(
+				{ message: error.message },
+				{ status: error.statusCode }
+			);
 		}
+
 		return NextResponse.json(
-			{ message: 'Internal Server Error' },
+			{ message: 'Internal server error' },
 			{ status: 500 }
 		);
 	}
