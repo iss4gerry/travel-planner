@@ -1,4 +1,4 @@
-import { ApiError } from '@/app/utils/apiError';
+import { ApiError } from '@/utils/apiError';
 import { prisma } from '../db';
 import { Category } from '@/types/category';
 
