@@ -1,0 +1,30 @@
+import { number, string, z } from 'zod';
+
+export const createPlanSchema = z
+	.object({
+		name: string().min(3, 'Name must be atleast 3 characters'),
+		startDate: string().min(3, 'Start date must be atleast 7 characters'),
+		endDate: string().min(3, 'End date must be atleast 7 characters'),
+		city: string().min(3, 'City must be atleast 3 characters'),
+		travelCompanion: string().min(
+			3,
+			'Travel companion must be atleast 3 characters'
+		),
+		budget: number(),
+		travelTheme: string().min(3, 'Travel theme must be atleast 3 characters'),
+	})
+	.strict();
+
+export const updatePlanSchema = z
+	.object({
+		name: string().min(3, 'Name must be atleast 3 characters').optional(),
+		city: string().min(3, 'City must be atleast 3 characters').optional(),
+		travelCompanion: string()
+			.min(3, 'Travel companion must be atleast 3 characters')
+			.optional(),
+		budget: number().optional(),
+		travelTheme: string()
+			.min(3, 'Travel theme must be atleast 3 characters')
+			.optional(),
+	})
+	.strict();
