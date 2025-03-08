@@ -1,16 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { CategoryService } from '@/lib/services/category-service';
-import { Category } from '@prisma/client';
-import { updateCategorySchema } from '@/lib/validations/category-schema';
+import { PlanService } from '@/lib/services/plan-service';
+import { CreatePlan } from '@/types/plan';
 import catchError from '@/utils/catchError';
+import { NextRequest, NextResponse } from 'next/server';
 
 type Context = {
 	params: Promise<{ id: string }>;
 };
 
 export const GET = catchError(async (req: NextRequest, context: Context) => {
-	const { id } = await context.params;
-	const result = await CategoryService.getCategory(id);
+	const id = (await context.params).id;
+	const result = await PlanService.getPlanById(id);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',
@@ -19,8 +18,8 @@ export const GET = catchError(async (req: NextRequest, context: Context) => {
 });
 
 export const DELETE = catchError(async (req: NextRequest, context: Context) => {
-	const { id } = await context.params;
-	const result = await CategoryService.deleteCategory(id);
+	const id = (await context.params).id;
+	const result = await PlanService.deletePlan(id);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',
@@ -29,10 +28,9 @@ export const DELETE = catchError(async (req: NextRequest, context: Context) => {
 });
 
 export const PATCH = catchError(async (req: NextRequest, context: Context) => {
-	const { id } = await context.params;
-	const data: Category = await req.json();
-	updateCategorySchema.parse(data);
-	const result = await CategoryService.updateCategory(id, data);
+	const body: CreatePlan = await req.json();
+	const id = (await context.params).id;
+	const result = await PlanService.updatePlan(body, id);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',

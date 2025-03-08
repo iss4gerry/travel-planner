@@ -1,10 +1,7 @@
-import { ApiError } from '@/utils/apiError';
 import { CategoryService } from '@/lib/services/category-service';
 import { Category } from '@/types/category';
 import { NextRequest, NextResponse } from 'next/server';
 import { createCategorySchema } from '@/lib/validations/category-schema';
-import { ZodError } from 'zod';
-import { formatZodError } from '@/utils/formatZodError';
 import catchError from '@/utils/catchError';
 
 export const GET = catchError(async () => {
