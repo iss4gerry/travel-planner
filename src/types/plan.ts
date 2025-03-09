@@ -20,3 +20,24 @@ export type PlanResponse = {
 	createdAt: Date;
 	updatedAt: Date;
 };
+
+export type Itinerary = {
+	[key: `day${number}`]: ItineraryData[];
+};
+
+export type ItineraryData = {
+	placeName: string;
+	description: string;
+	time: string;
+	address: string;
+	cost: string;
+	distance: string;
+};
+
+export type RequestItinerary = {
+	city: string;
+	travelCompanion: string;
+	budget: number;
+	duration: number;
+	travelTheme: string;
+};
