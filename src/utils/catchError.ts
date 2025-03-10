@@ -28,6 +28,7 @@ export default function catchError(
 				);
 			}
 
+			console.log(error);
 			return NextResponse.json(
 				{ message: 'Internal server error' },
 				{ status: 500 }

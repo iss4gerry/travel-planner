@@ -10,7 +10,7 @@ type Context = {
 
 export const GET = catchError(async (req: NextRequest, context: Context) => {
 	const id = (await context.params).id;
-	const result = await PlanService.getPlanById(id);
+	const result = await PlanService.getPlanDetail(id);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',

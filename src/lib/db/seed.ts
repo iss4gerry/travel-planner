@@ -1,4 +1,4 @@
-import { prisma } from '../db/index';
+import { prisma } from './index';
 
 const categories = [
 	{ name: 'nature', imageUrl: 'example' },
