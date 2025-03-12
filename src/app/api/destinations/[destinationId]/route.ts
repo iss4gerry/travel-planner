@@ -3,16 +3,12 @@ import {
 	UpdateDestination,
 	updateDestinationSchema,
 } from '@/lib/validations/destination-schema';
-import catchError from '@/utils/catchError';
+import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 
-type Context = {
-	params: Promise<{ id: string }>;
-};
-
 export const GET = catchError(async (req: NextRequest, context: Context) => {
-	const id = (await context.params).id;
-	const result = await DestinationService.getDestinationById(id);
+	const { destinationId } = await context.params;
+	const result = await DestinationService.getDestinationById(destinationId);
 
 	return NextResponse.json({
 		status: 200,
@@ -22,8 +18,8 @@ export const GET = catchError(async (req: NextRequest, context: Context) => {
 });
 
 export const DELETE = catchError(async (req: NextRequest, context: Context) => {
-	const id = (await context.params).id;
-	const result = await DestinationService.deleteDestination(id);
+	const { destinationId } = await context.params;
+	const result = await DestinationService.deleteDestination(destinationId);
 
 	return NextResponse.json({
 		status: 200,
@@ -33,10 +29,13 @@ export const DELETE = catchError(async (req: NextRequest, context: Context) => {
 });
 
 export const PATCH = catchError(async (req: NextRequest, context: Context) => {
-	const id = (await context.params).id;
+	const { destinationId } = await context.params;
 	const body: UpdateDestination = await req.json();
 	updateDestinationSchema.parse(body);
-	const result = await DestinationService.updateDestination(body, id);
+	const result = await DestinationService.updateDestination(
+		body,
+		destinationId
+	);
 
 	return NextResponse.json({
 		status: 200,

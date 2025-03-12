@@ -1,21 +1,15 @@
 import { itineraryCache } from '@/lib/itinerary-cache';
 import { PlanService } from '@/lib/services/plan-service';
-import { Itinerary } from '@/types/plan';
-import { ApiError } from '@/utils/apiError';
-import catchError from '@/utils/catchError';
+import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 
-type Context = {
-	params: Promise<{ id: string }>;
-};
-
 export const GET = catchError(async (req: NextRequest, context: Context) => {
-	const id = (await context.params).id;
-	if (itineraryCache.has(id)) {
-		itineraryCache.delete(id);
+	const { planId } = await context.params;
+	if (itineraryCache.has(planId)) {
+		itineraryCache.delete(planId);
 	}
-	const itineraryData = await PlanService.getItinerary(id);
-	itineraryCache.set(id, { result: itineraryData });
+	const itineraryData = await PlanService.getItinerary(planId);
+	itineraryCache.set(planId, { result: itineraryData });
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',
@@ -24,10 +18,10 @@ export const GET = catchError(async (req: NextRequest, context: Context) => {
 });
 
 export const POST = catchError(async (req: NextRequest, context: Context) => {
-	const id = (await context.params).id;
-	const cachedBody = itineraryCache.get(id);
+	const { planId } = await context.params;
+	const cachedBody = itineraryCache.get(planId);
 	const body = cachedBody;
-	const result = await PlanService.saveItinerary(body, id);
+	const result = await PlanService.saveItinerary(body, planId);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',

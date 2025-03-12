@@ -3,8 +3,12 @@ import { ApiError } from './apiError';
 import { ZodError } from 'zod';
 import { formatZodError } from './formatZodError';
 
-type Context = {
-	params: Promise<{ id: string }>;
+export type Context = {
+	params: Promise<{
+		categoryId: string;
+		planId: string;
+		destinationId: string;
+	}>;
 };
 
 export default function catchError(
