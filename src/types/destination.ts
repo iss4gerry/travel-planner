@@ -8,4 +8,8 @@ export type DestinationResponse = {
 	createdAt: Date;
 	updatedAt: Date;
 	categoryId: string;
+	category?: {
+		name: string;
+		imageUrl: string | null;
+	};
 };

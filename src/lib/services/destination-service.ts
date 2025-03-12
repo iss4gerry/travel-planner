@@ -8,13 +8,30 @@ import { DestinationResponse } from '@/types/destination';
 
 export class DestinationService {
 	static async getAllDestination(): Promise<DestinationResponse[]> {
-		return await prisma.destination.findMany();
+		return await prisma.destination.findMany({
+			include: {
+				category: {
+					select: {
+						name: true,
+						imageUrl: true,
+					},
+				},
+			},
+		});
 	}
 
 	static async getDestinationById(destinationId: string) {
 		const destination = await prisma.destination.findUnique({
 			where: {
 				id: destinationId,
+			},
+			include: {
+				category: {
+					select: {
+						name: true,
+						imageUrl: true,
+					},
+				},
 			},
 		});
 
