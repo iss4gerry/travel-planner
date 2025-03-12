@@ -28,3 +28,13 @@ export const updatePlanSchema = z
 			.optional(),
 	})
 	.strict();
+
+export const addDestinationToPlan = z
+	.object({
+		planDetailId: string().min(5, 'Invalid UUID'),
+		destinationId: string().min(5, 'Invalid UUID'),
+		time: string().min(2, 'Invalid Time'),
+	})
+	.strict();
+
+export type AddDestinationToPlan = z.infer<typeof addDestinationToPlan>;
