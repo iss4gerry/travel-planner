@@ -8,112 +8,9 @@ import {
 } from '@/types/plan';
 import { prisma } from '../db';
 import { ApiError } from '@/utils/apiError';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import Groq from 'groq-sdk';
-
-// const itinerary: { result: Itinerary } = {
-// 	result: {
-// 		day1: [
-// 			{
-// 				placeName: 'Warung Sopa',
-// 				description: 'Breakfast',
-// 				time: '7:00 - 8:00 AM',
-// 				cost: 'Rp. 200,000',
-// 				category: 'culinary',
-// 				address:
-// 					'Jl. Pantai Batu Bolong No.99, Canggu, Kuta Utara, Kabupaten Badung, Bali 80361',
-// 				distance: '0Km',
-// 			},
-// 			{
-// 				placeName: 'Tanah Lot Temple',
-// 				description: 'Explore the iconic sea temple',
-// 				time: '8:30 AM - 12:00 PM',
-// 				cost: 'Rp. 60,000 (entrance fee)',
-// 				category: 'nature',
-// 				address:
-// 					'Jalan Raya Tanah Lot, Desa Beraban, Kec. Kediri, Kabupaten Tabanan, Bali 82111',
-// 				distance: '18km',
-// 			},
-// 			{
-// 				placeName: 'Canteen near Tanah Lot',
-// 				description: 'Lunch',
-// 				time: '12:00 PM - 1:00 PM',
-// 				cost: 'Rp. 150,000',
-// 				category: 'culinary',
-// 				address: 'near Tanah Lot Temple',
-// 				distance: '0.5km',
-// 			},
-// 			{
-// 				placeName: 'Uluwatu Temple',
-// 				description:
-// 					'Witness Kecak dance performance (optional, check showtimes)',
-// 				time: '2:00 PM - 6:00 PM',
-// 				cost: 'Rp. 100,000 (entrance fee)',
-// 				category: 'nature',
-// 				address:
-// 					'Jl. Raya Uluwatu, Pecatu, Kec. Kuta Sel., Kabupaten Badung, Bali 80361',
-// 				distance: '20km',
-// 			},
-// 			{
-// 				placeName: 'Jimbaran Bay',
-// 				description: 'Dinner by the beach',
-// 				time: '7:00 PM - 9:00 PM',
-// 				cost: 'Rp. 300,000',
-// 				category: 'culinary',
-// 				address: 'Jimbaran, South Kuta, Badung Regency, Bali',
-// 				distance: '15km',
-// 			},
-// 		],
-// 		day2: [
-// 			{
-// 				placeName: "Made's Warung",
-// 				description: 'Breakfast',
-// 				time: '7:00 - 8:00 AM',
-// 				cost: 'Rp. 150,000',
-// 				category: 'culinary',
-// 				address:
-// 					'Jl. Pantai Batu Bolong No.5, Canggu, Kuta Utara, Kabupaten Badung, Bali 80361',
-// 				distance: '0km',
-// 			},
-// 			{
-// 				placeName: 'Ubud Monkey Forest',
-// 				description: 'Interact with playful monkeys',
-// 				time: '9:00 AM - 12:00 PM',
-// 				cost: 'Rp. 60,000 (entrance fee)',
-// 				category: 'nature',
-// 				address: 'Jl. Monkey Forest, Ubud, Gianyar, Bali 80571',
-// 				distance: '35km',
-// 			},
-// 			{
-// 				placeName: 'Local Warung in Ubud',
-// 				description: 'Lunch',
-// 				time: '12:00 PM - 1:00 PM',
-// 				cost: 'Rp. 100,000',
-// 				category: 'culinary',
-// 				address: 'Near Ubud Monkey Forest',
-// 				distance: '0.5km',
-// 			},
-// 			{
-// 				placeName: 'Tegalalang Rice Terraces',
-// 				description: 'Stunning rice paddy views',
-// 				time: '1:30 PM - 4:30 PM',
-// 				cost: 'Rp. 15,000 (entrance fee)',
-// 				category: 'nature',
-// 				address: 'Tegalalang, Gianyar, Bali',
-// 				distance: '10km',
-// 			},
-// 			{
-// 				placeName: 'Locavore',
-// 				description: 'Fine dining experience',
-// 				time: '7:00 PM - 9:00 PM',
-// 				cost: 'Rp. 500,000',
-// 				category: 'culinary',
-// 				address: 'Jl. Dewisita No.9, Ubud, Gianyar, Bali 80571',
-// 				distance: '8km',
-// 			},
-// 		],
-// 	},
-// };
+import { ActivityResponse } from '@/types/activity';
+import { AddDestinationToPlan } from '../validations/plan-schema';
+import { ItineraryService } from './itinerary-service';
 
 export class PlanService {
 	static async createPlan(
@@ -296,112 +193,16 @@ export class PlanService {
 			travelTheme: planData.travelTheme,
 		};
 
-		let data = await this.groqRequest(requestData);
+		let data = await ItineraryService.geminiRequest(requestData);
 		if (!data) {
 			console.log('groq');
-			data = await this.geminiRequest(requestData);
+			data = await ItineraryService.groqRequest(requestData);
 			if (!data) {
 				throw new ApiError(500, 'An error occured while generate itinerary');
 			}
 		}
 
 		return data;
-	}
-
-	static async geminiRequest(
-		itineraryData: RequestItinerary
-	): Promise<Itinerary | null> {
-		try {
-			const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-			const model = genAi.getGenerativeModel({ model: 'gemini-1.5-flash' });
-			const prompt = this.generateItineraryPrompt(itineraryData);
-
-			const result = await model.generateContent(prompt);
-			const text = result.response.text();
-			let data = text;
-			if (text.includes('json```') || text.includes('```')) {
-				data = text.replace(/json|```/g, '');
-			}
-
-			const response: { result: Itinerary } = JSON.parse(data);
-
-			return response.result;
-		} catch (error) {
-			console.log(error);
-			return null;
-		}
-	}
-
-	static async groqRequest(
-		itineraryData: RequestItinerary
-	): Promise<Itinerary | null> {
-		try {
-			const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-			const prompt = this.generateItineraryPrompt(itineraryData);
-
-			const result = await groq.chat.completions.create({
-				messages: [
-					{
-						role: 'user',
-						content: prompt,
-					},
-				],
-				model: 'llama3-8b-8192',
-			});
-
-			const text = result.choices[0]?.message?.content || '';
-			let data = text;
-			if (text.includes('json```') || text.includes('```')) {
-				data = text.replace(/json|```/g, '');
-			}
-
-			const response: { result: Itinerary } = JSON.parse(data);
-
-			return response.result;
-		} catch (error) {
-			console.log(error);
-			return null;
-		}
-	}
-
-	static generateItineraryPrompt(itineraryData: RequestItinerary) {
-		return `
-        Provide me with an itinerary destination for a trip to ${itineraryData.city} with my ${itineraryData.travelCompanion}. 
-        With a budget of ${itineraryData.budget}, create a well-structured itinerary for ${itineraryData.duration} days. 
-        Suggest destinations from each category: ${itineraryData.travelTheme}/culinary.
-        
-        Each day's itinerary should:
-        - The destination must suitable for ${itineraryData.travelCompanion}
-        - Start with breakfast and end with dinner.
-        - The activities should be reasonable for each day, ensuring no overlapping or conflicting schedules. For example, do not combine a beach visit and a water park visit on the same day.
-        - The order of places should be logical, such as: on the first day, visit place A, then move to place B, and have a meal at place C.
-        - The destinations address within a single day should be relatively close to each other and not more than 20km to mode from one place to another and also should be visitable from morning to night, not run out of time on the way.
-        
-        Your response must **ONLY** contain the object.  
-        Do not include any introductory text, explanations, or additional formatting.  
-        Send the response in the following string format. Your entire response/output should consist of a single string object {}. Your response must begin with { and end with } 
-        and you will NOT wrap it within JSON markdown markers.
-      
-        {
-          "result": {
-            "day1": [
-              {
-                "placeName": "string",  // The actual name of the place,
-                "description": "string",  // Activities or experiences at this location,
-                "time": "string", // time doing this activity,
-                "cost": "string", // in rupiah ex (Rp. xxxx)
-                "category": "${itineraryData.travelTheme}/culinary <- one of those don't write more than one",
-                "address": "place address",
-                "distance": "distance from previous place if this place are first destination just fill it with 0Km"
-              }
-            ],
-            and so on until day ${itineraryData.duration}
-          }
-        }
-      
-        Send the response in English.
-        Do not add any additional explanation or text outside the requested format.
-        `;
 	}
 
 	static async saveItinerary(
@@ -498,5 +299,23 @@ export class PlanService {
 		});
 
 		return body?.result;
+	}
+
+	static async addDestinationToPlan(
+		body: AddDestinationToPlan
+	): Promise<ActivityResponse> {
+		return await prisma.activity.create({
+			data: body,
+		});
+	}
+
+	static async deleteDestinationFromPlan(
+		activityId: string
+	): Promise<ActivityResponse> {
+		return await prisma.activity.delete({
+			where: {
+				id: activityId,
+			},
+		});
 	}
 }
