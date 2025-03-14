@@ -13,4 +13,17 @@ export const createBannerSchema = z
 	})
 	.strict();
 
+export const updateBannerSchema = z
+	.object({
+		title: z.string().optional(),
+		description: z.string().optional(),
+		startDate: z.string().optional(),
+		address: z.string().optional(),
+		cost: z.string().optional(),
+		categoryId: z.string().optional(),
+		targetUrl: z.string().optional(),
+	})
+	.strict();
+
 export type CreateBanner = z.infer<typeof createBannerSchema>;
+export type UpdateBanner = z.infer<typeof updateBannerSchema>;

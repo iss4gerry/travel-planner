@@ -1,6 +1,7 @@
 import { BannerResponse } from '@/types/banner';
-import { CreateBanner } from '../validations/banner-schema';
+import { CreateBanner, UpdateBanner } from '../validations/banner-schema';
 import { prisma } from '../db';
+import { ApiError } from '@/utils/apiError';
 
 export class BannerService {
 	static async createBanner(
@@ -25,5 +26,46 @@ export class BannerService {
 
 	static async getAllBanner(): Promise<BannerResponse[]> {
 		return await prisma.bannerAds.findMany();
+	}
+
+	static async getBannerById(bannerId: string): Promise<BannerResponse> {
+		const banner = await prisma.bannerAds.findUnique({
+			where: {
+				id: bannerId,
+			},
+		});
+
+		if (!banner) {
+			throw new ApiError(404, 'Banner not found');
+		}
+
+		return banner;
+	}
+
+	static async deleteBanner(bannerId: string): Promise<BannerResponse> {
+		await this.getBannerById(bannerId);
+		const banner = await prisma.bannerAds.delete({
+			where: {
+				id: bannerId,
+			},
+		});
+
+		return banner;
+	}
+
+	static async updateBanner(
+		body: UpdateBanner,
+		bannerId: string
+	): Promise<BannerResponse> {
+		await this.getBannerById(bannerId);
+		const filteredData = Object.fromEntries(
+			Object.entries(body).filter(([_, v]) => v !== undefined)
+		);
+		return await prisma.bannerAds.update({
+			where: {
+				id: bannerId,
+			},
+			data: filteredData,
+		});
 	}
 }
