@@ -68,4 +68,14 @@ export class BannerService {
 			data: filteredData,
 		});
 	}
+
+	static async acceptBanner(bannerId: string) {
+		this.getBannerById(bannerId);
+		return await prisma.bannerAds.update({
+			where: { id: bannerId },
+			data: {
+				isActive: true,
+			},
+		});
+	}
 }
