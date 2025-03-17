@@ -1,4 +1,5 @@
 import { NewsResponse } from '@/types/news';
+import { ApiError } from '@/utils/apiError';
 
 export class NewsService {
 	static async getRandomNews(): Promise<NewsResponse[]> {
@@ -59,6 +60,11 @@ export class NewsService {
 		const response = await fetch(
 			`https://berita-indo-api-next.vercel.app/api/tribun-news/${randomCity}/travel`
 		);
+
+		if (!response.ok) {
+			throw new ApiError(500, 'Something went wrong');
+		}
+
 		const news: { data: NewsResponse[] } = await response.json();
 		return news.data;
 	}
