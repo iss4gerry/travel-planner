@@ -9,6 +9,7 @@ export type Context = {
 		planId: string;
 		destinationId: string;
 		bannerId: string;
+		city: string;
 		activityId: string;
 	}>;
 };

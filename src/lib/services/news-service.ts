@@ -68,4 +68,17 @@ export class NewsService {
 		const news: { data: NewsResponse[] } = await response.json();
 		return news.data;
 	}
+
+	static async getNewsByCity(city: string): Promise<NewsResponse[]> {
+		const response = await fetch(
+			`https://berita-indo-api-next.vercel.app/api/tribun-news/${city}/travel`
+		);
+
+		if (!response.ok) {
+			throw new ApiError(500, 'Something went wrong');
+		}
+
+		const news: { data: NewsResponse[] } = await response.json();
+		return news.data;
+	}
 }
