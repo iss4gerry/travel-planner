@@ -5,6 +5,7 @@ import {
 	UpdateDestination,
 } from '../validations/destination-schema';
 import { DestinationResponse } from '@/types/destination';
+import { BannerResponse } from '@/types/banner';
 
 export class DestinationService {
 	static async getAllDestination(): Promise<DestinationResponse[]> {
@@ -71,6 +72,48 @@ export class DestinationService {
 		return await prisma.destination.delete({
 			where: {
 				id: destinationId,
+			},
+		});
+	}
+
+	static async createBannerForDestination(
+		bannerDuration: number,
+		destinationId: string,
+		userId: string
+	): Promise<BannerResponse> {
+		const destination = await prisma.destination.findFirst({
+			where: {
+				id: destinationId,
+			},
+			select: {
+				id: true,
+				imageUrl: true,
+				name: true,
+				description: true,
+				address: true,
+				cost: true,
+				categoryId: true,
+			},
+		});
+
+		if (!destination) {
+			throw new ApiError(404, 'Destination not found');
+		}
+
+		const endDate = new Date();
+		endDate.setDate(endDate.getDate() + bannerDuration);
+
+		return await prisma.bannerAds.create({
+			data: {
+				...destination,
+				imageUrl: destination.imageUrl || 'No image',
+				userId: userId,
+				title: destination.name,
+				startDate: '',
+				cost: parseInt(destination.cost),
+				targetUrl: `${process.env.FE_URL}/destination/${destination.id}`,
+				bannerDuration: bannerDuration,
+				validUntil: endDate,
 			},
 		});
 	}
