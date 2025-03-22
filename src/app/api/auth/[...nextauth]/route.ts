@@ -27,13 +27,13 @@ export const authOptions: AuthOptions = {
 					throw new ApiError(400, 'Invalid email or password.');
 				}
 
-				// const isPasswordValid = await bcrypt.compare(
-				// 	credentials.password,
-				// 	user.password
-				// );
-				// if (!isPasswordValid) {
-				// 	throw new ApiError(404, 'Invalid email or password.');
-				// }
+				const isPasswordValid = await bcrypt.compare(
+					credentials.password,
+					user.password
+				);
+				if (!isPasswordValid) {
+					throw new ApiError(404, 'Invalid email or password.');
+				}
 
 				return {
 					id: user.id,
