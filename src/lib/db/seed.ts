@@ -7,7 +7,7 @@ const categories = [
 	{ name: 'culinary', imageUrl: 'example' },
 ];
 
-async function seedDatabase() {
+export async function seedDatabase() {
 	try {
 		await prisma.category.deleteMany();
 
