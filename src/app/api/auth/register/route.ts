@@ -1,7 +1,5 @@
-import { prisma } from '@/lib/db';
 import { AuthService } from '@/lib/services/auth-service';
 import { RegisterInput, registerSchema } from '@/lib/validations/auth-schema';
-import { ApiError } from '@/utils/apiError';
 import catchError from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 
