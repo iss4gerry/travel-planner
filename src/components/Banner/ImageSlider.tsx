@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { BannerResponse } from '@/types/banner';
 import Image from 'next/image';

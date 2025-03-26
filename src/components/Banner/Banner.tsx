@@ -1,33 +1,31 @@
 'use client';
 
 import { BannerResponse } from '@/types/banner';
-import { useEffect, useState } from 'react';
 import ImageSlider from './ImageSlider';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Banner() {
-	const [banners, setBanners] = useState<BannerResponse[]>([]);
+	const getDestination = async () => {
+		const result = await fetch('/api/banners');
+		if (!result.ok) {
+			throw new Error('Something went wrong');
+		}
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const result = await fetch('/api/banners');
-				if (!result.ok) {
-					throw new Error('Something went wrong');
-				}
+		const response: { data: BannerResponse[] } = await result.json();
+		return response.data;
+	};
 
-				const response: { data: BannerResponse[] } = await result.json();
-				setBanners(response.data);
-			} catch (error) {
-				console.error(error);
-			}
-		};
+	const { data, isLoading, error } = useQuery({
+		queryKey: ['destinations'],
+		queryFn: getDestination,
+	});
 
-		fetchData();
-	}, []);
+	if (isLoading) return <p>Loading...</p>;
+	if (error) return <p>Error Fetching Destination</p>;
 
 	return (
 		<div className="w-full mt-5">
-			<ImageSlider banners={banners} />
+			<ImageSlider banners={data ?? []} />
 		</div>
 	);
 }
