@@ -20,12 +20,16 @@ export default function Banner() {
 		queryFn: fetchBanners,
 	});
 
-	if (isLoading) return <p>Loading...</p>;
-	if (error) return <p>Error Fetching Destination</p>;
-
 	return (
 		<div className="w-full mt-5">
-			<ImageSlider banners={data ?? []} />
+			<p className="text-2xl min-sm:text-3xl font-bold mb-2">
+				Top Destinations for You!
+			</p>
+			{isLoading || error ? (
+				<div className="skeleton w-full h-[450px] max-md:h-[250px]"></div>
+			) : (
+				<ImageSlider banners={data ?? []} />
+			)}
 		</div>
 	);
 }
