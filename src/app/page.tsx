@@ -1,9 +1,11 @@
 import Banner from '@/components/Banner/Banner';
+import DestinationList from '@/components/Destination/DestinationList';
 
 export default function Home() {
 	return (
-		<div className="w-3/4 flex items-center flex-col">
+		<div className="w-full flex items-center flex-col">
 			<Banner />
+			<DestinationList />
 		</div>
 	);
 }

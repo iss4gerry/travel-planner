@@ -16,26 +16,26 @@ export const ImageSlider = ({ banners }: { banners: BannerResponse[] }) => {
 
 	return (
 		<div className="relative w-full mx-auto">
-			<div className="w-full h-[450px] overflow-hidden rounded-lg shadow-lg relative">
+			<div className="w-full h-[450px] max-md:h-[250px] overflow-hidden rounded-lg shadow-lg relative">
 				<Image
 					fill
 					src={banners[currentIndex].imageUrl}
 					alt={banners[currentIndex].title}
-					className="object-cover"
-					sizes="(max-width: 1200px) 100vw, (max-width: 1200px) 50vw, 33vw"
+					className="object-cover hover:scale-105 ease-in duration-200 z-0"
+					sizes="(max-width: 1200px) 100vw"
 				/>
-			</div>
 
-			<div className="flex justify-center mt-4 space-x-2">
-				{banners.map((_, index) => (
-					<div
-						key={index}
-						onClick={() => handleSlideChange(index)}
-						className={`h-1 cursor-pointer transition-all duration-300 ease-in-out ${
-							index === currentIndex ? 'bg-blue-500 w-12' : 'bg-gray-300 w-8'
-						}`}
-					/>
-				))}
+				<div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex justify-center space-x-2 z-10">
+					{banners.map((_, index) => (
+						<div
+							key={index}
+							onClick={() => handleSlideChange(index)}
+							className={`rounded-4xl h-1 cursor-pointer transition-all duration-300 ease-in-out ${
+								index === currentIndex ? 'bg-gray-500 w-12' : 'bg-gray-300 w-8'
+							}`}
+						/>
+					))}
+				</div>
 			</div>
 
 			<div className="flex justify-between absolute top-1/2 transform -translate-y-1/2 w-full px-4">

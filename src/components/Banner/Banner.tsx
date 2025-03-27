@@ -5,7 +5,7 @@ import ImageSlider from './ImageSlider';
 import { useQuery } from '@tanstack/react-query';
 
 export default function Banner() {
-	const getDestination = async () => {
+	const fetchBanners = async () => {
 		const result = await fetch('/api/banners');
 		if (!result.ok) {
 			throw new Error('Something went wrong');
@@ -16,8 +16,8 @@ export default function Banner() {
 	};
 
 	const { data, isLoading, error } = useQuery({
-		queryKey: ['destinations'],
-		queryFn: getDestination,
+		queryKey: ['banners'],
+		queryFn: fetchBanners,
 	});
 
 	if (isLoading) return <p>Loading...</p>;

@@ -27,10 +27,10 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className="flex items-center flex-col w-full">
-				<div className="w-3/4 mt-3">
+				<div className="w-3/4 max-md:w-10/12 mt-3">
 					<NavBar />
+					<Provider>{children}</Provider>
 				</div>
-				<Provider>{children}</Provider>
 			</body>
 		</html>
 	);
