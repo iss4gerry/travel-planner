@@ -1,14 +1,19 @@
 import { DestinationResponse } from '@/types/destination';
 import { Layers, Heart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function DestinationCard({
 	destination,
 }: {
 	destination: DestinationResponse;
 }) {
+	const router = useRouter();
+	const handleClick = (id: string) => {
+		router.push(`destination/${id}`);
+	};
 	return (
-		<div className="card">
-			<picture className="rounded-lg block overflow-hidden w-full min-h-48">
+		<div className="card" onClick={() => handleClick(destination.id)}>
+			<picture className="rounded-lg block overflow-hidden w-full min-h-48 max-h-48">
 				<img
 					src={
 						destination.imageUrl ||

@@ -2,7 +2,9 @@ export default function NavBar() {
 	return (
 		<div className="navbar bg-base-100 shadow-sm">
 			<div className="flex-1">
-				<a className="btn btn-ghost text-xl">daisyUI</a>
+				<a className="btn btn-ghost text-3xl font-bold text-blue-900-600 ">
+					Twavely ˚.🎀༘⋆
+				</a>
 			</div>
 			<div className="flex gap-2">
 				<input
