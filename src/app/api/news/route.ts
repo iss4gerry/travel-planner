@@ -9,5 +9,5 @@ export const GET = catchError(async () => {
 		status: 200,
 		message: 'Success',
 		data: result,
-	});
+	}); 
 });

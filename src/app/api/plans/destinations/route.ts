@@ -16,3 +16,4 @@ export const POST = catchError(async (req: NextRequest) => {
 		data: result,
 	});
 });
+	

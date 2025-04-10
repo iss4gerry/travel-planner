@@ -3,11 +3,17 @@
 import React, { useState } from 'react';
 import { BannerResponse } from '@/types/banner';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 export const ImageSlider = ({ banners }: { banners: BannerResponse[] }) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 
 	const handleSlideChange = (index: number) => {
 		setCurrentIndex(index);
+	};
+	const router = useRouter();
+
+	const handleClick = (id: string) => {
+		router.push(`banner/${id}`);
 	};
 
 	if (!banners || banners.length === 0) {
@@ -15,9 +21,10 @@ export const ImageSlider = ({ banners }: { banners: BannerResponse[] }) => {
 	}
 
 	return (
-		<div className="relative w-full mx-auto">
+		<div className="relative w-full mx-auto hover:cursor-pointer">
 			<div className="w-full h-[450px] max-md:h-[250px] overflow-hidden rounded-lg shadow-lg relative">
 				<Image
+					onClick={() => handleClick(banners[currentIndex].id)}
 					fill
 					src={banners[currentIndex].imageUrl}
 					alt={banners[currentIndex].title}

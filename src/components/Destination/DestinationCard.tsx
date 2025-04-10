@@ -12,7 +12,10 @@ export default function DestinationCard({
 		router.push(`destination/${id}`);
 	};
 	return (
-		<div className="card" onClick={() => handleClick(destination.id)}>
+		<div
+			className="card hover:cursor-pointer"
+			onClick={() => handleClick(destination.id)}
+		>
 			<picture className="rounded-lg block overflow-hidden w-full min-h-48 max-h-48">
 				<img
 					src={
