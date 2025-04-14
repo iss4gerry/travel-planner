@@ -235,6 +235,7 @@ export class PlanService {
 			'category' | 'distance' | 'placeName' | 'time'
 		> & {
 			name: string;
+			city: string;
 		};
 
 		const destinations: (RemapItineraryData & {
@@ -264,6 +265,7 @@ export class PlanService {
 						address: address,
 						categoryId: categoriesMap[category],
 						cost: cost,
+						city: plan.city,
 					});
 
 					activities.push({

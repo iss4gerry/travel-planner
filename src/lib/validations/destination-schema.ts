@@ -8,6 +8,7 @@ export const createDestinationSchema = z
 		address: string().min(5, 'Address must be atleast 3 characters'),
 		cost: string().min(2, 'Price must be atleast 3 characters'),
 		categoryId: string().min(5, 'Invalid Category Id'),
+		city: string().min(1, 'City has to be filled'),
 	})
 	.strict();
 

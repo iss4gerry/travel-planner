@@ -35,7 +35,7 @@ export default function DestinationList() {
 	};
 
 	return (
-		<div className="flex flex-col w-full mt-4">
+		<div className="flex flex-col w-full my-5">
 			<p className="text-2xl min-sm:text-3xl font-bold my-3">Explore</p>
 			<select className="select w-35">
 				<option defaultValue="true">All City</option>
