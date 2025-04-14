@@ -21,8 +21,9 @@ export default function BannerDetails() {
 		const response: { data: BannerResponse } = await result.json();
 		return response.data;
 	};
+
 	const { data, isLoading, error } = useQuery({
-		queryKey: ['destinationDetail'],
+		queryKey: ['destinationDetail', params.bannerId],
 		queryFn: fetchDestination,
 	});
 

@@ -29,7 +29,7 @@ export default function DestinationDetails() {
 		return response.data;
 	};
 	const { data, isLoading, error } = useQuery({
-		queryKey: ['destinationDetail'],
+		queryKey: ['destinationDetail', params.destinationId],
 		queryFn: fetchDestination,
 	});
 
