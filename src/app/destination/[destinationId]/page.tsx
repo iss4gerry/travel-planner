@@ -35,8 +35,12 @@ export default function DestinationDetails() {
 		queryFn: fetchDestination,
 	});
 
-	const changeModalStatus = () => {
-		setModalStatus((prev) => !prev);
+	const openModal = () => {
+		setModalStatus(() => true);
+	};
+
+	const closeModal = () => {
+		setModalStatus(() => false);
 	};
 
 	if (isLoading) return <DestinationDetailSkeleton />;
@@ -127,11 +131,11 @@ export default function DestinationDetails() {
 			<div className="flex flex-col sm:flex-row gap-4 mt-8">
 				<button
 					className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-700 transition-colors"
-					onClick={changeModalStatus}
+					onClick={openModal}
 				>
 					Add to plan
 				</button>
-				<AddToPlanModal modalStatus={modalStatus} />
+				<AddToPlanModal modalStatus={modalStatus} onClose={closeModal} />
 				<Link
 					href={`/attractions/${data.address}`}
 					className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors"

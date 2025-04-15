@@ -125,7 +125,6 @@ export default function BannerDetails() {
 				>
 					Add to plan
 				</button>
-				<AddToPlanModal modalStatus={modalStatus} />
 				<Link
 					href={`/attractions/${data.address}`}
 					className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors"

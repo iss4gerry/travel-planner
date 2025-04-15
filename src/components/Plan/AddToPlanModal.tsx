@@ -5,8 +5,10 @@ import { useEffect, useState } from 'react';
 
 export default function AddToPlanModal({
 	modalStatus,
+	onClose,
 }: {
 	modalStatus: boolean;
+	onClose: () => void;
 }) {
 	const queryClient = useQueryClient();
 	const params = useParams<{ destinationId: string }>();
@@ -173,7 +175,9 @@ export default function AddToPlanModal({
 							</div>
 
 							<div className="modal-action">
-								<button className="btn btn-outline">Cancel</button>
+								<button className="btn btn-outline" onClick={onClose}>
+									Cancel
+								</button>
 								<button
 									className="btn btn-primary"
 									onClick={handleSubmit}
