@@ -13,7 +13,13 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 	}
 
-	return NextResponse.next();
+	const res = NextResponse.next();
+
+	console.log(token.sub);
+
+	res.headers.set('x-user-id', token.sub!);
+
+	return res;
 }
 
 export const config = {

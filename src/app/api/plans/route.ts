@@ -7,10 +7,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export const POST = catchError(async (req: NextRequest) => {
 	const body: CreatePlan = await req.json();
 	createPlanSchema.parse(body);
-	const result = await PlanService.createPlan(
-		body,
-		'9369b04d-f752-4adb-978c-3fdcf82d07e7'
-	);
+	const userId = req.headers.get('x-user-id');
+	if (!userId) {
+		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+	}
+	const result = await PlanService.createPlan(body, userId);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',
@@ -19,9 +20,11 @@ export const POST = catchError(async (req: NextRequest) => {
 });
 
 export const GET = catchError(async (req: NextRequest) => {
-	const result = await PlanService.getAllPlan(
-		'9369b04d-f752-4adb-978c-3fdcf82d07e7'
-	);
+	const userId = req.headers.get('x-user-id');
+	if (!userId) {
+		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+	}
+	const result = await PlanService.getAllPlan(userId);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',

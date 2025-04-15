@@ -8,10 +8,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
 import { BannerResponse } from '@/types/banner';
+import AddToPlanModal from '@/components/Plan/AddToPlanModal';
 
 export default function BannerDetails() {
 	const params = useParams<{ bannerId: string }>();
 	const [isFavorite, setIsFavorite] = useState(false);
+	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const fetchDestination = async () => {
 		const result = await fetch(`/api/banners/${params.bannerId}`);
 		if (!result.ok) {
@@ -26,6 +28,10 @@ export default function BannerDetails() {
 		queryKey: ['destinationDetail', params.bannerId],
 		queryFn: fetchDestination,
 	});
+
+	const changeModalStatus = () => {
+		setModalStatus((prev) => !prev);
+	};
 
 	if (isLoading) return <DestinationDetailSkeleton />;
 	if (error)
@@ -113,12 +119,13 @@ export default function BannerDetails() {
 			</div>
 
 			<div className="flex flex-col sm:flex-row gap-4 mt-8">
-				<Link
-					href={`/book/${data.id}`}
+				<button
 					className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-700 transition-colors"
+					onClick={changeModalStatus}
 				>
-					Plan Your Trip
-				</Link>
+					Add to plan
+				</button>
+				<AddToPlanModal modalStatus={modalStatus} />
 				<Link
 					href={`/attractions/${data.address}`}
 					className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors"
