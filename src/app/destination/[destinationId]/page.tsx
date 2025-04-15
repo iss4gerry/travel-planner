@@ -15,10 +15,12 @@ import { useQuery } from '@tanstack/react-query';
 import { DestinationResponse } from '@/types/destination';
 import { useParams } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
+import AddToPlanModal from '@/components/Plan/AddToPlanModal';
 
 export default function DestinationDetails() {
 	const params = useParams<{ destinationId: string }>();
 	const [isFavorite, setIsFavorite] = useState(false);
+	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const fetchDestination = async () => {
 		const result = await fetch(`/api/destinations/${params.destinationId}`);
 		if (!result.ok) {
@@ -32,6 +34,10 @@ export default function DestinationDetails() {
 		queryKey: ['destinationDetail', params.destinationId],
 		queryFn: fetchDestination,
 	});
+
+	const changeModalStatus = () => {
+		setModalStatus((prev) => !prev);
+	};
 
 	if (isLoading) return <DestinationDetailSkeleton />;
 	if (error)
@@ -119,12 +125,13 @@ export default function DestinationDetails() {
 			</div>
 
 			<div className="flex flex-col sm:flex-row gap-4 mt-8">
-				<Link
-					href={`/book/${data.id}`}
+				<button
 					className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-700 transition-colors"
+					onClick={changeModalStatus}
 				>
-					Plan Your Trip
-				</Link>
+					Add to plan
+				</button>
+				<AddToPlanModal modalStatus={modalStatus} />
 				<Link
 					href={`/attractions/${data.address}`}
 					className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors"
