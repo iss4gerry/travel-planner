@@ -4,7 +4,7 @@ export type DestinationResponse = {
 	name: string;
 	description: string;
 	address: string;
-	city: string | null;
+	city: string;
 	cost: string;
 	createdAt: Date;
 	updatedAt: Date;

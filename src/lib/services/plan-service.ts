@@ -236,6 +236,7 @@ export class PlanService {
 		> & {
 			name: string;
 			city: string;
+			isAiGenerated: boolean;
 		};
 
 		const destinations: (RemapItineraryData & {
@@ -266,6 +267,7 @@ export class PlanService {
 						categoryId: categoriesMap[category],
 						cost: cost,
 						city: plan.city,
+						isAiGenerated: true,
 					});
 
 					activities.push({

@@ -9,8 +9,16 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.next();
 	}
 
-	if (!token) {
+	const isApiRoute = req.nextUrl.pathname.startsWith('/api/');
+
+	if (isApiRoute && !token) {
 		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+	}
+
+	if (!token) {
+		const loginUrl = new URL('/auth/login', req.url);
+		loginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
+		return NextResponse.redirect(loginUrl);
 	}
 
 	const res = NextResponse.next();
@@ -23,5 +31,8 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: '/api/:path*',
+	matcher: [
+		'/api/:path*',
+		'/((?!auth/login|auth/register|_next/static|_next/image|favicon.ico).*)',
+	],
 };
