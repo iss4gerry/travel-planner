@@ -1,16 +1,8 @@
-'use client';
-
 import { PlanResponse, TravelTheme } from '@/types/plan';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CalendarIcon, MapPinIcon, UsersIcon, WalletIcon } from 'lucide-react';
-import { useState } from 'react';
 import { format } from 'date-fns';
 
 export default function PlanCard({ plan }: { plan: PlanResponse }) {
-	const [isDeleting, setIsDeleting] = useState<boolean>(false);
-	const [isConfirmingDelete, setIsConfirmingDelete] = useState<boolean>(false);
-	const queryClient = useQueryClient();
-
 	const getThemesArray = (themeString: string): string[] => {
 		return themeString.split('/').map((theme) => theme.trim());
 	};
@@ -45,46 +37,6 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 		return themeColors[matchedTheme as TravelTheme] ?? 'badge-neutral';
 	};
 
-	const deletePlan = async () => {
-		setIsDeleting(true);
-		const result = await fetch(`api/plan/${plan.id}`, {
-			method: 'DELETE',
-		});
-
-		if (!result.ok) {
-			throw new Error('Something went wrong');
-		}
-
-		const response: { data: PlanResponse } = await result.json();
-		setIsDeleting(false);
-		return response.data;
-	};
-
-	const deletePlanMutation = useMutation({
-		mutationFn: deletePlan,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['plans'] });
-		},
-		onError: (error) => {
-			console.error('Failed to delete plan:', error);
-		},
-		onSettled: () => {
-			setIsConfirmingDelete(false);
-		},
-	});
-
-	const handleDelete = async () => {
-		if (isConfirmingDelete) {
-			deletePlanMutation.mutate();
-		} else {
-			setIsConfirmingDelete(true);
-		}
-	};
-
-	const cancelDelete = () => {
-		setIsConfirmingDelete(false);
-	};
-
 	const startDate = new Date(plan.startDate);
 	const endDate = new Date(plan.endDate);
 	const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
@@ -93,12 +45,10 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 	return (
 		<div
 			key={plan.id}
-			className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300"
+			className="card bg-base-100 shadow-xl hover:cursor-pointer hover:translate-y-[-4px] ease-in duration-110 transition-transform"
 		>
 			<div className="card-body">
 				<h2 className="card-title text-xl">{plan.name}</h2>
-
-				<div className="divider my-2"></div>
 
 				<div className="space-y-3">
 					<div className="flex items-center">
@@ -126,10 +76,10 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 
 					<div className="flex items-center">
 						<WalletIcon className="h-5 w-5 mr-2 text-primary" />
-						<span>${plan.budget.toLocaleString()}</span>
+						<span>Rp {plan.budget.toLocaleString()}</span>
 					</div>
 
-					<div className="flex items-start mt-5">
+					<div className="flex items-start mt-6">
 						<div className="flex flex-wrap gap-1">
 							{getThemesArray(plan.travelTheme).map((theme) => (
 								<div
@@ -141,11 +91,6 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 							))}
 						</div>
 					</div>
-				</div>
-
-				<div className="card-actions justify-end mt-4">
-					<button className="btn btn-sm btn-outline">Edit</button>
-					<button className="btn btn-sm btn-primary">View Details</button>
 				</div>
 			</div>
 		</div>
