@@ -26,8 +26,11 @@ export const ImageSlider = ({ banners }: { banners: BannerResponse[] }) => {
 				<Image
 					onClick={() => handleClick(banners[currentIndex].id)}
 					fill
-					src={banners[currentIndex].imageUrl}
-					alt={banners[currentIndex].title}
+					src={
+						banners[currentIndex].imageUrl ||
+						'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/c7/f1/d3/caption.jpg?w=1400&h=1400&s=1'
+					}
+					alt={banners[currentIndex].title || 'ex'}
 					className="object-cover hover:scale-105 ease-in duration-200 z-0"
 					sizes="(max-width: 1200px) 100vw"
 				/>

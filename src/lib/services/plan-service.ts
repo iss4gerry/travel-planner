@@ -10,7 +10,6 @@ export const fetchPlanServer = async (cookieStore: string) => {
 		const axios = await axiosWithCookie(cookieStore);
 		const { data } = await axios.get('/plans');
 		const plans: PlanResponse[] = data.data;
-		console.log('data dari ssr' + plans);
 		return plans;
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');
@@ -23,7 +22,6 @@ export const fetchPlan = async () => {
 		const { data } = await axios.get('/plans');
 
 		const plans: PlanResponse[] = data.data;
-		console.log('data dari csr' + plans);
 		return plans;
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');

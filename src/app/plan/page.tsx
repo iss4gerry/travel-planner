@@ -4,7 +4,7 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from '@tanstack/react-query';
-import { Suspense } from 'react';
+
 import PlansClient from './PlansClient';
 import { cookies } from 'next/headers';
 
@@ -20,9 +20,7 @@ export default async function Page() {
 
 	return (
 		<HydrationBoundary state={dehydratedState}>
-			<Suspense fallback={<p>Loading...</p>}>
-				<PlansClient />
-			</Suspense>
+			<PlansClient />
 		</HydrationBoundary>
 	);
 }

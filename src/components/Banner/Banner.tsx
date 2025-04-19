@@ -1,23 +1,13 @@
 'use client';
 
-import { BannerResponse } from '@/types/banner';
 import ImageSlider from './ImageSlider';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { fetchBannerClient } from '@/lib/services/banner-service';
 
 export default function Banner() {
-	const fetchBanners = async () => {
-		const result = await fetch('/api/banners');
-		if (!result.ok) {
-			throw new Error('Something went wrong');
-		}
-
-		const response: { data: BannerResponse[] } = await result.json();
-		return response.data;
-	};
-
-	const { data, isLoading, error } = useQuery({
+	const { data } = useSuspenseQuery({
 		queryKey: ['banners'],
-		queryFn: fetchBanners,
+		queryFn: fetchBannerClient,
 	});
 
 	return (
@@ -25,11 +15,8 @@ export default function Banner() {
 			<p className="text-2xl min-sm:text-3xl font-bold mb-2">
 				Top Destinations for You!
 			</p>
-			{isLoading || error ? (
-				<div className="skeleton w-full h-[450px] max-md:h-[250px]"></div>
-			) : (
-				<ImageSlider banners={data ?? []} />
-			)}
+
+			<ImageSlider banners={data ?? []} />
 		</div>
 	);
 }

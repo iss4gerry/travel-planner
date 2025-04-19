@@ -1,52 +1,78 @@
 'use client';
 
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { FilterIcon } from 'lucide-react';
+import { TravelTheme } from '@/types/plan';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchPlan } from '@/lib/services/plan-service';
 import PlanCard from '@/components/Plan/PlanCard';
-import { Link, Plus } from 'lucide-react';
 
-export default function PlansClient() {
-	const { data, isLoading } = useSuspenseQuery({
+export default function TravelPlans() {
+	const { data: plans } = useSuspenseQuery({
 		queryKey: ['plans'],
 		queryFn: fetchPlan,
 	});
 
-	if (isLoading) {
-		return <p>Loading...</p>;
-	}
+	const [activeTheme, setActiveTheme] = useState<string | null>(null);
+
+	const getThemesArray = (themeString: string): string[] => {
+		return themeString.split('/').map((theme) => theme.trim());
+	};
+
+	const filteredPlans = activeTheme
+		? plans.filter((plan) =>
+				getThemesArray(plan.travelTheme).includes(activeTheme)
+		  )
+		: plans;
+
+	const themes = Array.from(
+		new Set(plans.flatMap((plan) => getThemesArray(plan.travelTheme)))
+	).sort();
 
 	return (
-		<div>
-			<div className="mx-auto p-4">
-				<div className="flex justify-between items-center mb-6">
-					<h1 className="text-2xl font-bold">My Travel Itineraries</h1>
-					<Link
-						href="/itineraries/create"
-						className="bg-blue-600 text-white px-4 py-2 rounded flex items-center"
-					>
-						<Plus size={18} className="mr-1" />
-						Create New Itinerary
-					</Link>
+		<div className="container mx-auto px-4 py-8">
+			<div className="flex flex-wrap items-center gap-2 mb-6">
+				<div className="flex items-center">
+					<FilterIcon className="h-5 w-5 mr-2" />
+					<span className="font-medium">Filter by theme:</span>
 				</div>
-
-				{!data || data.length === 0 ? (
-					<div className="bg-gray-100 p-8 text-center rounded">
-						<p className="text-gray-600">You don't have any plan yet.</p>
-						<Link
-							href="/itineraries/create"
-							className="text-blue-600 font-medium mt-2 inline-block"
+				<div className="flex flex-wrap gap-2">
+					<button
+						className={`btn btn-sm ${
+							activeTheme === null ? 'btn-active' : 'btn-outline'
+						}`}
+						onClick={() => setActiveTheme(null)}
+					>
+						All
+					</button>
+					{themes.map((theme) => (
+						<button
+							key={theme}
+							className={`btn btn-sm ${
+								activeTheme === theme ? 'btn-active' : 'btn-outline'
+							}`}
+							onClick={() => setActiveTheme(theme)}
 						>
-							Plan your first trip
-						</Link>
-					</div>
-				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						{data.map((plan) => (
-							<PlanCard plan={plan} key={plan.id} />
-						))}
-					</div>
-				)}
+							{theme}
+						</button>
+					))}
+				</div>
 			</div>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{filteredPlans.map((plan) => (
+					<PlanCard plan={plan} key={plan.id} />
+				))}
+			</div>
+
+			{filteredPlans.length === 0 && (
+				<div className="alert alert-info mt-6">
+					<div>
+						<span>No travel plans found with the selected filter.</span>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

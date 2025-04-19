@@ -81,3 +81,24 @@ export type RequestItinerary = {
 	duration: number;
 	travelTheme: string;
 };
+
+export enum TravelTheme {
+	Adventure = 'adventure',
+	Romantic = 'romantic',
+	Cultural = 'cultural',
+	Relaxation = 'relaxation',
+	Family = 'family',
+	Nature = 'nature',
+	City = 'city',
+	Beach = 'beach',
+	Business = 'business',
+	Wellness = 'wellness',
+	Foodie = 'foodie',
+	Solo = 'solo',
+	Luxury = 'luxury',
+	RoadTrip = 'road-trip',
+	Backpacking = 'backpacking',
+	Cruise = 'cruise',
+	Festival = 'festival',
+	Pilgrimage = 'pilgrimage',
+}
