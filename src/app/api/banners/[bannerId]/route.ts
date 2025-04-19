@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import catchError, { Context } from '@/utils/catchError';
-import { BannerService } from '@/lib/services/banner-service';
+import { BannerService } from '@/lib/api/banner-service';
 import { updateBannerSchema } from '@/lib/validations/banner-schema';
 
 export const GET = catchError(async (req: NextRequest, context: Context) => {

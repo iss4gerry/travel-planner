@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CategoryService } from '@/lib/services/category-service';
+import { CategoryService } from '@/lib/api/category-service';
 import { Category } from '@prisma/client';
 import { updateCategorySchema } from '@/lib/validations/category-schema';
 import catchError, { Context } from '@/utils/catchError';

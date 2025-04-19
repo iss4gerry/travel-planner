@@ -24,6 +24,7 @@ export const updateDestinationSchema = z
 		address: string().min(5, 'Address must be atleast 3 characters').optional(),
 		cost: string().min(2, 'Price must be atleast 3 characters').optional(),
 		categoryId: string().min(5, 'Invalid Category Id').optional(),
+		city: string().min(2, 'Invalid city').optional(),
 	})
 	.strict();
 

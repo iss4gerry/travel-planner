@@ -1,3 +1,5 @@
+'use client';
+
 import { PlanResponse } from '@/types/plan';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MapPin, Calendar, Users, Eye, Edit, Trash2 } from 'lucide-react';

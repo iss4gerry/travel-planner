@@ -1,4 +1,4 @@
-import { BannerService } from '@/lib/services/banner-service';
+import { BannerService } from '@/lib/api/banner-service';
 import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 

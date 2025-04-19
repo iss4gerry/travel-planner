@@ -1,4 +1,4 @@
-import { DestinationService } from '@/lib/services/destination-service';
+import { DestinationService } from '@/lib/api/destination-service';
 import {
 	UpdateDestination,
 	updateDestinationSchema,

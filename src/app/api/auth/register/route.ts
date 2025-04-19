@@ -1,4 +1,4 @@
-import { AuthService } from '@/lib/services/auth-service';
+import { AuthService } from '@/lib/api/auth-service';
 import { RegisterInput, registerSchema } from '@/lib/validations/auth-schema';
 import catchError from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';

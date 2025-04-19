@@ -1,5 +1,5 @@
 import { itineraryCache } from '@/lib/itinerary-cache';
-import { PlanService } from '@/lib/services/plan-service';
+import { PlanService } from '@/lib/api/plan-service';
 import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 

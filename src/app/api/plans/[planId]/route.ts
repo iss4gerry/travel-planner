@@ -1,4 +1,4 @@
-import { PlanService } from '@/lib/services/plan-service';
+import { PlanService } from '@/lib/api/plan-service';
 import { updatePlanSchema } from '@/lib/validations/plan-schema';
 import { CreatePlan } from '@/types/plan';
 import catchError, { Context } from '@/utils/catchError';

@@ -1,4 +1,4 @@
-import { NewsService } from '@/lib/services/news-service';
+import { NewsService } from '@/lib/api/news-service';
 import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 

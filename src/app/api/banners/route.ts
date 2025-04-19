@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import catchError from '@/utils/catchError';
-import { BannerService } from '@/lib/services/banner-service';
+import { BannerService } from '@/lib/api/banner-service';
 import {
 	CreateBanner,
 	createBannerSchema,

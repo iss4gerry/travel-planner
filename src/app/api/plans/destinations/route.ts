@@ -1,4 +1,4 @@
-import { PlanService } from '@/lib/services/plan-service';
+import { PlanService } from '@/lib/api/plan-service';
 import {
 	addDestinationToPlan,
 	AddDestinationToPlan,
@@ -16,4 +16,3 @@ export const POST = catchError(async (req: NextRequest) => {
 		data: result,
 	});
 });
-	

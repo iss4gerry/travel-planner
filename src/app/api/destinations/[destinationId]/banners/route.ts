@@ -1,4 +1,4 @@
-import { DestinationService } from '@/lib/services/destination-service';
+import { DestinationService } from '@/lib/api/destination-service';
 import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
 

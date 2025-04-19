@@ -1,4 +1,4 @@
-import { NewsService } from '@/lib/services/news-service';
+import { NewsService } from '@/lib/api/news-service';
 import catchError from '@/utils/catchError';
 import { NextResponse } from 'next/server';
 
@@ -9,5 +9,5 @@ export const GET = catchError(async () => {
 		status: 200,
 		message: 'Success',
 		data: result,
-	}); 
+	});
 });

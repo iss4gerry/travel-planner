@@ -1,4 +1,4 @@
-import { CategoryService } from '@/lib/services/category-service';
+import { CategoryService } from '@/lib/api/category-service';
 import { Category } from '@/types/category';
 import { NextRequest, NextResponse } from 'next/server';
 import { createCategorySchema } from '@/lib/validations/category-schema';
