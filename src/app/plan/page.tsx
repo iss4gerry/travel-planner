@@ -1,4 +1,4 @@
-import { fetchPlan } from '@/lib/services/plan-service';
+import { fetchPlanServer } from '@/lib/services/plan-service';
 import {
 	dehydrate,
 	HydrationBoundary,

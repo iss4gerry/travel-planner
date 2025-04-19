@@ -1,12 +1,12 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchPlan } from '@/lib/services/plan-service';
 import PlanCard from '@/components/Plan/PlanCard';
 import { Link, Plus } from 'lucide-react';
 
 export default function PlansClient() {
-	const { data, isLoading } = useQuery({
+	const { data, isLoading } = useSuspenseQuery({
 		queryKey: ['plans'],
 		queryFn: fetchPlan,
 	});

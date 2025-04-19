@@ -1,27 +1,31 @@
 import { PlanResponse } from '@/types/plan';
+import {
+	axiosWithCookie,
+	axiosWithoutCookie,
+	handleAxiosError,
+} from '../axios';
 
 export const fetchPlanServer = async (cookieStore: string) => {
 	try {
-		const result = await fetch('http://localhost:3002/api/plans', {
-			headers: {
-				cookie: cookieStore,
-			},
-		});
-
-		const response: { data: PlanResponse[] } = await result.json();
-		return response.data;
+		const axios = await axiosWithCookie(cookieStore);
+		const { data } = await axios.get('/plans');
+		const plans: PlanResponse[] = data.data;
+		console.log('data dari ssr' + plans);
+		return plans;
 	} catch (error) {
-		console.log(error);
+		handleAxiosError(error, 'fetchPlan');
 	}
 };
 
 export const fetchPlan = async () => {
 	try {
-		const result = await fetch('http://localhost:3002/api/plans');
+		const axios = await axiosWithoutCookie();
+		const { data } = await axios.get('/plans');
 
-		const response: { data: PlanResponse[] } = await result.json();
-		return response.data;
+		const plans: PlanResponse[] = data.data;
+		console.log('data dari csr' + plans);
+		return plans;
 	} catch (error) {
-		console.log(error);
+		handleAxiosError(error, 'fetchPlan');
 	}
 };

@@ -1,10 +1,11 @@
 'use client';
 
 import { PlanResponse } from '@/types/plan';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MapPin, Calendar, Users, Eye, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { format } from 'date-fns';
 
 export default function PlanCard({ plan }: { plan: PlanResponse }) {
 	const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -51,8 +52,8 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 					<div className="flex items-center text-gray-600">
 						<Calendar size={16} className="mr-2" />
 						<span>
-							{new Date(plan.startDate).toLocaleDateString()} -{' '}
-							{new Date(plan.endDate).toLocaleDateString()}
+							{format(new Date(plan.startDate), 'dd/MM/yyyy')} -{' '}
+							{format(new Date(plan.endDate), 'dd/MM/yyyy')}
 						</span>
 					</div>
 
