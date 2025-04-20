@@ -1,15 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { format } from 'date-fns';
 import { FilterIcon } from 'lucide-react';
-import { TravelTheme } from '@/types/plan';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchPlan } from '@/lib/services/plan-service';
 import PlanCard from '@/components/Plan/PlanCard';
 
 export default function TravelPlans() {
-	const { data: plans } = useSuspenseQuery({
+	const { data: plans, isFetching } = useSuspenseQuery({
 		queryKey: ['plans'],
 		queryFn: fetchPlan,
 	});
@@ -60,11 +58,15 @@ export default function TravelPlans() {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{filteredPlans.map((plan) => (
-					<PlanCard plan={plan} key={plan.id} />
-				))}
-			</div>
+			{isFetching ? (
+				<LoadingState />
+			) : (
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					{filteredPlans.map((plan) => (
+						<PlanCard plan={plan} key={plan.id} />
+					))}
+				</div>
+			)}
 
 			{filteredPlans.length === 0 && (
 				<div className="alert alert-info mt-6">
@@ -73,6 +75,19 @@ export default function TravelPlans() {
 					</div>
 				</div>
 			)}
+		</div>
+	);
+}
+
+function LoadingState() {
+	return (
+		<div className="w-full min-h-56">
+			<div className="flex items-center justify-center min-h-40">
+				<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+				<p className="ml-3 text-gray-600 font-medium">
+					Loading your travel plans...
+				</p>
+			</div>
 		</div>
 	);
 }

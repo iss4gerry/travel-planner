@@ -1,10 +1,7 @@
-import { Plan } from '@prisma/client';
-import { Category } from './category';
-
 export type CreatePlan = {
 	name: string;
-	startDate: Date;
-	endDate: Date;
+	startDate: string;
+	endDate: string;
 	city: string;
 	travelCompanion: string;
 	budget: number;

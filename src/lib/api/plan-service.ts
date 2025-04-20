@@ -17,8 +17,8 @@ export class PlanService {
 		body: CreatePlan,
 		userId: string
 	): Promise<PlanResponse> {
-		body.startDate = new Date(body.startDate);
-		body.endDate = new Date(body.endDate);
+		const startDate = new Date(body.startDate);
+		const endDate = new Date(body.endDate);
 		body.budget = Number(body.budget);
 		const user = await prisma.user.findFirst({
 			where: {
@@ -41,8 +41,7 @@ export class PlanService {
 		if (body.endDate >= body.startDate) {
 			days =
 				Math.ceil(
-					(body.endDate.getTime() - body.startDate.getTime()) /
-						(1000 * 60 * 60 * 24)
+					(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
 				) + 1;
 		} else {
 			throw new ApiError(400, 'Invalid date range');
@@ -52,13 +51,15 @@ export class PlanService {
 			data: {
 				userId: userId,
 				...body,
+				startDate,
+				endDate,
 			},
 		});
 
 		const planDetail = Array.from({ length: days }, (_, index) => ({
 			day: index + 1,
 			date: new Date(
-				new Date(body.startDate).setDate(body.startDate.getDate() + index)
+				new Date(body.startDate).setDate(startDate.getDate() + index)
 			),
 			planId: plan.id,
 		}));

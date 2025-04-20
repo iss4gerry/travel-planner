@@ -5,6 +5,13 @@ import { getThemeColor } from '@/utils/planThemeColor';
 import { useState } from 'react';
 import { addDays, format } from 'date-fns';
 import Calendar from '../UI/Calendar';
+import { createPlanSchema } from '@/lib/validations/plan-schema';
+import {
+	QueryClient,
+	useMutation,
+	useQueryClient,
+} from '@tanstack/react-query';
+import { createPlan } from '@/lib/services/plan-service';
 
 export default function CreatePlanPage({
 	modalStatus,
@@ -43,21 +50,35 @@ export default function CreatePlanPage({
 		});
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		console.log(bodyToSend);
-		onClose();
-	};
-
 	const bodyToSend = {
 		name: planName,
-		startDate: format(selectedDate[0].startDate as Date, 'yyyy-M-d'),
-		endDate: format(selectedDate[0].endDate as Date, 'yyyy-M-d'),
+		startDate: format(selectedDate[0].startDate as Date, 'yyyy-M-d').toString(),
+		endDate: format(selectedDate[0].endDate as Date, 'yyyy-M-d').toString(),
 		city: city,
 		travelCompanion: companion,
-		budget: budget,
-		travelTheme: TravelTheme,
+		budget: Number(budget),
+		travelTheme: selectedThemes.join('/'),
 	};
+
+	const queryClient = useQueryClient();
+
+	const createPlanMutation = useMutation({
+		mutationFn: () => createPlan(bodyToSend),
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ['plans'] });
+			onClose();
+		},
+		onError: (error) => {
+			console.log(error);
+		},
+	});
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		createPlanMutation.mutate();
+	};
+
+	const { status } = createPlanMutation;
 
 	const availableTravelTheme = Object.values(TravelTheme);
 	const availableTravelCompanion = Object.values(TravelCompanion);
@@ -65,7 +86,7 @@ export default function CreatePlanPage({
 	return (
 		<dialog id="add_to_plan_modal" className="modal" open={modalStatus}>
 			<div className="modal-box max-w-xl">
-				<form onSubmit={handleSubmit} className="p-6 space-y-6">
+				<form className="p-6 space-y-6" onSubmit={handleSubmit}>
 					<header className="flex justify-center items-center pb-2 w-full">
 						<h3 className="font-bold text-xl">Create New Travel Plan</h3>
 					</header>
@@ -178,7 +199,11 @@ export default function CreatePlanPage({
 						<button className="btn btn-outline" type="button" onClick={onClose}>
 							Cancel
 						</button>
-						<button className="btn btn-primary" type="submit">
+						<button
+							className="btn btn-primary"
+							disabled={status === 'pending'}
+							type="submit"
+						>
 							Create Plan
 						</button>
 					</div>
