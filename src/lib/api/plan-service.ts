@@ -72,7 +72,6 @@ export class PlanService {
 	}
 
 	static async getAllPlan(userId: string): Promise<PlanResponse[]> {
-		await new Promise((Resolve) => setTimeout(Resolve, 3000));
 		return await prisma.plan.findMany({
 			where: {
 				userId: userId,

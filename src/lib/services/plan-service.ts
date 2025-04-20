@@ -1,4 +1,4 @@
-import { CreatePlan, PlanResponse } from '@/types/plan';
+import { CreatePlan, PlanDetailResponse, PlanResponse } from '@/types/plan';
 import {
 	getAxiosInstance,
 	getAxiosWithCookie,
@@ -23,6 +23,18 @@ export const fetchPlan = async () => {
 
 		const plans: PlanResponse[] = data.data;
 		return plans;
+	} catch (error) {
+		handleAxiosError(error, 'fetchPlan');
+	}
+};
+
+export const fetchPlanById = async (cookieStore: string, id: string) => {
+	try {
+		const axios = getAxiosWithCookie(cookieStore);
+		const { data } = await axios.get(`/plans/${id}`);
+		const plan: PlanDetailResponse = data.data;
+
+		return plan;
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');
 	}

@@ -25,7 +25,6 @@ export class BannerService {
 	}
 
 	static async getAllBanner(): Promise<BannerResponse[]> {
-		await new Promise((Resolve) => setTimeout(Resolve, 3000));
 		return await prisma.bannerAds.findMany();
 	}
 

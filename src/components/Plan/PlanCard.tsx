@@ -2,6 +2,7 @@ import { PlanResponse, TravelTheme } from '@/types/plan';
 import { CalendarIcon, MapPinIcon, UsersIcon, WalletIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { getThemeColor } from '@/utils/planThemeColor';
+import { redirect } from 'next/navigation';
 
 export default function PlanCard({ plan }: { plan: PlanResponse }) {
 	const getThemesArray = (themeString: string): string[] => {
@@ -13,8 +14,13 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 	const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
 	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+	const handleClick = () => {
+		redirect(`/plan/${plan.id}`);
+	};
+
 	return (
 		<div
+			onClick={handleClick}
 			key={plan.id}
 			className="card bg-base-100 shadow-xl hover:cursor-pointer hover:translate-y-[-4px] ease-in duration-110 transition-transform"
 		>
