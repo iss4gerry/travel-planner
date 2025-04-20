@@ -11,7 +11,7 @@ export default function NavBar() {
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	return (
-		<div className="navbar bg-base-100 shadow-md sticky top-0 z-50">
+		<div className="navbar bg-base-100 shadow-md sticky top-0 z-50 ">
 			<div className="navbar-start">
 				<div className="dropdown lg:hidden">
 					<button onClick={toggleMenu} className="btn btn-ghost btn-circle">

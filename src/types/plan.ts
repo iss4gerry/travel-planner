@@ -93,12 +93,22 @@ export enum TravelTheme {
 	Beach = 'beach',
 	Business = 'business',
 	Wellness = 'wellness',
-	Foodie = 'foodie',
+	Culinary = 'culinary',
 	Solo = 'solo',
 	Luxury = 'luxury',
 	RoadTrip = 'road-trip',
 	Backpacking = 'backpacking',
 	Cruise = 'cruise',
 	Festival = 'festival',
-	Pilgrimage = 'pilgrimage',
+}
+
+export enum TravelCompanion {
+	Solo = 'Solo',
+	Partner = 'Partner',
+	Spouse = 'Spouse',
+	Family = 'Family',
+	Friends = 'Friends',
+	Coworkers = 'Coworkers',
+	OnlineFriends = 'OnlineFriends',
+	Roommate = 'Roommate',
 }

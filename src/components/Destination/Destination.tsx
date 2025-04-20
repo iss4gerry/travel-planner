@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { fetchDestinationServer } from '@/lib/services/destination-service';
 import { DestinationResponse } from '@/types/destination';
 
-export default async function DestinationList() {
+export default async function Destination() {
 	const queryClient = new QueryClient();
 
 	const cookieStore = (await cookies()).toString();

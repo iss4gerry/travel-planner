@@ -23,8 +23,6 @@ export default async function middleware(req: NextRequest) {
 
 	const res = NextResponse.next();
 
-	console.log(token.sub);
-
 	res.headers.set('x-user-id', token.sub!);
 
 	return res;

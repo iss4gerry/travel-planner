@@ -1,0 +1,33 @@
+'use client';
+
+import { PlusIcon } from 'lucide-react';
+import { useState } from 'react';
+import CreatePlanPage from './CreatePlan';
+
+export default function PlanTitle() {
+	const [modalStatus, setModalStatus] = useState<boolean>(false);
+
+	const showModal = () => {
+		setModalStatus(true);
+	};
+
+	const closeModal = () => {
+		setModalStatus(false);
+	};
+
+	return (
+		<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 w-full">
+			<div>
+				<h1 className="text-3xl font-bold">Travel Plans</h1>
+				<p className="text-gray-500 mt-2">
+					Manage and view your upcoming adventures
+				</p>
+			</div>
+			<button className="btn btn-primary mt-4 md:mt-0" onClick={showModal}>
+				<PlusIcon className="h-5 w-5 mr-2" />
+				New Plan
+			</button>
+			<CreatePlanPage modalStatus={modalStatus} onClose={closeModal} />
+		</div>
+	);
+}

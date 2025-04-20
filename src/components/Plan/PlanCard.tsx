@@ -1,40 +1,11 @@
 import { PlanResponse, TravelTheme } from '@/types/plan';
 import { CalendarIcon, MapPinIcon, UsersIcon, WalletIcon } from 'lucide-react';
 import { format } from 'date-fns';
+import { getThemeColor } from '@/utils/planThemeColor';
 
 export default function PlanCard({ plan }: { plan: PlanResponse }) {
 	const getThemesArray = (themeString: string): string[] => {
 		return themeString.split('/').map((theme) => theme.trim());
-	};
-
-	const getThemeColor = (theme: string): string => {
-		const themeColors: Partial<Record<TravelTheme, string>> = {
-			[TravelTheme.Cultural]: 'badge-primary',
-			[TravelTheme.Adventure]: 'badge-secondary',
-			[TravelTheme.Relaxation]: 'badge-accent',
-			[TravelTheme.Romantic]: 'badge-info',
-			[TravelTheme.Business]: 'badge-warning',
-			[TravelTheme.Family]: 'badge-error',
-			[TravelTheme.Nature]: 'badge-success',
-			[TravelTheme.City]: 'badge-neutral',
-			[TravelTheme.Beach]: 'badge-ghost',
-			[TravelTheme.Wellness]: 'badge-success',
-			[TravelTheme.Foodie]: 'badge-primary',
-			[TravelTheme.Solo]: 'badge-secondary',
-			[TravelTheme.Luxury]: 'badge-info',
-			[TravelTheme.RoadTrip]: 'badge-warning',
-			[TravelTheme.Backpacking]: 'badge-error',
-			[TravelTheme.Cruise]: 'badge-accent',
-			[TravelTheme.Festival]: 'badge-success',
-			[TravelTheme.Pilgrimage]: 'badge-ghost',
-		};
-
-		const normalized = theme.toLowerCase();
-		const matchedTheme = Object.values(TravelTheme).find(
-			(value) => value === normalized
-		);
-
-		return themeColors[matchedTheme as TravelTheme] ?? 'badge-neutral';
 	};
 
 	const startDate = new Date(plan.startDate);

@@ -27,8 +27,10 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className="flex items-center flex-col w-full">
-				<div className="w-3/4 max-md:w-10/12 mt-3">
+				<div className="w-full mt-3 items-center justify-center flex">
 					<NavBar />
+				</div>
+				<div className="w-3/4 max-md:w-10/12 mt-3">
 					<Provider>{children}</Provider>
 				</div>
 			</body>
