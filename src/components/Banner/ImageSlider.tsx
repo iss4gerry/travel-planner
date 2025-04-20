@@ -1,10 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BannerResponse } from '@/types/banner';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-export const ImageSlider = ({ banners }: { banners: BannerResponse[] }) => {
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { fetchBannerClient } from '@/lib/services/banner-service';
+export const ImageSlider = () => {
+	const { data: banners } = useSuspenseQuery({
+		queryKey: ['banners'],
+		queryFn: fetchBannerClient,
+	});
 	const [currentIndex, setCurrentIndex] = useState(0);
 
 	const handleSlideChange = (index: number) => {

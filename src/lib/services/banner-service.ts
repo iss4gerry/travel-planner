@@ -13,6 +13,7 @@ export const fetchBannerServer = async (cookieStore: string) => {
 		return banners;
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');
+		throw error;
 	}
 };
 

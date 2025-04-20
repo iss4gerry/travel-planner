@@ -76,7 +76,7 @@ export default function PlanCard({ plan }: { plan: PlanResponse }) {
 
 					<div className="flex items-center">
 						<WalletIcon className="h-5 w-5 mr-2 text-primary" />
-						<span>Rp {plan.budget.toLocaleString()}</span>
+						<span>{plan.budget.toLocaleString('id-ID')}</span>
 					</div>
 
 					<div className="flex items-start mt-6">

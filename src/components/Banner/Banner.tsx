@@ -1,22 +1,28 @@
-'use client';
-
 import ImageSlider from './ImageSlider';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { fetchBannerClient } from '@/lib/services/banner-service';
+import {
+	dehydrate,
+	HydrationBoundary,
+	QueryClient,
+} from '@tanstack/react-query';
+import { fetchBannerServer } from '@/lib/services/banner-service';
+import { cookies } from 'next/headers';
 
-export default function Banner() {
-	const { data } = useSuspenseQuery({
+export default async function Banner() {
+	const queryClient = new QueryClient();
+
+	const cookieStore = (await cookies()).toString();
+	await queryClient.prefetchQuery({
 		queryKey: ['banners'],
-		queryFn: fetchBannerClient,
+		queryFn: () => fetchBannerServer(cookieStore),
 	});
 
-	return (
-		<div className="w-full mt-5">
-			<p className="text-2xl min-sm:text-3xl font-bold mb-2">
-				Top Destinations for You!
-			</p>
+	const dehydratedState = dehydrate(queryClient);
 
-			<ImageSlider banners={data ?? []} />
-		</div>
+	return (
+		<HydrationBoundary state={dehydratedState}>
+			<div className="w-full mt-1">
+				<ImageSlider />
+			</div>
+		</HydrationBoundary>
 	);
 }

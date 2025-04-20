@@ -9,6 +9,7 @@ import { BannerResponse } from '@/types/banner';
 
 export class DestinationService {
 	static async getAllDestination(): Promise<DestinationResponse[]> {
+		await new Promise((Resolve) => setTimeout(Resolve, 4000));
 		return await prisma.destination.findMany({
 			include: {
 				category: {

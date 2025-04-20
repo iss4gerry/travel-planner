@@ -1,3 +1,5 @@
+'use client';
+
 import { DestinationResponse } from '@/types/destination';
 import { Layers, Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
