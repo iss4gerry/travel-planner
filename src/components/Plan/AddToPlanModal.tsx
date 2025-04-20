@@ -1,7 +1,10 @@
+import { addDestinationToPlan } from '@/lib/services/destination-service';
 import { PlanDetailResponse, PlanResponse } from '@/types/plan';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
+import { Clock10Icon } from 'lucide-react';
 
 export default function AddToPlanModal({
 	modalStatus,
@@ -19,10 +22,14 @@ export default function AddToPlanModal({
 		planId: null,
 		dayId: null,
 	});
+	const [selectedTime, setSelectedTime] = useState('12:00');
+	const [timeFormat, setTimeFormat] = useState<'AM' | 'PM'>('PM');
 
 	useEffect(() => {
 		if (!modalStatus) {
 			setSelectedPlan({ planId: null, dayId: null });
+			setSelectedTime('12:00');
+			setTimeFormat('PM');
 		}
 	}, [modalStatus]);
 
@@ -69,127 +76,210 @@ export default function AddToPlanModal({
 			return { ...prev, dayId: event.target.value };
 		});
 	};
+
+	const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSelectedTime(event.target.value);
+	};
+
+	const handleTimeFormatChange = (format: 'AM' | 'PM') => {
+		setTimeFormat(format);
+	};
+
 	const addToPlanMutation = useMutation({
-		mutationFn: async (data: {
-			planDetailId: string;
-			destinationId: string;
-			time: string;
-		}) => {
-			const response = await fetch('/api/plans/destinations', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to add item to plan');
-			}
-
-			return await response.json();
-		},
-		onSuccess: () => {
+		mutationFn: addDestinationToPlan,
+		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['plans'] });
+			toast.success('Destination added to plan successfully!');
+			onClose();
 		},
 		onError: (error) => {
 			console.error('Failed to add to plan:', error);
+			toast.error('Failed to add destination to plan. Please try again.');
 		},
 	});
 
 	const handleSubmit = () => {
-		if (selectedPlan.dayId && selectedPlan.planId && params.destinationId) {
-			addToPlanMutation.mutate({
-				planDetailId: selectedPlan.dayId,
-				destinationId: params.destinationId,
-				time: '12:00 PM',
-			});
+		if (
+			!selectedPlan?.dayId ||
+			!selectedPlan?.planId ||
+			!params?.destinationId
+		) {
+			toast.error('Please select both a plan and a day');
+			return;
 		}
+
+		addToPlanMutation.mutate({
+			planDetailId: selectedPlan.dayId,
+			destinationId: params.destinationId,
+			time: `${selectedTime} ${timeFormat}`,
+		});
 	};
 
 	return (
-		<dialog id="add_to_plan_modal" className="modal" open={modalStatus}>
-			<div className="modal-box">
-				<form method="dialog">
-					<h3 className="font-bold text-lg mb-4">Add to Plan</h3>
+		<div>
+			<Toaster position="top-center" reverseOrder={false} />
+			<dialog
+				id="add_to_plan_modal"
+				className="modal modal-bottom sm:modal-middle"
+				open={modalStatus}
+			>
+				<div className="modal-box bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+					<form method="dialog">
+						<h3 className="font-bold text-xl mb-6 text-center">
+							Add to Your Travel Plan
+						</h3>
 
-					{isLoading ? (
-						<div className="skeleton w-full h-24"></div>
-					) : error ? (
-						<div className="alert alert-error">
-							<p>Failed to load plans. Please try again.</p>
-						</div>
-					) : (
-						<div className="space-y-4">
-							<div>
-								<label
-									htmlFor="plan-select"
-									className="block font-semibold mb-1"
-								>
-									Select Plan:
-								</label>
-								<select
-									id="plan-select"
-									className="select select-bordered w-full"
-									onChange={handlePlanChange}
-									value={selectedPlan.planId || ''}
-								>
-									<option value="" disabled>
-										-- Choose a Plan --
-									</option>
-									{data?.map((planItem) => (
-										<option key={planItem.id} value={planItem.id}>
-											{planItem.name}
-										</option>
-									))}
-								</select>
+						{isLoading ? (
+							<div className="flex flex-col gap-4 animate-pulse">
+								<div className="skeleton bg-gray-200 w-full h-12 rounded"></div>
+								<div className="skeleton bg-gray-200 w-full h-12 rounded"></div>
+								<div className="skeleton bg-gray-200 w-full h-12 rounded"></div>
 							</div>
-
-							<div>
-								<label
-									htmlFor="day-select"
-									className="block font-semibold mb-1"
+						) : error ? (
+							<div className="alert alert-error bg-red-100 border-red-500 text-red-700 p-4 rounded-lg">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="stroke-current shrink-0 h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
 								>
-									Select Day:
-								</label>
-								{isPlanDetailsLoading ? (
-									<div className="skeleton w-full h-10"></div>
-								) : (
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth="2"
+										d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<p>Failed to load plans. Please try again.</p>
+							</div>
+						) : (
+							<div className="space-y-6">
+								<div className="form-control">
+									<label htmlFor="plan-select" className="label">
+										<span className="label-text font-medium text-gray-700 dark:text-gray-300">
+											Select Plan
+										</span>
+									</label>
 									<select
-										id="day-select"
-										disabled={!selectedPlan.planId}
-										className="select select-bordered w-full"
-										onChange={handleDayChange}
-										value={selectedPlan.dayId || ''}
+										id="plan-select"
+										className="select select-bordered bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500"
+										onChange={handlePlanChange}
+										value={selectedPlan.planId || ''}
 									>
 										<option value="" disabled>
-											-- Choose a Day --
+											-- Choose a Plan --
 										</option>
-										{planDetails?.planDetails?.map((day) => (
-											<option key={day.id} value={day.id}>
-												{`Day ${day.day}`}
+										{data?.map((planItem) => (
+											<option key={planItem.id} value={planItem.id}>
+												{planItem.name}
 											</option>
 										))}
 									</select>
-								)}
-							</div>
+								</div>
 
-							<div className="modal-action">
-								<button className="btn btn-outline" onClick={onClose}>
-									Cancel
-								</button>
-								<button
-									className="btn btn-primary"
-									onClick={handleSubmit}
-									type="button"
-								>
-									Add to Plan
-								</button>
+								<div className="form-control">
+									<label htmlFor="day-select" className="label">
+										<span className="label-text font-medium text-gray-700 dark:text-gray-300">
+											Select Day
+										</span>
+									</label>
+									{isPlanDetailsLoading ? (
+										<div className="skeleton bg-gray-200 w-full h-10 rounded"></div>
+									) : (
+										<select
+											id="day-select"
+											disabled={!selectedPlan.planId}
+											className="select select-bordered bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500"
+											onChange={handleDayChange}
+											value={selectedPlan.dayId || ''}
+										>
+											<option value="" disabled>
+												-- Choose a Day --
+											</option>
+											{planDetails?.planDetails?.map((day) => (
+												<option key={day.id} value={day.id}>
+													{`Day ${day.day}`}
+												</option>
+											))}
+										</select>
+									)}
+								</div>
+
+								<div className="form-control">
+									<label className="label">
+										<span className="label-text font-medium text-gray-700 dark:text-gray-300">
+											Select Time
+										</span>
+									</label>
+									<div className="flex items-center gap-3">
+										<div className="relative flex-1">
+											<Clock10Icon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+											<input
+												type="time"
+												className="input input-bordered pl-4 w-full bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500"
+												value={selectedTime}
+												onChange={handleTimeChange}
+											/>
+										</div>
+										<div className="flex border rounded-lg overflow-hidden">
+											<button
+												type="button"
+												className={`px-4 py-2 hover:cursor-pointer ${
+													timeFormat === 'AM'
+														? 'bg-blue-500 text-white'
+														: 'bg-gray-100'
+												}`}
+												onClick={() => handleTimeFormatChange('AM')}
+											>
+												AM
+											</button>
+											<button
+												type="button"
+												className={`px-4 py-2 hover:cursor-pointer ${
+													timeFormat === 'PM'
+														? 'bg-blue-500 text-white'
+														: 'bg-gray-100'
+												}`}
+												onClick={() => handleTimeFormatChange('PM')}
+											>
+												PM
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="modal-action flex justify-end gap-3 pt-4 ">
+									<button
+										className="btn btn-outline border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+										onClick={(e) => {
+											e.preventDefault();
+											onClose();
+										}}
+									>
+										Cancel
+									</button>
+									<button
+										className={`btn ${
+											addToPlanMutation.isPending
+												? 'loading btn-disabled'
+												: 'btn-primary bg-blue-600 hover:bg-blue-700'
+										}`}
+										onClick={(e) => {
+											e.preventDefault();
+											handleSubmit();
+										}}
+										type="button"
+										disabled={addToPlanMutation.isPending}
+									>
+										{addToPlanMutation.isPending ? 'Adding...' : 'Add to Plan'}
+									</button>
+								</div>
 							</div>
-						</div>
-					)}
-				</form>
-			</div>
-		</dialog>
+						)}
+					</form>
+				</div>
+				<div className="modal-backdrop bg-black/30" onClick={onClose}></div>
+			</dialog>
+		</div>
 	);
 }

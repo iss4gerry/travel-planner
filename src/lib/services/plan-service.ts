@@ -1,13 +1,13 @@
 import { CreatePlan, PlanResponse } from '@/types/plan';
 import {
-	axiosWithCookie,
-	axiosWithoutCookie,
+	getAxiosInstance,
+	getAxiosWithCookie,
 	handleAxiosError,
 } from '../axios';
 
 export const fetchPlanServer = async (cookieStore: string) => {
 	try {
-		const axios = await axiosWithCookie(cookieStore);
+		const axios = getAxiosWithCookie(cookieStore);
 		const { data } = await axios.get('/plans');
 		const plans: PlanResponse[] = data.data;
 		return plans;
@@ -18,7 +18,7 @@ export const fetchPlanServer = async (cookieStore: string) => {
 
 export const fetchPlan = async () => {
 	try {
-		const axios = await axiosWithoutCookie();
+		const axios = getAxiosInstance();
 		const { data } = await axios.get('/plans');
 
 		const plans: PlanResponse[] = data.data;
@@ -30,7 +30,7 @@ export const fetchPlan = async () => {
 
 export const createPlan = async (body: CreatePlan) => {
 	try {
-		const axios = await axiosWithoutCookie();
+		const axios = getAxiosInstance();
 		const { data } = await axios.post('/plans', {
 			...body,
 		});

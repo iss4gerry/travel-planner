@@ -1,21 +1,31 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-export const axiosWithCookie = async (cookieStore: string) => {
+let axiosInstanceWithoutCookie: AxiosInstance | null = null;
+const cookieInstancesMap = new Map<string, AxiosInstance>();
+
+export const getAxiosInstance = (): AxiosInstance => {
+	if (!axiosInstanceWithoutCookie) {
+		axiosInstanceWithoutCookie = axios.create({
+			baseURL: 'http://localhost:3002/api',
+		});
+	}
+
+	return axiosInstanceWithoutCookie;
+};
+
+export const getAxiosWithCookie = (cookieStore: string): AxiosInstance => {
+	if (cookieInstancesMap.has(cookieStore)) {
+		return cookieInstancesMap.get(cookieStore)!;
+	}
+
 	const instance = axios.create({
-		baseURL: `http://localhost:3002/api`,
+		baseURL: 'http://localhost:3002/api',
 		headers: {
 			cookie: cookieStore,
 		},
 	});
 
-	return instance;
-};
-
-export const axiosWithoutCookie = async () => {
-	const instance = axios.create({
-		baseURL: `http://localhost:3002/api`,
-	});
-
+	cookieInstancesMap.set(cookieStore, instance);
 	return instance;
 };
 
