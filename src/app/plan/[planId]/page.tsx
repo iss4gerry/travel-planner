@@ -2,6 +2,7 @@ import { fetchPlanById } from '@/lib/services/plan-service';
 import { PlanDetailResponse } from '@/types/plan';
 import { QueryClient } from '@tanstack/react-query';
 import { cookies } from 'next/headers';
+import PlanDetail from '@/components/Plan/PlanDetail';
 
 export default async function Page({
 	params,
@@ -17,10 +18,13 @@ export default async function Page({
 	});
 
 	const plan = queryClient.getQueryData<PlanDetailResponse>(['plan', planId]);
+	if (!plan) {
+		throw new Error('Plan not found');
+	}
 
 	return (
-		<div>
-			<p>{plan?.name}</p>
+		<div className="w-full">
+			<PlanDetail planDetail={plan} />
 		</div>
 	);
 }
