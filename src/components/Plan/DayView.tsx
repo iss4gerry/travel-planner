@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { PlanDetailResponse } from '@/types/plan';
 import { format } from 'date-fns';
 import { MapPin, Clock, ChevronRight, Info } from 'lucide-react';
+import { getThemeHexColor } from '@/utils/planThemeColor';
+import Image from 'next/image';
 
 export default function DayView({
 	dayDetail,
@@ -66,9 +68,9 @@ export default function DayView({
 							sortedActivities.map((activity, index) => {
 								const isExpanded = expandedActivity === activity.id;
 								return (
-									<div>
-										<div className="absolute left-31 top-2 bottom-0 w-0.5 bg-gray-200"></div>
-										<div key={activity.id} className="flex">
+									<div key={activity.id}>
+										<div className="flex">
+											<div className="absolute left-31 top-2 bottom-0 w-0.5 bg-gray-200"></div>
 											<div className="flex flex-row w-[13vh] justify-between ">
 												<div className="min-w-20 pr-4 text-right">
 													<span className="font-medium text-gray-700">
@@ -91,9 +93,12 @@ export default function DayView({
 													<div className="p-4 cursor-pointer bg-gray-50 flex items-center justify-between">
 														<div className="flex items-center space-x-3">
 															<div
-																className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${getActivityColor(
-																	activity.destination.category.name
-																)}`}
+																className="w-10 h-10 rounded-full flex items-center justify-center text-white"
+																style={{
+																	backgroundColor: getThemeHexColor(
+																		activity.destination.category.name
+																	),
+																}}
 															>
 																{getCategoryIcon(
 																	activity.destination.category.name
@@ -121,11 +126,15 @@ export default function DayView({
 															<div className="p-4">
 																<div className="flex flex-col md:flex-row">
 																	{activity.destination.imageUrl && (
-																		<img
+																		<Image
 																			src={
 																				activity.destination.imageUrl ||
+																				activity.destination.category
+																					.imageUrl ||
 																				'/api/placeholder/200/150'
 																			}
+																			width={20}
+																			height={48}
 																			alt={activity.destination.name}
 																			className="w-full md:w-1/3 h-48 object-cover rounded-lg mb-4 md:mb-0 md:mr-4"
 																		/>
@@ -170,20 +179,4 @@ export default function DayView({
 
 function getCategoryIcon(category: string) {
 	return category.charAt(0).toUpperCase();
-}
-
-function getActivityColor(category: string) {
-	const colorMap = {
-		Restaurant: 'bg-orange-500',
-		Museum: 'bg-blue-500',
-		Park: 'bg-green-500',
-		Shopping: 'bg-purple-500',
-		Entertainment: 'bg-red-500',
-		'Historic Site': 'bg-amber-500',
-		Tour: 'bg-emerald-500',
-		Beach: 'bg-cyan-500',
-		Nightlife: 'bg-violet-500',
-	};
-
-	return colorMap[category] || 'bg-indigo-500';
 }

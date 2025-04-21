@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { FilterIcon } from 'lucide-react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchPlan } from '@/lib/services/plan-service';
-import PlanCard from '@/components/Plan/PlanCard';
+import PlanListItem from '@/components/Plan/PlanCard';
 
 export default function TravelPlans() {
 	const { data: plans, isFetching } = useSuspenseQuery({
@@ -29,7 +29,7 @@ export default function TravelPlans() {
 	).sort();
 
 	return (
-		<div className="container mx-auto px-4 py-8">
+		<div className="container mx-auto px-4 pb-8 ">
 			<div className="flex flex-wrap items-center gap-2 mb-6">
 				<div className="flex items-center">
 					<FilterIcon className="h-5 w-5 mr-2" />
@@ -61,9 +61,9 @@ export default function TravelPlans() {
 			{isFetching ? (
 				<LoadingState />
 			) : (
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<div className="bg-white rounded-lg shadow divide-y divide-gray-200">
 					{filteredPlans.map((plan) => (
-						<PlanCard plan={plan} key={plan.id} />
+						<PlanListItem plan={plan} key={plan.id} />
 					))}
 				</div>
 			)}

@@ -187,7 +187,7 @@ export default function CreatePlanPage({
 										className={`badge badge-lg cursor-pointer transition-all ${
 											selectedThemes.includes(theme)
 												? `${getThemeColor(theme)} text-white`
-												: 'badge-outline hover:bg-gray-100 dark:hover:bg-gray-700'
+												: 'badge-outline hover:bg-gray-100 '
 										}`}
 									>
 										{theme}
