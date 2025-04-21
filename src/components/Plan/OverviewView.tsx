@@ -1,4 +1,5 @@
 import { PlanDetailResponse } from '@/types/plan';
+import { format } from 'date-fns';
 import { WaypointsIcon } from 'lucide-react';
 
 export default function OverviewView({
@@ -44,13 +45,7 @@ export default function OverviewView({
 					<div className="flex justify-between items-center mb-4">
 						<div>
 							<h3 className="text-lg font-semibold">Day {day.day}</h3>
-							<p className="text-gray-500">
-								{new Date(day.date).toLocaleDateString('en-US', {
-									weekday: 'long',
-									month: 'long',
-									day: 'numeric',
-								})}
-							</p>
+							<p className="text-gray-500">{format(day.date, 'EEE, MMMM d')}</p>
 						</div>
 						<button
 							className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md hover:bg-indigo-200 transition"

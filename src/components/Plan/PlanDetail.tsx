@@ -4,6 +4,7 @@ import { PlanDetailResponse } from '@/types/plan';
 import { useState } from 'react';
 import OverviewView from './OverviewView';
 import DayView from './DayView';
+import { format } from 'date-fns';
 
 export default function PlanDetail({
 	planDetail,
@@ -33,8 +34,8 @@ export default function PlanDetail({
 							{planDetail.name}
 						</h1>
 						<p className="text-gray-600">
-							{new Date(planDetail.startDate).toLocaleDateString()} -{' '}
-							{new Date(planDetail.endDate).toLocaleDateString()}
+							{format(new Date(planDetail.startDate), 'EEE, MMMM d, yyyy')} -{' '}
+							{format(new Date(planDetail.endDate), 'EEE, MMMM d, yyyy')}
 						</p>
 					</div>
 					<div className="mt-4 md:mt-0">
