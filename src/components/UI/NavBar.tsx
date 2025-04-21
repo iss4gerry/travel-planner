@@ -11,7 +11,7 @@ export default function NavBar() {
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	return (
-		<div className="navbar bg-base-100 shadow-md sticky top-0 z-50 ">
+		<div className="navbar bg-base-100 shadow-sm ">
 			<div className="navbar-start">
 				<div className="dropdown lg:hidden">
 					<button onClick={toggleMenu} className="btn btn-ghost btn-circle">
@@ -39,7 +39,6 @@ export default function NavBar() {
 					<span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
 						Twavely
 					</span>
-					<span className="text-xl ml-1">˚.🎀༘⋆</span>
 				</a>
 			</div>
 
@@ -111,9 +110,9 @@ export default function NavBar() {
 					>
 						<li className="mb-2">
 							<div className="flex flex-col items-start gap-1 p-2">
-								<span className="font-bold text-base">Sarah Johnson</span>
+								<span className="font-bold text-base">mayuyu</span>
 								<span className="text-xs text-gray-500">
-									sarah.j@example.com
+									mayuyu@example.com
 								</span>
 							</div>
 						</li>

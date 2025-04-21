@@ -42,7 +42,7 @@ export default function DayView({
 
 	return (
 		<div className="bg-white rounded-lg shadow-lg overflow-hidden">
-			<div className="bg-indigo-600 text-white p-6">
+			<div className="bg-primary text-white p-6">
 				<div className="flex justify-between items-center">
 					<div>
 						<h2 className="text-2xl font-bold">Day {dayDetail.day}</h2>
@@ -50,7 +50,7 @@ export default function DayView({
 							{format(new Date(dayDetail.date), 'EEEE, MMMM d, yyyy')}
 						</p>
 					</div>
-					<div className="bg-indigo-500 rounded-full px-4 py-2 text-sm font-medium">
+					<div className="bg-secondary rounded-full px-4 py-2 text-sm font-medium">
 						{sortedActivities.length} Activities
 					</div>
 				</div>
@@ -79,7 +79,7 @@ export default function DayView({
 												</div>
 
 												<div className="relative">
-													<div className="absolute left-0 bg-indigo-600 border-4 border-indigo-100 rounded-full w-5 h-5 z-10"></div>
+													<div className="absolute left-0 bg-primary border-4 border-indigo-100 rounded-full w-5 h-5 z-10"></div>
 												</div>
 											</div>
 

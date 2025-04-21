@@ -58,7 +58,7 @@ export default function DestinationDetails() {
 			<div className="flex items-center mb-6">
 				<button
 					onClick={() => window.history.back()}
-					className="flex items-center text-blue-600 hover:text-blue-800"
+					className="flex items-center text-primary hover:cursor-pointer"
 				>
 					<ChevronLeft size={20} />
 					<span>Back to destinations</span>
@@ -110,14 +110,14 @@ export default function DestinationDetails() {
 			</div>
 
 			<div className="flex flex-wrap gap-4 mb-6">
-				<div className="flex items-center bg-blue-50 px-4 py-2 rounded-lg">
-					<Heart size={18} className="text-yellow-500 mr-2" />
-					<span className="text-gray-500 ml-1">20 Likes</span>
+				<div className="flex items-center bg-base-200 px-4 py-2 rounded-lg">
+					<Heart size={18} className="text-primary mr-2" />
+					<span className="text-primary ml-1">20 Likes</span>
 				</div>
 
-				<div className="flex items-center bg-blue-50 px-4 py-2 rounded-lg">
-					<MapPin size={18} className="text-blue-500 mr-2" />
-					<span className="text-gray-500 ml-1">Bali</span>
+				<div className="flex items-center bg-base-200 px-4 py-2 rounded-lg">
+					<MapPin size={18} className="text-primary mr-2" />
+					<span className="text-primary ml-1">Bali</span>
 				</div>
 			</div>
 
@@ -130,7 +130,7 @@ export default function DestinationDetails() {
 
 			<div className="flex flex-col sm:flex-row gap-4 mt-8">
 				<button
-					className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-700 transition-colors"
+					className="bg-primary text-white px-6 py-3 rounded-lg font-medium text-center hover:cursor-pointer transition-colors"
 					onClick={openModal}
 				>
 					Add to plan
@@ -138,7 +138,7 @@ export default function DestinationDetails() {
 				<AddToPlanModal modalStatus={modalStatus} onClose={closeModal} />
 				<Link
 					href={`/attractions/${data.address}`}
-					className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium text-center hover:bg-blue-50 transition-colors"
+					className="border border-primary text-primary px-6 py-3 rounded-lg font-medium text-center hover:bg-secondary transition-colors"
 				>
 					Explore Attractions
 				</Link>

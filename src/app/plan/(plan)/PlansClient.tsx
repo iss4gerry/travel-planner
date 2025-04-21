@@ -29,7 +29,7 @@ export default function TravelPlans() {
 	).sort();
 
 	return (
-		<div className="container mx-auto px-4 pb-8 ">
+		<div className="container bg-base-100 mx-auto px-4 pb-8 ">
 			<div className="flex flex-wrap items-center gap-2 mb-6">
 				<div className="flex items-center">
 					<FilterIcon className="h-5 w-5 mr-2" />

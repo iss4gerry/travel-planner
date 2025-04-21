@@ -38,12 +38,12 @@ export default function PlanListItem({ plan }: { plan: PlanResponse }) {
 						{plan.name}
 					</h3>
 					<div className="flex items-center gap-2 text-sm text-gray-500 mt-1 sm:mt-0">
-						<CalendarIcon className="h-4 w-4 text-indigo-500" />
+						<CalendarIcon className="h-4 w-4 text-secondary" />
 						<span>
 							{format(plan.startDate, 'MMM d')} -{' '}
 							{format(plan.endDate, 'MMM d, yyyy')}
 						</span>
-						<span className="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full">
+						<span className="text-xs px-2 py-0.5 bg-base-200 text-secondary rounded-full">
 							{diffDays} {diffDays === 1 ? 'day' : 'days'}
 						</span>
 					</div>
@@ -51,17 +51,17 @@ export default function PlanListItem({ plan }: { plan: PlanResponse }) {
 
 				<div className="mt-2 flex flex-row max-sm:grid sm:grid-cols-3 gap-y-2 gap-x-4">
 					<div className="flex items-center gap-2 text-gray-700">
-						<MapPinIcon className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+						<MapPinIcon className="h-4 w-4 text-secondary flex-shrink-0" />
 						<span className="truncate">{plan.city}</span>
 					</div>
 
 					<div className="flex items-center gap-2 text-gray-700">
-						<UsersIcon className="h-4 w-4 text-amber-500 flex-shrink-0" />
+						<UsersIcon className="h-4 w-4 text-secondary flex-shrink-0" />
 						<span className="truncate">{plan.travelCompanion}</span>
 					</div>
 
 					<div className="flex items-center gap-2 text-gray-700">
-						<WalletIcon className="h-4 w-4 text-rose-500 flex-shrink-0" />
+						<WalletIcon className="h-4 w-4 text-secondary flex-shrink-0" />
 						<span className="truncate">
 							Rp {plan.budget.toLocaleString('id-ID')}
 						</span>
