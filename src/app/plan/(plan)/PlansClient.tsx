@@ -22,8 +22,8 @@ export default function TravelPlans() {
 
 	const params = parseQueryParams({ page, limit, sort, order });
 
-	const { data, isFetching } = useSuspenseQuery({
-		queryKey: ['plans'],
+	const { data } = useSuspenseQuery({
+		queryKey: ['plans', page, limit, sort, order],
 		queryFn: () => fetchPlan(params),
 	});
 
@@ -75,18 +75,14 @@ export default function TravelPlans() {
 				</div>
 			</div>
 
-			{isFetching ? (
-				<LoadingState />
-			) : (
-				<div className="flex flex-col">
-					<div className="bg-white rounded-lg shadow divide-y divide-gray-200">
-						{filteredPlans.map((plan) => (
-							<PlanListItem plan={plan} key={plan.id} />
-						))}
-					</div>
-					<Pagination pagination={pagination} url="plan" />
+			<div className="flex flex-col">
+				<div className="bg-white rounded-lg shadow divide-y divide-gray-200">
+					{filteredPlans.map((plan) => (
+						<PlanListItem plan={plan} key={plan.id} />
+					))}
 				</div>
-			)}
+				<Pagination pagination={pagination} url="plan" />
+			</div>
 
 			{filteredPlans.length === 0 && (
 				<div className="alert alert-info mt-6">
@@ -95,19 +91,6 @@ export default function TravelPlans() {
 					</div>
 				</div>
 			)}
-		</div>
-	);
-}
-
-function LoadingState() {
-	return (
-		<div className="w-full min-h-56">
-			<div className="flex items-center justify-center min-h-40">
-				<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-				<p className="ml-3 text-gray-600 font-medium">
-					Loading your travel plans...
-				</p>
-			</div>
 		</div>
 	);
 }

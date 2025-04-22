@@ -26,7 +26,7 @@ export default async function Page({ searchParams }: Props) {
 	const cookieStore = (await cookies()).toString();
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
-		queryKey: ['plans'],
+		queryKey: ['plans', parse.page, parse.limit, parse.sort, parse.order],
 		queryFn: () => fetchPlanServer(cookieStore, parse),
 	});
 

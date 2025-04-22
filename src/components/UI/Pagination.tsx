@@ -1,4 +1,9 @@
-import { redirect } from 'next/navigation';
+import {
+	redirect,
+	usePathname,
+	useRouter,
+	useSearchParams,
+} from 'next/navigation';
 
 export default function Pagination({
 	pagination,
@@ -12,8 +17,18 @@ export default function Pagination({
 	};
 	url: string;
 }) {
-	const changePage = (page: number) => {
-		redirect(`/${url}?page=${page}`);
+	const searchParams = useSearchParams();
+
+	const createQueryString = (name: string, value: string) => {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set(name, value);
+		return params.toString();
+	};
+
+	const handlePageChange = (page: number) => {
+		const query = createQueryString('page', page.toString());
+
+		window.location.href = `${url}?${query}`;
 	};
 
 	return (
@@ -23,13 +38,16 @@ export default function Pagination({
 					<button
 						className="join-item btn"
 						disabled={pagination.page === 1}
-						onClick={() => changePage(pagination.page - 1)}
+						onClick={() => handlePageChange(pagination.page - 1)}
 					>
 						«
 					</button>
 
 					{pagination.page > 2 && (
-						<button className="join-item btn" onClick={() => changePage(1)}>
+						<button
+							className="join-item btn"
+							onClick={() => handlePageChange(1)}
+						>
 							1
 						</button>
 					)}
@@ -42,7 +60,7 @@ export default function Pagination({
 						.filter((page) => page > 0 && page <= pagination.totalPages)
 						.map((page) => (
 							<button
-								onClick={() => changePage(page)}
+								onClick={() => handlePageChange(page)}
 								key={page}
 								className={`join-item btn ${
 									page === pagination.page ? 'btn-active' : ''
@@ -59,7 +77,7 @@ export default function Pagination({
 					{pagination.page < pagination.totalPages - 1 && (
 						<button
 							className="join-item btn"
-							onClick={() => changePage(pagination.totalPages)}
+							onClick={() => handlePageChange(pagination.totalPages)}
 						>
 							{pagination.totalPages}
 						</button>
@@ -67,7 +85,7 @@ export default function Pagination({
 
 					<button
 						className="join-item btn"
-						onClick={() => changePage(pagination.page + 1)}
+						onClick={() => handlePageChange(pagination.page + 1)}
 						disabled={pagination.page === pagination.totalPages}
 					>
 						»
