@@ -1,11 +1,13 @@
 'use client';
 
-import { PlanDetailResponse } from '@/types/plan';
-import { useState } from 'react';
+import { Itinerary, PlanDetailResponse } from '@/types/plan';
+import { useEffect, useState } from 'react';
 import OverviewView from './OverviewView';
 import DayView from './DayView';
 import { format } from 'date-fns';
 import { getThemeColor } from '@/utils/planThemeColor';
+import { useQuery } from '@tanstack/react-query';
+import { fetchItinerary } from '@/lib/services/itinerary-service';
 
 export default function PlanDetail({
 	planDetail,
@@ -13,11 +15,46 @@ export default function PlanDetail({
 	planDetail: PlanDetailResponse;
 }) {
 	const [selectedDay, setSelectedDay] = useState(1);
+	const [aiItinerary, setAiItinerary] = useState<Itinerary | null>(null);
+	const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
+	const [savedDays, setSavedDays] = useState<number[]>([]);
+
+	const {
+		data: itinerary,
+		isLoading: isGeneratingItinerary,
+		isSuccess: successGenerateItinerary,
+		refetch: refetchItinerary,
+	} = useQuery({
+		queryKey: ['itinerary'],
+		queryFn: () => fetchItinerary(planDetail.id),
+		enabled: false,
+		refetchOnWindowFocus: false,
+	});
 
 	if (!planDetail) {
 		return (
-			<div className="flex items-center justify-center h-screen text-gray-500">
-				No itinerary data available
+			<div className="flex items-center justify-center h-screen">
+				<div className="card card-bordered p-6 max-w-md">
+					<div className="card-body items-center text-center">
+						<svg
+							className="w-16 h-16 text-gray-400"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
+						<h2 className="card-title">No Plan data available</h2>
+						<p className="text-gray-500">
+							Please create a new plan or select an existing one.
+						</p>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -26,77 +63,172 @@ export default function PlanDetail({
 		(a, b) => a.day - b.day
 	);
 
+	const deleteDestinationFromItinerary = (placeName: string) => {
+		setAiItinerary((prev) => {
+			if (!prev) return prev;
+
+			const selectedDayKey = `day${selectedDay}` as keyof typeof prev;
+
+			const updatedDayDestinations = prev[selectedDayKey].filter(
+				(d) => d.placeName !== placeName
+			);
+			return {
+				...prev,
+				[selectedDayKey]: updatedDayDestinations,
+			};
+		});
+	};
+
+	const generateAIItinerary = async () => {
+		const { data } = await refetchItinerary();
+		if (data) {
+			setAiItinerary(data);
+		}
+	};
+
+	const hasAiItineraryForSelectedDay =
+		aiItinerary &&
+		aiItinerary[`day${selectedDay}`] &&
+		aiItinerary[`day${selectedDay}`].length > 0;
+
 	return (
-		<div className="min-h-screen w-full">
-			<div className="bg-white rounded-lg shadow-md p-6 mb-6">
-				<div className="flex flex-col md:flex-row md:justify-between md:items-center">
+		<div className="min-h-screen w-full pb-8">
+			<div id="toast-success" className="toast toast-top toast-end hidden">
+				<div className="alert alert-success shadow-lg">
 					<div>
-						<h1 className="text-2xl md:text-3xl font-bold text-primary">
-							{planDetail.name}
-						</h1>
-						<p className="text-gray-600">
-							{format(new Date(planDetail.startDate), 'EEE, MMMM d, yyyy')} -{' '}
-							{format(new Date(planDetail.endDate), 'EEE, MMMM d, yyyy')}
-						</p>
-					</div>
-					<div className="mt-4 md:mt-0">
-						<span className="text-base-100 px-4 py-2 rounded-full font-medium flex justify-end">
-							{planDetail.travelTheme.split('/').map((t) => (
-								<div className="flex flex-row">
-									<p className={`text-base-100 badge ml-2 ${getThemeColor(t)}`}>
-										{t}
-									</p>
-								</div>
-							))}
-						</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="stroke-current flex-shrink-0 h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
+						<span>Itinerary saved successfully!</span>
 					</div>
 				</div>
-
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-					<div className="bg-base-100 p-4 rounded-md">
-						<p className="text-gray-500 text-sm">Location</p>
-						<p className="font-medium">{planDetail.city}</p>
-					</div>
-					<div className="bg-base-100 p-4 rounded-md">
-						<p className="text-gray-500 text-sm">Travel Companion</p>
-						<p className="font-medium">{planDetail.travelCompanion}</p>
-					</div>
-					<div className="bg-base-100 p-4 rounded-md">
-						<p className="text-gray-500 text-sm">Budget</p>
-						<p className="font-medium">
-							Rp {planDetail.budget.toLocaleString()}
-						</p>
+			</div>
+			<div id="toast-error" className="toast toast-top toast-end hidden">
+				<div className="alert alert-error shadow-lg">
+					<div>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="stroke-current flex-shrink-0 h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
+						<span>Error! Failed to save itinerary.</span>
 					</div>
 				</div>
 			</div>
 
-			<div className="mb-6 overflow-x-auto">
-				<div className="flex space-x-2 min-w-max">
-					<button
-						className={`px-4 py-2 rounded-full font-medium hover:cursor-pointer ${
-							selectedDay === 0
-								? 'bg-primary text-white'
-								: 'bg-white text-gray-700 hover:bg-gray-100'
-						}`}
-						onClick={() => setSelectedDay(0)}
-					>
-						Overview
-					</button>
+			<div className="card bg-base-100 shadow-xl mb-6">
+				<div className="card-body">
+					<div className="flex flex-col md:flex-row md:justify-between md:items-center">
+						<div>
+							<h1 className="text-2xl md:text-3xl font-bold text-primary">
+								{planDetail.name}
+							</h1>
+							<p className="text-gray-600 mt-1">
+								{format(new Date(planDetail.startDate), 'EEE, MMMM d, yyyy')} -{' '}
+								{format(new Date(planDetail.endDate), 'EEE, MMMM d, yyyy')}
+							</p>
+						</div>
+						<div className="mt-4 md:mt-0 flex flex-wrap gap-2 justify-end">
+							{planDetail.travelTheme.split('/').map((t) => (
+								<div key={t} className={`badge badge-lg ${getThemeColor(t)}`}>
+									{t}
+								</div>
+							))}
+						</div>
+					</div>
 
-					{sortedPlanDetails.map((day) => (
+					<div className="divider my-2"></div>
+
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+						<div className="stat bg-base-200 rounded-box">
+							<div className="stat-title">Location</div>
+							<div className="stat-value text-lg">{planDetail.city}</div>
+						</div>
+						<div className="stat bg-base-200 rounded-box">
+							<div className="stat-title">Travel Companion</div>
+							<div className="stat-value text-lg">
+								{planDetail.travelCompanion}
+							</div>
+						</div>
+						<div className="stat bg-base-200 rounded-box">
+							<div className="stat-title">Budget</div>
+							<div className="stat-value text-lg">
+								Rp {planDetail.budget.toLocaleString()}
+							</div>
+						</div>
+					</div>
+
+					<div className="mt-6 flex justify-center">
 						<button
-							key={day.id}
-							className={`px-4 py-2 rounded-full font-medium hover:cursor-pointer ${
-								selectedDay === day.day
-									? 'bg-primary text-white'
-									: 'bg-white text-gray-700 hover:bg-gray-100'
+							onClick={generateAIItinerary}
+							disabled={isGeneratingItinerary}
+							className={`btn btn-primary btn-lg gap-2 ${
+								isGeneratingItinerary ? 'loading' : ''
 							}`}
-							onClick={() => setSelectedDay(day.day)}
 						>
-							Day {day.day}
+							{isGeneratingItinerary ? (
+								'Generating Itinerary...'
+							) : (
+								<>
+									<svg
+										className="w-5 h-5"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth="2"
+											d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+										/>
+									</svg>
+									Generate AI Itinerary
+								</>
+							)}
 						</button>
-					))}
+					</div>
 				</div>
+			</div>
+
+			<div className="tabs tabs-boxed mb-6 overflow-x-auto flex flex-nowrap">
+				<button
+					className={`tab tab-lg ${selectedDay === 0 ? 'tab-active' : ''}`}
+					onClick={() => setSelectedDay(0)}
+				>
+					Overview
+				</button>
+
+				{sortedPlanDetails.map((day) => (
+					<button
+						key={day.id}
+						className={`tab tab-lg ${
+							selectedDay === day.day ? 'tab-active' : ''
+						}`}
+						onClick={() => setSelectedDay(day.day)}
+					>
+						Day {day.day}
+					</button>
+				))}
 			</div>
 
 			{selectedDay === 0 ? (
@@ -105,9 +237,181 @@ export default function PlanDetail({
 					setSelectedDay={setSelectedDay}
 				/>
 			) : (
-				<DayView
-					dayDetail={sortedPlanDetails.find((day) => day.day === selectedDay)!}
-				/>
+				<div>
+					<DayView
+						dayDetail={
+							sortedPlanDetails.find((day) => day.day === selectedDay)!
+						}
+					/>
+
+					{hasAiItineraryForSelectedDay && (
+						<div className="card bg-base-100 shadow-xl mt-8">
+							<div className="card-body">
+								<div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+									<h2 className="card-title text-xl flex items-center">
+										<svg
+											className="w-6 h-6 mr-2 text-primary"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth="2"
+												d="M13 10V3L4 14h7v7l9-11h-7z"
+											/>
+										</svg>
+										AI Suggested Itinerary - Day {selectedDay}
+									</h2>
+
+									<button
+										className={`btn mt-4 md:mt-0 ${
+											savedDays.includes(selectedDay)
+												? 'btn-success btn-disabled'
+												: isSaving[`day${selectedDay}`]
+												? 'btn-ghost loading'
+												: 'btn-primary'
+										}`}
+									>
+										{savedDays.includes(selectedDay) ? (
+											<>
+												<svg
+													className="w-4 h-4 mr-1"
+													fill="none"
+													stroke="currentColor"
+													viewBox="0 0 24 24"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth="2"
+														d="M5 13l4 4L19 7"
+													/>
+												</svg>
+												Saved
+											</>
+										) : isSaving[`day${selectedDay}`] ? (
+											'Saving...'
+										) : (
+											<>
+												<svg
+													className="w-4 h-4 mr-1"
+													fill="none"
+													stroke="currentColor"
+													viewBox="0 0 24 24"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth="2"
+														d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+													/>
+												</svg>
+												Save Itinerary
+											</>
+										)}
+									</button>
+								</div>
+
+								<div className="divider"></div>
+
+								<div className="space-y-6">
+									{aiItinerary &&
+										aiItinerary[`day${selectedDay}`]?.map((item, index) => (
+											<div
+												key={index}
+												className="card bg-base-200 shadow-sm group hover:shadow-md transition-shadow"
+											>
+												<div className="card-body relative">
+													<button
+														className="btn btn-circle btn-xs btn-error absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
+														title="Remove this destination"
+														onClick={() =>
+															deleteDestinationFromItinerary(item.placeName)
+														}
+													>
+														<svg
+															className="w-4 h-4"
+															fill="none"
+															stroke="currentColor"
+															viewBox="0 0 24 24"
+														>
+															<path
+																strokeLinecap="round"
+																strokeLinejoin="round"
+																strokeWidth="2"
+																d="M6 18L18 6M6 6l12 12"
+															/>
+														</svg>
+													</button>
+
+													<div className="flex flex-col md:flex-row md:justify-between md:items-start pr-8">
+														<div>
+															<h3 className="card-title text-lg">
+																{item.placeName}
+															</h3>
+															<p className="text-sm opacity-70">
+																{item.time} • {item.category}
+															</p>
+														</div>
+														<div className="mt-2 md:mt-0">
+															<div className="badge badge-accent badge-lg">
+																{item.cost}
+															</div>
+														</div>
+													</div>
+
+													<p className="mt-2">{item.description}</p>
+
+													<div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+														<div className="flex items-center text-sm opacity-70">
+															<svg
+																className="w-4 h-4 mr-1"
+																fill="none"
+																stroke="currentColor"
+																viewBox="0 0 24 24"
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	strokeWidth="2"
+																	d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+																/>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	strokeWidth="2"
+																	d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+																/>
+															</svg>
+															{item.address}
+														</div>
+														<div className="flex items-center text-sm opacity-70">
+															<svg
+																className="w-4 h-4 mr-1"
+																fill="none"
+																stroke="currentColor"
+																viewBox="0 0 24 24"
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	strokeWidth="2"
+																	d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+																/>
+															</svg>
+															{item.distance}
+														</div>
+													</div>
+												</div>
+											</div>
+										))}
+								</div>
+							</div>
+						</div>
+					)}
+				</div>
 			)}
 		</div>
 	);
