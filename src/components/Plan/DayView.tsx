@@ -41,7 +41,7 @@ export default function DayView({
 	};
 
 	return (
-		<div className="bg-white rounded-lg shadow-lg overflow-hidden">
+		<div className="bg-base-100 rounded-lg shadow-lg overflow-hidden">
 			<div className="bg-primary text-white p-6">
 				<div className="flex justify-between items-center">
 					<div>

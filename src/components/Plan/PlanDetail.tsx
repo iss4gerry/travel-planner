@@ -1,7 +1,7 @@
 'use client';
 
 import { Itinerary, PlanDetailResponse } from '@/types/plan';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import OverviewView from './OverviewView';
 import DayView from './DayView';
 import { format } from 'date-fns';
@@ -12,10 +12,13 @@ import {
 	saveItineraryToPlan,
 } from '@/lib/services/itinerary-service';
 import { fetchPlanByIdClient } from '@/lib/services/plan-service';
+import AiItinerary from './AiItinerary';
 
 export default function PlanDetail({ planId }: { planId: string }) {
 	const [selectedDay, setSelectedDay] = useState(1);
 	const [aiItinerary, setAiItinerary] = useState<Itinerary | null>(null);
+	const aiItineraryRef = useRef<HTMLDivElement>(null);
+	const planOverviewRef = useRef<HTMLDivElement>(null);
 	const queryClient = useQueryClient();
 
 	const { data: planDetail } = useQuery({
@@ -23,47 +26,42 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		queryFn: () => fetchPlanByIdClient(planId),
 	});
 
-	const {
-		isLoading: isGeneratingItinerary,
-		isSuccess: successGenerateItinerary,
-		refetch: refetchItinerary,
-	} = useQuery({
-		queryKey: ['itinerary'],
-		queryFn: () => fetchItinerary(planId),
-		enabled: false,
-		refetchOnWindowFocus: false,
-	});
+	const { isLoading: isGeneratingItinerary, refetch: refetchItinerary } =
+		useQuery({
+			queryKey: ['itinerary'],
+			queryFn: () => fetchItinerary(planId),
+			enabled: false,
+			refetchOnWindowFocus: false,
+		});
 
-	const {
-		mutate: saveItineraryMutation,
-		isPending: saveItineraryIsPending,
-		isSuccess: successSaveItinerary,
-	} = useMutation({
-		mutationFn: () => {
-			const dayKey = `day${selectedDay}` as keyof Itinerary;
-			const dayData = aiItinerary?.[dayKey];
+	const { mutate: saveItineraryMutation, isPending: saveItineraryIsPending } =
+		useMutation({
+			mutationFn: () => {
+				const dayKey = `day${selectedDay}` as keyof Itinerary;
+				const dayData = aiItinerary?.[dayKey];
 
-			if (!dayData) {
-				throw new Error('No itinerary data available for selected day');
-			}
+				if (!dayData) {
+					throw new Error('No itinerary data available for selected day');
+				}
 
-			return saveItineraryToPlan(planId, {
-				[dayKey]: dayData,
-			});
-		},
-		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: ['plan', planId] });
-			setAiItinerary((prev) => {
-				if (!prev) return prev;
-				const selectedDayKey = `day${selectedDay}` as keyof typeof prev;
+				return saveItineraryToPlan(planId, {
+					[dayKey]: dayData,
+				});
+			},
+			onSuccess: (data) => {
+				queryClient.invalidateQueries({ queryKey: ['plan', planId] });
+				setAiItinerary((prev) => {
+					if (!prev) return prev;
+					const selectedDayKey = `day${selectedDay}` as keyof typeof prev;
 
-				const newItinerary = { ...prev };
-				delete newItinerary[selectedDayKey];
+					const newItinerary = { ...prev };
+					delete newItinerary[selectedDayKey];
 
-				return newItinerary;
-			});
-		},
-	});
+					return newItinerary;
+				});
+				planOverviewRef.current?.scrollIntoView({ behavior: 'smooth' });
+			},
+		});
 
 	if (!planDetail) {
 		return (
@@ -113,11 +111,19 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		});
 	};
 
+	useEffect(() => {
+		if (!isGeneratingItinerary && aiItinerary) {
+			aiItineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
+		}
+	}, [isGeneratingItinerary, aiItinerary]);
+
 	const generateAIItinerary = async () => {
 		const { data } = await refetchItinerary();
 		if (data) {
 			setAiItinerary(data);
 		}
+
+		aiItineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
 	};
 
 	const saveItinerary = () => {
@@ -130,48 +136,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		aiItinerary[`day${selectedDay}`].length > 0;
 
 	return (
-		<div className="min-h-screen w-full pb-8">
-			<div id="toast-success" className="toast toast-top toast-end hidden">
-				<div className="alert alert-success shadow-lg">
-					<div>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="stroke-current flex-shrink-0 h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
-						<span>Itinerary saved successfully!</span>
-					</div>
-				</div>
-			</div>
-			<div id="toast-error" className="toast toast-top toast-end hidden">
-				<div className="alert alert-error shadow-lg">
-					<div>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="stroke-current flex-shrink-0 h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
-						<span>Error! Failed to save itinerary.</span>
-					</div>
-				</div>
-			</div>
-
+		<div className="min-h-screen w-full pb-8" ref={planOverviewRef}>
 			<div className="card bg-base-100 shadow-xl mb-6">
 				<div className="card-body">
 					<div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -283,131 +248,14 @@ export default function PlanDetail({ planId }: { planId: string }) {
 					/>
 
 					{hasAiItineraryForSelectedDay && (
-						<div className="card bg-base-100 shadow-xl mt-8">
-							<div className="card-body">
-								<div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-									<h2 className="card-title text-xl flex items-center">
-										<svg
-											className="w-6 h-6 mr-2 text-primary"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth="2"
-												d="M13 10V3L4 14h7v7l9-11h-7z"
-											/>
-										</svg>
-										AI Suggested Itinerary - Day {selectedDay}
-									</h2>
-
-									<button
-										onClick={saveItinerary}
-										className={`btn mt-4 md:mt-0 bg-primary text-base-100`}
-										disabled={saveItineraryIsPending}
-									>
-										{saveItineraryIsPending ? 'Saving' : 'Save to plan'}
-									</button>
-								</div>
-
-								<div className="divider"></div>
-
-								<div className="space-y-6">
-									{aiItinerary &&
-										aiItinerary[`day${selectedDay}`]?.map((item, index) => (
-											<div
-												key={index}
-												className="card bg-base-200 shadow-sm group hover:shadow-md transition-shadow"
-											>
-												<div className="card-body relative">
-													<button
-														className="btn btn-circle btn-xs btn-error absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
-														title="Remove this destination"
-														onClick={() =>
-															deleteDestinationFromItinerary(item.placeName)
-														}
-													>
-														<svg
-															className="w-4 h-4"
-															fill="none"
-															stroke="currentColor"
-															viewBox="0 0 24 24"
-														>
-															<path
-																strokeLinecap="round"
-																strokeLinejoin="round"
-																strokeWidth="2"
-																d="M6 18L18 6M6 6l12 12"
-															/>
-														</svg>
-													</button>
-
-													<div className="flex flex-col md:flex-row md:justify-between md:items-start pr-8">
-														<div>
-															<h3 className="card-title text-lg">
-																{item.placeName}
-															</h3>
-															<p className="text-sm opacity-70">
-																{item.time} • {item.category}
-															</p>
-														</div>
-														<div className="mt-2 md:mt-0">
-															<div className="badge badge-accent badge-lg">
-																{item.cost}
-															</div>
-														</div>
-													</div>
-
-													<p className="mt-2">{item.description}</p>
-
-													<div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-														<div className="flex items-center text-sm opacity-70">
-															<svg
-																className="w-4 h-4 mr-1"
-																fill="none"
-																stroke="currentColor"
-																viewBox="0 0 24 24"
-															>
-																<path
-																	strokeLinecap="round"
-																	strokeLinejoin="round"
-																	strokeWidth="2"
-																	d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-																/>
-																<path
-																	strokeLinecap="round"
-																	strokeLinejoin="round"
-																	strokeWidth="2"
-																	d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-																/>
-															</svg>
-															{item.address}
-														</div>
-														<div className="flex items-center text-sm opacity-70">
-															<svg
-																className="w-4 h-4 mr-1"
-																fill="none"
-																stroke="currentColor"
-																viewBox="0 0 24 24"
-															>
-																<path
-																	strokeLinecap="round"
-																	strokeLinejoin="round"
-																	strokeWidth="2"
-																	d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-																/>
-															</svg>
-															{item.distance}
-														</div>
-													</div>
-												</div>
-											</div>
-										))}
-								</div>
-							</div>
-						</div>
+						<AiItinerary
+							aiItineraryRef={aiItineraryRef}
+							selectedDay={selectedDay}
+							saveItinerary={saveItinerary}
+							saveItineraryIsPending={saveItineraryIsPending}
+							deleteDestinationFromItinerary={deleteDestinationFromItinerary}
+							aiItinerary={aiItinerary}
+						/>
 					)}
 				</div>
 			)}

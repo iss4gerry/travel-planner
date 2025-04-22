@@ -46,7 +46,7 @@ export default function OverviewView({
 							<p className="text-gray-500">{format(day.date, 'EEE, MMMM d')}</p>
 						</div>
 						<button
-							className="bg-secondary text-base-100 px-3 py-1 rounded-md hover:bg-indigo-200 transition"
+							className="bg-primary text-base-100 px-3 py-1 rounded-md hover:bg-indigo-200 transition"
 							onClick={() => setSelectedDay(day.day)}
 						>
 							View Details
