@@ -6,29 +6,63 @@ import OverviewView from './OverviewView';
 import DayView from './DayView';
 import { format } from 'date-fns';
 import { getThemeColor } from '@/utils/planThemeColor';
-import { useQuery } from '@tanstack/react-query';
-import { fetchItinerary } from '@/lib/services/itinerary-service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+	fetchItinerary,
+	saveItineraryToPlan,
+} from '@/lib/services/itinerary-service';
+import { fetchPlanByIdClient } from '@/lib/services/plan-service';
 
-export default function PlanDetail({
-	planDetail,
-}: {
-	planDetail: PlanDetailResponse;
-}) {
+export default function PlanDetail({ planId }: { planId: string }) {
 	const [selectedDay, setSelectedDay] = useState(1);
 	const [aiItinerary, setAiItinerary] = useState<Itinerary | null>(null);
-	const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
-	const [savedDays, setSavedDays] = useState<number[]>([]);
+	const queryClient = useQueryClient();
+
+	const { data: planDetail } = useQuery({
+		queryKey: ['plan', planId],
+		queryFn: () => fetchPlanByIdClient(planId),
+	});
 
 	const {
-		data: itinerary,
 		isLoading: isGeneratingItinerary,
 		isSuccess: successGenerateItinerary,
 		refetch: refetchItinerary,
 	} = useQuery({
 		queryKey: ['itinerary'],
-		queryFn: () => fetchItinerary(planDetail.id),
+		queryFn: () => fetchItinerary(planId),
 		enabled: false,
 		refetchOnWindowFocus: false,
+	});
+
+	const {
+		mutate: saveItineraryMutation,
+		isPending: saveItineraryIsPending,
+		isSuccess: successSaveItinerary,
+	} = useMutation({
+		mutationFn: () => {
+			const dayKey = `day${selectedDay}` as keyof Itinerary;
+			const dayData = aiItinerary?.[dayKey];
+
+			if (!dayData) {
+				throw new Error('No itinerary data available for selected day');
+			}
+
+			return saveItineraryToPlan(planId, {
+				[dayKey]: dayData,
+			});
+		},
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ['plan', planId] });
+			setAiItinerary((prev) => {
+				if (!prev) return prev;
+				const selectedDayKey = `day${selectedDay}` as keyof typeof prev;
+
+				const newItinerary = { ...prev };
+				delete newItinerary[selectedDayKey];
+
+				return newItinerary;
+			});
+		},
 	});
 
 	if (!planDetail) {
@@ -84,6 +118,10 @@ export default function PlanDetail({
 		if (data) {
 			setAiItinerary(data);
 		}
+	};
+
+	const saveItinerary = () => {
+		saveItineraryMutation();
 	};
 
 	const hasAiItineraryForSelectedDay =
@@ -266,51 +304,11 @@ export default function PlanDetail({
 									</h2>
 
 									<button
-										className={`btn mt-4 md:mt-0 ${
-											savedDays.includes(selectedDay)
-												? 'btn-success btn-disabled'
-												: isSaving[`day${selectedDay}`]
-												? 'btn-ghost loading'
-												: 'btn-primary'
-										}`}
+										onClick={saveItinerary}
+										className={`btn mt-4 md:mt-0 bg-primary text-base-100`}
+										disabled={saveItineraryIsPending}
 									>
-										{savedDays.includes(selectedDay) ? (
-											<>
-												<svg
-													className="w-4 h-4 mr-1"
-													fill="none"
-													stroke="currentColor"
-													viewBox="0 0 24 24"
-												>
-													<path
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														strokeWidth="2"
-														d="M5 13l4 4L19 7"
-													/>
-												</svg>
-												Saved
-											</>
-										) : isSaving[`day${selectedDay}`] ? (
-											'Saving...'
-										) : (
-											<>
-												<svg
-													className="w-4 h-4 mr-1"
-													fill="none"
-													stroke="currentColor"
-													viewBox="0 0 24 24"
-												>
-													<path
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														strokeWidth="2"
-														d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
-													/>
-												</svg>
-												Save Itinerary
-											</>
-										)}
+										{saveItineraryIsPending ? 'Saving' : 'Save to plan'}
 									</button>
 								</div>
 

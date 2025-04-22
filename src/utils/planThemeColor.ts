@@ -19,6 +19,7 @@ export const getThemeColor = (theme: string): string => {
 		[TravelTheme.Backpacking]: 'badge-error',
 		[TravelTheme.Cruise]: 'badge-accent',
 		[TravelTheme.Festival]: 'badge-success',
+		[TravelTheme.Shopping]: 'badge-success',
 	};
 
 	const normalized = theme.toLowerCase();
@@ -48,6 +49,7 @@ export const getThemeHexColor = (theme: string): string => {
 		[TravelTheme.Backpacking]: '#DC2626',
 		[TravelTheme.Cruise]: '#A855F7',
 		[TravelTheme.Festival]: '#16A34A',
+		[TravelTheme.Shopping]: '#0EA5E9',
 	};
 
 	const normalized = theme.toLowerCase();

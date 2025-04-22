@@ -97,6 +97,7 @@ export enum TravelTheme {
 	Backpacking = 'backpacking',
 	Cruise = 'cruise',
 	Festival = 'festival',
+	Shopping = 'shopping',
 }
 
 export enum TravelCompanion {

@@ -1,6 +1,10 @@
 import { fetchPlanById } from '@/lib/services/plan-service';
 import { PlanDetailResponse } from '@/types/plan';
-import { QueryClient } from '@tanstack/react-query';
+import {
+	dehydrate,
+	HydrationBoundary,
+	QueryClient,
+} from '@tanstack/react-query';
 import { cookies } from 'next/headers';
 import PlanDetail from '@/components/Plan/PlanDetail';
 
@@ -22,9 +26,13 @@ export default async function Page({
 		throw new Error('Plan not found');
 	}
 
+	const dehydratedState = dehydrate(queryClient);
+
 	return (
-		<div className="w-full">
-			<PlanDetail planDetail={plan} />
-		</div>
+		<HydrationBoundary state={dehydratedState}>
+			<div className="w-full">
+				<PlanDetail planId={plan.id} />
+			</div>
+		</HydrationBoundary>
 	);
 }

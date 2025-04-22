@@ -229,7 +229,7 @@ export class PlanService {
 		];
 
 		const categories = await prisma.category.findMany({
-			where: { name: { in: categoryNames } },
+			where: { name: { in: categoryNames, mode: 'insensitive' } },
 		});
 
 		const travelDays = plan.planDetails;

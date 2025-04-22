@@ -17,8 +17,8 @@ export const GET = catchError(async (req: NextRequest, context: Context) => {
 
 export const POST = catchError(async (req: NextRequest, context: Context) => {
 	const { planId } = await context.params;
-	const body: Itinerary = await req.json();
-	const result = await PlanService.saveItinerary({ result: body }, planId);
+	const { body } = await req.json();
+	const result = await PlanService.saveItinerary(body, planId);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',

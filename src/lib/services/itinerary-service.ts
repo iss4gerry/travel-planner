@@ -234,3 +234,18 @@ export const fetchItinerary = async (planId: string) => {
 		handleAxiosError(error, 'fetchItinerary');
 	}
 };
+
+export const saveItineraryToPlan = async (planId: string, body: Itinerary) => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.post(`/plans/${planId}/itinerary`, {
+			body: {
+				result: body,
+			},
+		});
+		const itinerary: Itinerary = data;
+		return itinerary;
+	} catch (error) {
+		handleAxiosError(error, 'saveItinerary');
+	}
+};

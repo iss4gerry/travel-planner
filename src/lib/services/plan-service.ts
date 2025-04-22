@@ -61,6 +61,18 @@ export const fetchPlanById = async (cookieStore: string, id: string) => {
 	}
 };
 
+export const fetchPlanByIdClient = async (id: string) => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.get(`/plans/${id}`);
+		const plan: PlanDetailResponse = data.data;
+
+		return plan;
+	} catch (error) {
+		handleAxiosError(error, 'fetchPlan');
+	}
+};
+
 export const createPlan = async (body: CreatePlan) => {
 	try {
 		const axios = getAxiosInstance();
