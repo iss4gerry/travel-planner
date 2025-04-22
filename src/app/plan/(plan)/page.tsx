@@ -7,13 +7,27 @@ import {
 
 import PlansClient from './PlansClient';
 import { cookies } from 'next/headers';
+import { parseQueryParams } from '@/lib/validations/query-schema';
 
-export default async function Page() {
+type Props = {
+	searchParams: Promise<{
+		page?: string;
+		limit?: string;
+		sort?: string;
+		order?: string;
+	}>;
+};
+
+export default async function Page({ searchParams }: Props) {
+	const params = await searchParams;
+
+	const parse = parseQueryParams(params);
+
 	const cookieStore = (await cookies()).toString();
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
 		queryKey: ['plans'],
-		queryFn: () => fetchPlanServer(cookieStore),
+		queryFn: () => fetchPlanServer(cookieStore, parse),
 	});
 
 	const dehydratedState = dehydrate(queryClient);

@@ -63,7 +63,9 @@ export default function PlanDetail({
 					</div>
 					<div className="bg-base-100 p-4 rounded-md">
 						<p className="text-gray-500 text-sm">Budget</p>
-						<p className="font-medium">${planDetail.budget.toLocaleString()}</p>
+						<p className="font-medium">
+							Rp {planDetail.budget.toLocaleString()}
+						</p>
 					</div>
 				</div>
 			</div>

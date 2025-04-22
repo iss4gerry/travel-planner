@@ -26,8 +26,6 @@ export const getThemeColor = (theme: string): string => {
 		(value) => value === normalized
 	);
 
-	console.log(themeColors[matchedTheme as TravelTheme]);
-
 	return themeColors[matchedTheme as TravelTheme] ?? 'badge-neutral';
 };
 

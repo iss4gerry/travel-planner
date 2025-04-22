@@ -71,10 +71,19 @@ export class PlanService {
 		return plan;
 	}
 
-	static async getAllPlan(userId: string): Promise<PlanResponse[]> {
+	static async getAllPlan(
+		userId: string,
+		query: { page: number; limit: number; sort: string; order: string }
+	): Promise<PlanResponse[]> {
+		const offset = (query.page - 1) * query.limit;
 		return await prisma.plan.findMany({
 			where: {
 				userId: userId,
+			},
+			skip: offset,
+			take: query.limit,
+			orderBy: {
+				[query.sort]: query.order,
 			},
 		});
 	}

@@ -5,21 +5,42 @@ import {
 	handleAxiosError,
 } from '../axios';
 
-export const fetchPlanServer = async (cookieStore: string) => {
+export const fetchPlanServer = async (
+	cookieStore: string,
+	params: {
+		page: number;
+		limit: number;
+		sort: string;
+		order: string;
+	}
+) => {
 	try {
 		const axios = getAxiosWithCookie(cookieStore);
-		const { data } = await axios.get('/plans');
+		const { data } = await axios.get('/plans', {
+			params: {
+				...params,
+			},
+		});
 		const plans: PlanResponse[] = data.data;
 		return plans;
 	} catch (error) {
-		handleAxiosError(error, 'fetchPlan');
+		handleAxiosError(error, 'fetchPlanServer');
 	}
 };
 
-export const fetchPlan = async () => {
+export const fetchPlan = async (params: {
+	page: number;
+	limit: number;
+	sort: string;
+	order: string;
+}) => {
 	try {
 		const axios = getAxiosInstance();
-		const { data } = await axios.get('/plans');
+		const { data } = await axios.get('/plans', {
+			params: {
+				...params,
+			},
+		});
 
 		const plans: PlanResponse[] = data.data;
 		return plans;

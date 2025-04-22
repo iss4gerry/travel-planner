@@ -5,11 +5,25 @@ import { FilterIcon } from 'lucide-react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchPlan } from '@/lib/services/plan-service';
 import PlanListItem from '@/components/Plan/PlanCard';
+import { useSearchParams } from 'next/navigation';
+import { parseQueryParams } from '@/lib/validations/query-schema';
 
 export default function TravelPlans() {
+	const searchParams = useSearchParams();
+
+	const page = parseInt(searchParams.get('page') || '1', 10);
+	const limit = parseInt(searchParams.get('limit') || '8', 10);
+	const sort = searchParams.get('sort') || 'createdAt';
+	const order =
+		(searchParams.get('order') || 'desc').toLowerCase() === 'asc'
+			? 'asc'
+			: 'desc';
+
+	const params = parseQueryParams({ page, limit, sort, order });
+
 	const { data: plans, isFetching } = useSuspenseQuery({
 		queryKey: ['plans'],
-		queryFn: fetchPlan,
+		queryFn: () => fetchPlan(params),
 	});
 
 	const [activeTheme, setActiveTheme] = useState<string | null>(null);

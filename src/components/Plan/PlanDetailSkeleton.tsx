@@ -13,16 +13,16 @@ export default function PlanDetailSkeleton() {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-					<div className="bg-gray-50 p-4 rounded-md">
+					<div className="bg-base-100 p-4 rounded-md">
 						<p className="text-gray-500 text-sm">Location</p>
 						<div className="skeleton h-5 w-24 mt-1"></div>
 					</div>
-					<div className="bg-gray-50 p-4 rounded-md">
+					<div className="bg-base-100 p-4 rounded-md">
 						<p className="text-gray-500 text-sm">Travel Companion</p>
 						<div className="skeleton h-5 w-32 mt-1"></div>
 					</div>
 					<div className="bg-gray-50 p-4 rounded-md">
-						<p className="text-gray-500 text-sm">Budget</p>
+						<p className="text-base-100 text-sm">Budget</p>
 						<div className="skeleton h-5 w-20 mt-1"></div>
 					</div>
 				</div>
