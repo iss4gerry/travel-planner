@@ -37,10 +37,16 @@ export const GET = catchError(async (req: NextRequest) => {
 			? 'asc'
 			: 'desc';
 	const query = parseQueryParams({ page, limit, sort, order });
-	const result = await PlanService.getAllPlan(userId, query);
+	const { data, total } = await PlanService.getAllPlan(userId, query);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',
-		data: result,
+		data: data,
+		pagination: {
+			page,
+			limit,
+			total,
+			totalPages: Math.ceil(total / limit),
+		},
 	});
 });

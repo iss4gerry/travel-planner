@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const querySchema = z.object({
 	page: z.coerce.number().min(1).default(1),
-	limit: z.coerce.number().min(1).max(8).default(8),
+	limit: z.coerce.number().min(1).max(12).default(12),
 	sort: z.enum(['createdAt', 'title', 'updatedAt']).default('createdAt'),
 	order: z.enum(['asc', 'desc']).default('desc'),
 });

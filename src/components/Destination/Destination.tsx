@@ -1,29 +1,51 @@
-import { QueryClient } from '@tanstack/react-query';
+import {
+	dehydrate,
+	hydrate,
+	HydrationBoundary,
+	QueryClient,
+} from '@tanstack/react-query';
 import DestinationCard from './DestinationCard';
 import { cookies } from 'next/headers';
 import { fetchDestinationServer } from '@/lib/services/destination-service';
 import { DestinationResponse } from '@/types/destination';
+import Pagination from '../UI/Pagination';
+import DestinationClinet from './DestinationClient';
 
-export default async function Destination() {
+type Props = {
+	page: number;
+	limit: number;
+	sort: 'createdAt' | 'title' | 'updatedAt';
+	order: 'desc' | 'asc';
+};
+
+export default async function Page({ query }: { query: Props }) {
 	const queryClient = new QueryClient();
 
 	const cookieStore = (await cookies()).toString();
 
 	await queryClient.prefetchQuery({
 		queryKey: ['destinations'],
-		queryFn: () => fetchDestinationServer(cookieStore),
+		queryFn: () => fetchDestinationServer(cookieStore, query),
 	});
 
-	const data =
-		queryClient.getQueryData<DestinationResponse[]>(['destinations']) || [];
+	const data = queryClient.getQueryData<{
+		destination: DestinationResponse[];
+		pagination: {
+			page: number;
+			limit: number;
+			total: number;
+			totalPages: number;
+		};
+	}>(['destinations']) || {
+		destination: [],
+		pagination: { page: 1, limit: 12, total: 0, totalPages: 1 },
+	};
+
+	const dehydratedState = dehydrate(queryClient);
 
 	return (
-		<div className="flex flex-col w-full my-5">
-			<div className="mt-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-				{data.map((destination) => (
-					<DestinationCard key={destination.id} destination={destination} />
-				))}
-			</div>
-		</div>
+		<HydrationBoundary state={dehydratedState}>
+			<DestinationClinet />
+		</HydrationBoundary>
 	);
 }

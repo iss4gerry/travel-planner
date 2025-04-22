@@ -22,7 +22,13 @@ export const fetchPlanServer = async (
 			},
 		});
 		const plans: PlanResponse[] = data.data;
-		return plans;
+		const pagination: {
+			page: number;
+			limit: number;
+			total: number;
+			totalPages: number;
+		} = data.pagination;
+		return { plans, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlanServer');
 	}
@@ -43,7 +49,13 @@ export const fetchPlan = async (params: {
 		});
 
 		const plans: PlanResponse[] = data.data;
-		return plans;
+		const pagination: {
+			page: number;
+			limit: number;
+			total: number;
+			totalPages: number;
+		} = data.pagination;
+		return { plans, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');
 	}

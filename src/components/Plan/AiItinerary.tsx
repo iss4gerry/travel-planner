@@ -56,7 +56,7 @@ export default function AiItinerary({
 							>
 								<div className="card-body relative">
 									<button
-										className="btn btn-circle btn-xs btn-error absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
+										className="btn btn-circle btn-xs btn-primary absolute right-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity"
 										title="Remove this destination"
 										onClick={() =>
 											deleteDestinationFromItinerary(item.placeName)
@@ -85,7 +85,7 @@ export default function AiItinerary({
 											</p>
 										</div>
 										<div className="mt-2 md:mt-0">
-											<div className="badge badge-accent badge-lg">
+											<div className="badge badge-secondary badge-lg text-primary">
 												{item.cost}
 											</div>
 										</div>

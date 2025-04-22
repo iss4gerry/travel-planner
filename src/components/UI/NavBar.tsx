@@ -53,7 +53,10 @@ export default function NavBar() {
 						<a className="font-medium hover:text-primary">Explore</a>
 					</li>
 					<li>
-						<Link className="font-medium hover:text-primary" href="/plan">
+						<Link
+							className="font-medium hover:text-primary"
+							href="/plan?page=1"
+						>
 							My Plans
 						</Link>
 					</li>

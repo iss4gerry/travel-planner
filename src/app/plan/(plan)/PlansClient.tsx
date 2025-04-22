@@ -7,6 +7,7 @@ import { fetchPlan } from '@/lib/services/plan-service';
 import PlanListItem from '@/components/Plan/PlanCard';
 import { useSearchParams } from 'next/navigation';
 import { parseQueryParams } from '@/lib/validations/query-schema';
+import Pagination from '@/components/UI/Pagination';
 
 export default function TravelPlans() {
 	const searchParams = useSearchParams();
@@ -21,10 +22,12 @@ export default function TravelPlans() {
 
 	const params = parseQueryParams({ page, limit, sort, order });
 
-	const { data: plans, isFetching } = useSuspenseQuery({
+	const { data, isFetching } = useSuspenseQuery({
 		queryKey: ['plans'],
 		queryFn: () => fetchPlan(params),
 	});
+
+	const { plans, pagination } = data;
 
 	const [activeTheme, setActiveTheme] = useState<string | null>(null);
 
@@ -75,10 +78,13 @@ export default function TravelPlans() {
 			{isFetching ? (
 				<LoadingState />
 			) : (
-				<div className="bg-white rounded-lg shadow divide-y divide-gray-200">
-					{filteredPlans.map((plan) => (
-						<PlanListItem plan={plan} key={plan.id} />
-					))}
+				<div className="flex flex-col">
+					<div className="bg-white rounded-lg shadow divide-y divide-gray-200">
+						{filteredPlans.map((plan) => (
+							<PlanListItem plan={plan} key={plan.id} />
+						))}
+					</div>
+					<Pagination pagination={pagination} url="plan" />
 				</div>
 			)}
 

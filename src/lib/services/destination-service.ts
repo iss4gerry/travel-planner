@@ -6,23 +6,54 @@ import {
 import { DestinationResponse } from '@/types/destination';
 import { PlanResponse } from '@/types/plan';
 
-export const fetchDestinationServer = async (cookieStore: string) => {
+export const fetchDestinationServer = async (
+	cookieStore: string,
+	params: {
+		page: number;
+		limit: number;
+		sort: string;
+		order: string;
+	}
+) => {
 	try {
 		const axios = getAxiosWithCookie(cookieStore);
-		const { data } = await axios.get('/destinations');
+		const { data } = await axios.get('/destinations', {
+			params: { ...params },
+		});
 		const destinations: DestinationResponse[] = data.data;
-		return destinations;
+		const pagination: {
+			page: number;
+			limit: number;
+			total: number;
+			totalPages: number;
+		} = data.pagination;
+
+		return { destinations, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchDestination');
 	}
 };
 
-export const fetchDestination = async (cookieStore: string) => {
+export const fetchDestination = async (params: {
+	page: number;
+	limit: number;
+	sort: string;
+	order: string;
+}) => {
 	try {
 		const axios = getAxiosInstance();
-		const { data } = await axios.get('/destinations');
+		const { data } = await axios.get('/destinations', {
+			params: { ...params },
+		});
 		const destinations: DestinationResponse[] = data.data;
-		return destinations;
+		const pagination: {
+			page: number;
+			limit: number;
+			total: number;
+			totalPages: number;
+		} = data.pagination;
+
+		return { destinations, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchDestination');
 	}

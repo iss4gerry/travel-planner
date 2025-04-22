@@ -1,10 +1,22 @@
 import Banner from '@/components/Banner/Banner';
 import Destination from '@/components/Destination/Destination';
 import DestinationSkeleton from '@/components/Destination/DestinationSkeleton';
-
+import { parseQueryParams } from '@/lib/validations/query-schema';
 import { Suspense } from 'react';
 
-export default async function Home() {
+type Props = {
+	searchParams: Promise<{
+		page?: string;
+		limit?: string;
+		sort?: string;
+		order?: string;
+	}>;
+};
+
+export default async function Home({ searchParams }: Props) {
+	const params = await searchParams;
+	const parse = parseQueryParams(params);
+
 	return (
 		<div className="w-full flex items-center flex-col">
 			<div className="flex w-full mt-3">
@@ -40,7 +52,7 @@ export default async function Home() {
 					</div>
 				}
 			>
-				<Destination />
+				<Destination query={parse} />
 			</Suspense>
 		</div>
 	);

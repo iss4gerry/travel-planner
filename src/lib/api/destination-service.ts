@@ -8,17 +8,36 @@ import { DestinationResponse } from '@/types/destination';
 import { BannerResponse } from '@/types/banner';
 
 export class DestinationService {
-	static async getAllDestination(): Promise<DestinationResponse[]> {
-		return await prisma.destination.findMany({
-			include: {
-				category: {
-					select: {
-						name: true,
-						imageUrl: true,
+	static async getAllDestination(query: {
+		page: number;
+		limit: number;
+		sort: string;
+		order: string;
+	}): Promise<{
+		data: DestinationResponse[];
+		total: number;
+	}> {
+		const offset = (query.page - 1) * query.limit;
+		const [destinations, total] = await Promise.all([
+			prisma.destination.findMany({
+				skip: offset,
+				take: query.limit,
+				orderBy: {
+					[query.sort]: query.order,
+				},
+				include: {
+					category: {
+						select: {
+							name: true,
+							imageUrl: true,
+						},
 					},
 				},
-			},
-		});
+			}),
+			prisma.destination.count(),
+		]);
+
+		return { data: destinations, total };
 	}
 
 	static async getDestinationById(destinationId: string) {
