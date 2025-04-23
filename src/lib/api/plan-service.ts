@@ -187,38 +187,42 @@ export class PlanService {
 		});
 	}
 
-	static async getItinerary(planId: string): Promise<Itinerary> {
-		const planData = await prisma.plan.findFirst({
-			where: {
-				id: planId,
-			},
-			include: {
-				planDetails: true,
-			},
-		});
+	static async getItinerary(planId: string): Promise<Itinerary | undefined> {
+		try {
+			const planData = await prisma.plan.findFirst({
+				where: {
+					id: planId,
+				},
+				include: {
+					planDetails: true,
+				},
+			});
 
-		if (!planData) {
-			throw new ApiError(404, 'Plan not found');
-		}
-
-		const requestData: RequestItinerary = {
-			city: planData.city,
-			travelCompanion: planData.travelCompanion,
-			budget: planData.budget,
-			duration: planData.planDetails.length,
-			travelTheme: planData.travelTheme,
-		};
-
-		let data = await ItineraryService.geminiRequest(requestData);
-		if (!data) {
-			console.log('groq');
-			data = await ItineraryService.groqRequest(requestData);
-			if (!data) {
-				throw new ApiError(500, 'An error occured while generate itinerary');
+			if (!planData) {
+				throw new ApiError(404, 'Plan not found');
 			}
-		}
 
-		return data;
+			const requestData: RequestItinerary = {
+				city: planData.city,
+				travelCompanion: planData.travelCompanion,
+				budget: planData.budget,
+				duration: planData.planDetails.length,
+				travelTheme: planData.travelTheme,
+			};
+
+			let data = await ItineraryService.geminiRequest(requestData);
+			if (!data) {
+				console.log('groq');
+				data = await ItineraryService.groqRequest(requestData);
+				if (!data) {
+					throw new ApiError(500, 'An error occured while generate itinerary');
+				}
+			}
+
+			return data;
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	static async saveItinerary(
@@ -274,6 +278,11 @@ export class PlanService {
 					if (!categoriesMap[category]) {
 						return;
 					}
+
+					if (time.includes('-')) {
+						time = time.split('-')[0];
+					}
+
 					const destinationId = `temp-${placeName}`;
 					destinations.push({
 						id: destinationId,

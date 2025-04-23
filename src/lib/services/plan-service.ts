@@ -28,6 +28,7 @@ export const fetchPlanServer = async (
 			total: number;
 			totalPages: number;
 		} = data.pagination;
+
 		return { plans, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlanServer');

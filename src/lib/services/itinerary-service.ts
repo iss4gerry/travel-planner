@@ -226,10 +226,10 @@ export const dummyItinerary: Itinerary = {
 
 export const fetchItinerary = async (planId: string) => {
 	try {
-		// const axios = getAxiosInstance();
-		// const { data } = await axios.post(`/plans/${planId}/itinerary`);
-		// const itinerary: Itinerary = data.data;
-		return dummyItinerary;
+		const axios = getAxiosInstance();
+		const { data } = await axios.get(`/plans/${planId}/itinerary`);
+		const itinerary: Itinerary = data.data;
+		return itinerary;
 	} catch (error) {
 		handleAxiosError(error, 'fetchItinerary');
 	}
