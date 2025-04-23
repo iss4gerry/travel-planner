@@ -77,12 +77,24 @@ export default function AddToPlanModal({
 		});
 	};
 
-	const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setSelectedTime(event.target.value);
+	const formatTo12Hour = (time24: string): string => {
+		if (!time24) return '';
+
+		const [hourStr, minute] = time24.split(':');
+		const hour = parseInt(hourStr, 10);
+
+		if (isNaN(hour)) return '';
+
+		const period = hour >= 12 ? 'PM' : 'AM';
+		const hour12 = hour % 12 || 12;
+
+		return `${hour12}:${minute} ${period}`;
 	};
 
-	const handleTimeFormatChange = (format: 'AM' | 'PM') => {
-		setTimeFormat(format);
+	const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newTime = formatTo12Hour(event.target.value);
+		console.log(newTime);
+		setSelectedTime(event.target.value);
 	};
 
 	const addToPlanMutation = useMutation({
@@ -220,30 +232,6 @@ export default function AddToPlanModal({
 												value={selectedTime}
 												onChange={handleTimeChange}
 											/>
-										</div>
-										<div className="flex border rounded-lg overflow-hidden">
-											<button
-												type="button"
-												className={`px-4 py-2 hover:cursor-pointer ${
-													timeFormat === 'AM'
-														? 'bg-blue-500 text-white'
-														: 'bg-gray-100'
-												}`}
-												onClick={() => handleTimeFormatChange('AM')}
-											>
-												AM
-											</button>
-											<button
-												type="button"
-												className={`px-4 py-2 hover:cursor-pointer ${
-													timeFormat === 'PM'
-														? 'bg-blue-500 text-white'
-														: 'bg-gray-100'
-												}`}
-												onClick={() => handleTimeFormatChange('PM')}
-											>
-												PM
-											</button>
 										</div>
 									</div>
 								</div>
