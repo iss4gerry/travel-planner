@@ -60,6 +60,13 @@ export const ImageSlider = () => {
 			</div>
 		);
 	}
+	useEffect(() => {
+		const interval = setInterval(() => {
+			handleSlideChange((currentIndex + 1) % banners.length);
+		}, 4500);
+
+		return () => clearInterval(interval);
+	}, [currentIndex, banners.length]);
 
 	return (
 		<div className="relative w-full mx-auto hover:cursor-pointer">
