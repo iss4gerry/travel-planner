@@ -9,7 +9,7 @@ import { cookies } from 'next/headers';
 import { fetchDestinationServer } from '@/lib/services/destination-service';
 import { DestinationResponse } from '@/types/destination';
 import Pagination from '../UI/Pagination';
-import DestinationClinet from './DestinationClient';
+import DestinationClient from './DestinationClient';
 
 type Props = {
 	page: number;
@@ -28,24 +28,11 @@ export default async function Page({ query }: { query: Props }) {
 		queryFn: () => fetchDestinationServer(cookieStore, query),
 	});
 
-	const data = queryClient.getQueryData<{
-		destination: DestinationResponse[];
-		pagination: {
-			page: number;
-			limit: number;
-			total: number;
-			totalPages: number;
-		};
-	}>(['destinations']) || {
-		destination: [],
-		pagination: { page: 1, limit: 12, total: 0, totalPages: 1 },
-	};
-
 	const dehydratedState = dehydrate(queryClient);
 
 	return (
 		<HydrationBoundary state={dehydratedState}>
-			<DestinationClinet />
+			<DestinationClient />
 		</HydrationBoundary>
 	);
 }

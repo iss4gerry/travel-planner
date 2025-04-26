@@ -119,7 +119,7 @@ export default function CreatePlanPage({
 							</label>
 							<input
 								type="text"
-								placeholder="E.g., Tokyo, Paris, New York"
+								placeholder="E.g., Bali, Bandung, Yogyakarta"
 								className="input input-bordered w-full focus:ring-2 focus:ring-primary transition-all"
 								value={city}
 								onChange={(e) => setCity(e.target.value)}
