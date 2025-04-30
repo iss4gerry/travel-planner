@@ -1,4 +1,7 @@
-import { addDestinationToPlan } from '@/lib/services/destination-service';
+import {
+	addBannerToPlan,
+	addDestinationToPlan,
+} from '@/lib/services/destination-service';
 import { PlanDetailResponse, PlanResponse } from '@/types/plan';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
@@ -9,12 +12,14 @@ import { Clock10Icon } from 'lucide-react';
 export default function AddToPlanModal({
 	modalStatus,
 	onClose,
+	mode,
 }: {
 	modalStatus: boolean;
 	onClose: () => void;
+	mode: string;
 }) {
 	const queryClient = useQueryClient();
-	const params = useParams<{ destinationId: string }>();
+	const params = useParams<{ destinationId: string; bannerId: string }>();
 	const [selectedPlan, setSelectedPlan] = useState<{
 		planId: string | null;
 		dayId: string | null;
@@ -93,38 +98,54 @@ export default function AddToPlanModal({
 
 	const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newTime = formatTo12Hour(event.target.value);
-		console.log(newTime);
-		setSelectedTime(event.target.value);
+		setSelectedTime(newTime);
 	};
 
 	const addToPlanMutation = useMutation({
-		mutationFn: addDestinationToPlan,
+		mutationFn: (data: any) => {
+			if (mode === 'destination') {
+				return addDestinationToPlan(data);
+			} else {
+				return addBannerToPlan(data);
+			}
+		},
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['plans'] });
-			toast.success('Destination added to plan successfully!');
+			toast.success(`${mode.toUpperCase()} added to plan successfully!`);
 			onClose();
 		},
 		onError: (error) => {
-			console.error('Failed to add to plan:', error);
-			toast.error('Failed to add destination to plan. Please try again.');
+			console.error(`Failed to add to ${mode}:`, error);
+			toast.error(`Failed to add ${mode} to plan. Please try again.`);
 		},
 	});
 
 	const handleSubmit = () => {
-		if (
-			!selectedPlan?.dayId ||
-			!selectedPlan?.planId ||
-			!params?.destinationId
-		) {
-			toast.error('Please select both a plan and a day');
-			return;
+		if (mode === 'destination') {
+			if (
+				!selectedPlan?.dayId ||
+				!selectedPlan?.planId ||
+				!params?.destinationId
+			) {
+				toast.error('Please select both a plan and a day');
+				return;
+			}
+			addToPlanMutation.mutate({
+				planDetailId: selectedPlan.dayId,
+				destinationId: params.destinationId,
+				time: `${selectedTime} ${timeFormat}`,
+			});
+		} else {
+			if (!selectedPlan?.dayId || !selectedPlan?.planId || !params?.bannerId) {
+				toast.error('Please select both a plan and a day');
+				return;
+			}
+			addToPlanMutation.mutate({
+				planDetailId: selectedPlan.dayId,
+				bannerId: params.bannerId,
+				time: `${selectedTime} ${timeFormat}`,
+			});
 		}
-
-		addToPlanMutation.mutate({
-			planDetailId: selectedPlan.dayId,
-			destinationId: params.destinationId,
-			time: `${selectedTime} ${timeFormat}`,
-		});
 	};
 
 	return (
@@ -229,7 +250,6 @@ export default function AddToPlanModal({
 											<input
 												type="time"
 												className="input input-bordered pl-4 w-full bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500"
-												value={selectedTime}
 												onChange={handleTimeChange}
 											/>
 										</div>

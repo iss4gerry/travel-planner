@@ -11,6 +11,7 @@ export type Context = {
 		bannerId: string;
 		city: string;
 		activityId: string;
+		activityFromBannerId: string;
 	}>;
 };
 

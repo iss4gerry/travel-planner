@@ -44,6 +44,18 @@ model PlanDetail {
   planId      String
   plan        Plan        @relation(fields: [planId], references: [id], onDelete: Cascade)
   activities  Activity[]
+  activitiesFromBanner ActivityFromBanner[]
+}
+
+model ActivityFromBanner {
+  id              String      @id @default(uuid())
+  planDetailId    String
+  planDetail      PlanDetail  @relation(fields: [planDetailId], references: [id], onDelete: Cascade)
+  bannerId        String
+  bannerAds       BannerAds   @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  time            String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
 
 model Activity {
@@ -84,22 +96,23 @@ model Category {
 }
 
 model BannerAds {
-  id                String       @id @default(uuid())
-  userId            String
-  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  imageUrl          String       
-  title             String
-  description       String
-  startDate         String
-  address           String
-  cost              Float
-  categoryId        String
-  category          Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  targetUrl         String
-  bannerDuration    Int 
-  validUntil        DateTime
-  isActive          Boolean      @default(false)
-  isPaid            Boolean      @default(false)
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  id                    String       @id @default(uuid())
+  userId                String
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imageUrl              String       
+  title                 String
+  description           String
+  startDate             String
+  address               String
+  cost                  Float
+  categoryId            String
+  category              Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  targetUrl             String
+  bannerDuration        Int 
+  validUntil            DateTime
+  isActive              Boolean      @default(false)
+  isPaid                Boolean      @default(false)
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  activityFromBanner    ActivityFromBanner[]
 }

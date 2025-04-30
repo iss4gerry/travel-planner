@@ -28,7 +28,35 @@ export type PlanDetailResponse = PlanResponse & {
 		date: Date;
 		planId?: string;
 		activities?: Activities[];
+		activitiesFromPlan?: ActivitiesFromBanner[];
 	}[];
+};
+
+export type ActivitiesFromBanner = {
+	id: string;
+	planDetailId?: string;
+	bannerAdsId?: string;
+	time: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+	bannerAds: BannerAds;
+};
+
+export type BannerAds = {
+	id?: string;
+	imageUrl: string | null;
+	title: string;
+	description: string;
+	address: string;
+	cost: string;
+	targetUrl: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+	categoryId?: string;
+	category: {
+		name: string;
+		imageUrl: string | null;
+	};
 };
 
 export type Activities = {

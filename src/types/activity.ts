@@ -6,3 +6,12 @@ export type ActivityResponse = {
 	createdAt: Date;
 	updatedAt: Date;
 };
+
+export type ActivityFromBanner = {
+	id: string;
+	planDetailId: string;
+	bannerId: string;
+	time: string;
+	createdAt: Date;
+	updatedAt: Date;
+};

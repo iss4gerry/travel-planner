@@ -75,3 +75,21 @@ export const addDestinationToPlan = async (body: {
 		handleAxiosError(error, 'fetchDestination');
 	}
 };
+
+export const addBannerToPlan = async (body: {
+	planDetailId: string;
+	bannerId: string;
+	time: string;
+}) => {
+	try {
+		console.log(body);
+		const axios = getAxiosInstance();
+		const { data } = await axios.post('/plans/banners', {
+			...body,
+		});
+		const banners: PlanResponse = data.data;
+		return banners;
+	} catch (error) {
+		handleAxiosError(error, 'addBannerToPlan');
+	}
+};

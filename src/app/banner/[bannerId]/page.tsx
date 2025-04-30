@@ -29,8 +29,12 @@ export default function BannerDetails() {
 		queryFn: fetchDestination,
 	});
 
-	const changeModalStatus = () => {
-		setModalStatus((prev) => !prev);
+	const handleOpenModal = () => {
+		setModalStatus(true);
+	};
+
+	const handleCloseModal = () => {
+		setModalStatus(false);
 	};
 
 	if (isLoading) return <DestinationDetailSkeleton />;
@@ -121,10 +125,15 @@ export default function BannerDetails() {
 			<div className="flex flex-col sm:flex-row gap-4 mt-8">
 				<button
 					className="bg-primary text-white px-6 py-3 rounded-lg font-medium text-center hover:cursor-pointer transition-colors"
-					onClick={changeModalStatus}
+					onClick={handleOpenModal}
 				>
 					Add to plan
 				</button>
+				<AddToPlanModal
+					modalStatus={modalStatus}
+					onClose={handleCloseModal}
+					mode="banner"
+				/>
 				<Link
 					href={`/attractions/${data.address}`}
 					className="border border-primary text-primary px-6 py-3 rounded-lg font-medium text-center hover:bg-secondary transition-colors"

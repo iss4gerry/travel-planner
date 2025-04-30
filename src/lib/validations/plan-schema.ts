@@ -37,4 +37,13 @@ export const addDestinationToPlan = z
 	})
 	.strict();
 
+export const addBannerToPlan = z
+	.object({
+		planDetailId: string().min(5, 'Invalid UUID'),
+		bannerId: string().min(5, 'Invalid UUID'),
+		time: string().min(2, 'Invalid Time'),
+	})
+	.strict();
+
 export type AddDestinationToPlan = z.infer<typeof addDestinationToPlan>;
+export type AddBannerToPlan = z.infer<typeof addBannerToPlan>;

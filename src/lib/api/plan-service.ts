@@ -8,8 +8,11 @@ import {
 } from '@/types/plan';
 import { prisma } from '../db';
 import { ApiError } from '@/utils/apiError';
-import { ActivityResponse } from '@/types/activity';
-import { AddDestinationToPlan } from '../validations/plan-schema';
+import { ActivityFromBanner, ActivityResponse } from '@/types/activity';
+import {
+	AddBannerToPlan,
+	AddDestinationToPlan,
+} from '../validations/plan-schema';
 import { ItineraryService } from './itinerary-service';
 
 export class PlanService {
@@ -141,6 +144,28 @@ export class PlanService {
 										name: true,
 										imageUrl: true,
 										description: true,
+										address: true,
+										cost: true,
+										category: {
+											select: {
+												name: true,
+												imageUrl: true,
+											},
+										},
+									},
+								},
+							},
+						},
+						activitiesFromBanner: {
+							select: {
+								id: true,
+								time: true,
+								bannerAds: {
+									select: {
+										title: true,
+										imageUrl: true,
+										description: true,
+										targetUrl: true,
 										address: true,
 										cost: true,
 										category: {
@@ -344,6 +369,24 @@ export class PlanService {
 		return await prisma.activity.delete({
 			where: {
 				id: activityId,
+			},
+		});
+	}
+
+	static async addBannerToPlan(
+		body: AddBannerToPlan
+	): Promise<ActivityFromBanner> {
+		return await prisma.activityFromBanner.create({
+			data: body,
+		});
+	}
+
+	static async deleteBannerFromPlan(
+		activityFromBannerId: string
+	): Promise<ActivityFromBanner> {
+		return await prisma.activityFromBanner.delete({
+			where: {
+				id: activityFromBannerId,
 			},
 		});
 	}

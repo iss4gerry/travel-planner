@@ -100,7 +100,7 @@ export default function DestinationDetails() {
 
 			<div className="relative w-full h-90 rounded-lg overflow-hidden mb-8">
 				<Image
-					src={data.imageUrl || '/api/placeholder/800/400'}
+					src={data.imageUrl || data.category?.imageUrl || ''}
 					alt={data.name}
 					fill
 					className="object-cover"
@@ -135,7 +135,11 @@ export default function DestinationDetails() {
 				>
 					Add to plan
 				</button>
-				<AddToPlanModal modalStatus={modalStatus} onClose={closeModal} />
+				<AddToPlanModal
+					modalStatus={modalStatus}
+					onClose={closeModal}
+					mode="destination"
+				/>
 				<Link
 					href={`/attractions/${data.address}`}
 					className="border border-primary text-primary px-6 py-3 rounded-lg font-medium text-center hover:bg-secondary transition-colors"
