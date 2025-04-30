@@ -54,21 +54,38 @@ export default function OverviewView({
 					</div>
 
 					<div className="space-y-3">
-						{day.activities?.slice(0, 3).map((activity) => (
-							<div key={activity.id} className="flex items-center">
-								<div className="bg-gray-200 rounded-full p-2 mr-3">
-									<WaypointsIcon />
-								</div>
-								<div>
-									<p className="font-medium">
-										{activity.time} - {activity.destination.name}
-									</p>
-									<p className="text-sm text-gray-500 truncate">
-										{activity.destination.description.substring(0, 60)}...
-									</p>
-								</div>
-							</div>
-						))}
+						{[
+							...(Array.isArray(day.activities) ? day.activities : []),
+							...(Array.isArray(day.activitiesFromBanner)
+								? day.activitiesFromBanner
+								: []),
+						]
+							.slice(0, 3)
+							.map((activity) => {
+								const isDestinationActivity = 'destination' in activity;
+
+								return (
+									<div key={activity.id} className="flex items-center">
+										<div className="bg-gray-200 rounded-full p-2 mr-3">
+											<WaypointsIcon />
+										</div>
+										<div>
+											<p className="font-medium">
+												{activity.time} -{' '}
+												{isDestinationActivity
+													? activity.destination.name
+													: activity.bannerAds?.title}
+											</p>
+											<p className="text-sm text-gray-500 truncate">
+												{isDestinationActivity
+													? activity.destination.description.substring(0, 60)
+													: activity.bannerAds?.description?.substring(0, 60)}
+												...
+											</p>
+										</div>
+									</div>
+								);
+							})}
 						{(day.activities?.length || 0) > 3 && (
 							<p className="text-indigo-600 text-sm">
 								+ {day.activities!.length - 3} more activities

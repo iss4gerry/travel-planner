@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { PlanDetailResponse } from '@/types/plan';
+import type { BannerAds, Destination, PlanDetailResponse } from '@/types/plan';
 import { format } from 'date-fns';
 import { MapPin, Clock, ChevronRight, Info } from 'lucide-react';
 import { getThemeHexColor } from '@/utils/planThemeColor';
@@ -32,6 +32,15 @@ export default function DayView({
 		return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
 	});
 
+	const sortedActivitiesFromBanner = [
+		...(dayDetail.activitiesFromBanner || []),
+	].sort((a, b) => {
+		const timeA = a.time.split(':').map(Number);
+		const timeB = b.time.split(':').map(Number);
+		return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
+	});
+
+	const mergedActivities = [...sortedActivities, ...sortedActivitiesFromBanner];
 	const toggleActivity = (id: string) => {
 		if (expandedActivity === id) {
 			setExpandedActivity(null);
@@ -51,7 +60,7 @@ export default function DayView({
 						</p>
 					</div>
 					<div className="bg-secondary rounded-full px-4 py-2 text-sm font-medium">
-						{sortedActivities.length} Activities
+						{mergedActivities.length} Activities
 					</div>
 				</div>
 			</div>
@@ -59,14 +68,19 @@ export default function DayView({
 			<div className="p-6">
 				<div className="relative">
 					<div className="space-y-6">
-						{sortedActivities.length === 0 ? (
+						{mergedActivities.length === 0 ? (
 							<div className="text-center py-8 text-gray-500">
 								<Clock className="w-12 h-12 mx-auto mb-2 text-gray-400" />
 								<p>No activities scheduled for this day</p>
 							</div>
 						) : (
-							sortedActivities.map((activity, index) => {
+							mergedActivities.map((activity) => {
 								const isExpanded = expandedActivity === activity.id;
+								const isDestination = 'destination' in activity;
+								const data = isDestination
+									? activity.destination
+									: activity.bannerAds;
+
 								return (
 									<div key={activity.id}>
 										<div className="flex">
@@ -77,7 +91,6 @@ export default function DayView({
 														{activity.time}
 													</span>
 												</div>
-
 												<div className="relative">
 													<div className="absolute left-0 bg-primary border-4 border-indigo-100 rounded-full w-5 h-5 z-10"></div>
 												</div>
@@ -96,21 +109,19 @@ export default function DayView({
 																className="w-10 h-10 rounded-full flex items-center justify-center text-white"
 																style={{
 																	backgroundColor: getThemeHexColor(
-																		activity.destination.category.name
+																		data.category.name
 																	),
 																}}
 															>
-																{getCategoryIcon(
-																	activity.destination.category.name
-																)}
+																{getCategoryIcon(data.category.name)}
 															</div>
 															<div>
 																<h3 className="font-semibold text-lg text-gray-800">
-																	{activity.destination.name}
+																	{(data as Destination).name ??
+																		(data as BannerAds).title}
 																</h3>
 																<p className="text-sm text-gray-500">
-																	{activity.destination.category.name} •{' '}
-																	{activity.destination.cost}
+																	{data.category.name} • {data.cost}
 																</p>
 															</div>
 														</div>
@@ -125,42 +136,44 @@ export default function DayView({
 														<div className="divide-y divide-gray-100">
 															<div className="p-4">
 																<div className="flex flex-col md:flex-row">
-																	{activity.destination.imageUrl && (
+																	{data.imageUrl && (
 																		<Image
 																			src={
-																				activity.destination.imageUrl ||
-																				activity.destination.category
-																					.imageUrl ||
+																				data.imageUrl ||
+																				data.category.imageUrl ||
 																				'/api/placeholder/200/150'
 																			}
 																			width={20}
 																			height={48}
-																			alt={activity.destination.name}
+																			alt={
+																				(data as Destination).name ??
+																				(data as BannerAds).title
+																			}
 																			className="w-full md:w-1/3 h-48 object-cover rounded-lg mb-4 md:mb-0 md:mr-4"
 																		/>
 																	)}
 																	<div
 																		className={
-																			activity.destination.imageUrl
-																				? 'md:w-2/3'
-																				: 'w-full'
+																			data.imageUrl ? 'md:w-2/3' : 'w-full'
 																		}
 																	>
 																		<p className="text-gray-700">
-																			{activity.destination.description}
+																			{data.description}
 																		</p>
 																	</div>
 																</div>
 															</div>
 
-															<div className="bg-gray-50 p-4">
-																<div className="flex items-center text-gray-600">
-																	<MapPin className="w-4 h-4 flex-shrink-0 text-indigo-500" />
-																	<span className="ml-2 text-sm">
-																		{activity.destination.address}
-																	</span>
+															{data.address && (
+																<div className="bg-gray-50 p-4">
+																	<div className="flex items-center text-gray-600">
+																		<MapPin className="w-4 h-4 flex-shrink-0 text-indigo-500" />
+																		<span className="ml-2 text-sm">
+																			{data.address}
+																		</span>
+																	</div>
 																</div>
-															</div>
+															)}
 														</div>
 													)}
 												</div>

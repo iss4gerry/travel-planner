@@ -28,7 +28,7 @@ export type PlanDetailResponse = PlanResponse & {
 		date: Date;
 		planId?: string;
 		activities?: Activities[];
-		activitiesFromPlan?: ActivitiesFromBanner[];
+		activitiesFromBanner?: ActivitiesFromBanner[];
 	}[];
 };
 
@@ -48,7 +48,7 @@ export type BannerAds = {
 	title: string;
 	description: string;
 	address: string;
-	cost: string;
+	cost: number;
 	targetUrl: string;
 	createdAt?: Date;
 	updatedAt?: Date;
