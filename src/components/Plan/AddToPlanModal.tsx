@@ -133,7 +133,7 @@ export default function AddToPlanModal({
 			addToPlanMutation.mutate({
 				planDetailId: selectedPlan.dayId,
 				destinationId: params.destinationId,
-				time: `${selectedTime} ${timeFormat}`,
+				time: selectedTime,
 			});
 		} else {
 			if (!selectedPlan?.dayId || !selectedPlan?.planId || !params?.bannerId) {
@@ -143,7 +143,7 @@ export default function AddToPlanModal({
 			addToPlanMutation.mutate({
 				planDetailId: selectedPlan.dayId,
 				bannerId: params.bannerId,
-				time: `${selectedTime} ${timeFormat}`,
+				time: selectedTime,
 			});
 		}
 	};
