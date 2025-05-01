@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import type { BannerAds, Destination, PlanDetailResponse } from '@/types/plan';
 import { format } from 'date-fns';
-import { MapPin, Clock, ChevronRight, Info } from 'lucide-react';
+import {
+	MapPin,
+	Clock,
+	ChevronRight,
+	Info,
+	Trash2Icon,
+	Loader2Icon,
+} from 'lucide-react';
 import { getThemeHexColor } from '@/utils/planThemeColor';
 import Image from 'next/image';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+	deleteBannerFromPlan,
+	deleteDestinationFromPlan,
+} from '@/lib/services/plan-service';
+import toast from 'react-hot-toast';
+import { useParams } from 'next/navigation';
 
 export default function DayView({
 	dayDetail,
@@ -11,6 +25,8 @@ export default function DayView({
 	dayDetail: PlanDetailResponse['planDetails'][number];
 }) {
 	const [expandedActivity, setExpandedActivity] = useState<string | null>(null);
+	const queryClient = useQueryClient();
+	const params = useParams<{ planId: string }>();
 
 	if (!dayDetail) {
 		return (
@@ -26,11 +42,36 @@ export default function DayView({
 		);
 	}
 
-	const activities = dayDetail.activities || [];
-	const activitiesFromBanner = dayDetail.activitiesFromBanner || [];
+	const { mutate, isPending } = useMutation({
+		mutationFn: ({
+			type,
+			id,
+		}: {
+			type: 'destination' | 'banner';
+			id: string;
+		}) => {
+			return type === 'destination'
+				? deleteDestinationFromPlan(id)
+				: deleteBannerFromPlan(id);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['plan', params.planId] });
+			toast.success(`Delete destination from plan success!`);
+		},
+		onError: (error) => {
+			console.error(`Failed to delete destination from plan :`, error);
+			toast.error(`Failed to delete destination from  plan. Please try again.`);
+		},
+	});
 
-	const allActivities = [...activities, ...activitiesFromBanner];
-	const mergedActivities = [...(allActivities || [])].sort((a, b) => {
+	const handleDelete = (type: 'destination' | 'banner', id: string) => {
+		mutate({ type, id });
+	};
+
+	const mergedActivities = [
+		...(dayDetail.activities || []),
+		...(dayDetail.activitiesFromBanner || []),
+	].sort((a, b) => {
 		const to24Hour = (time: string) => {
 			const [hourMinute, modifier] = time.split(' ');
 			let [hours, minutes] = hourMinute.split(':').map(Number);
@@ -106,9 +147,11 @@ export default function DayView({
 													className={`border border-gray-200 rounded-xl overflow-hidden transition-all duration-200 ${
 														isExpanded ? 'shadow-lg' : 'hover:shadow-md'
 													}`}
-													onClick={() => toggleActivity(activity.id)}
 												>
-													<div className="p-4 cursor-pointer bg-gray-50 flex items-center justify-between">
+													<div
+														className="p-4 cursor-pointer bg-gray-50 flex items-center justify-between"
+														onClick={() => toggleActivity(activity.id)}
+													>
 														<div className="flex items-center space-x-3">
 															<div
 																className="w-10 h-10 rounded-full flex items-center justify-center text-white"
@@ -170,13 +213,36 @@ export default function DayView({
 															</div>
 
 															{data.address && (
-																<div className="bg-gray-50 p-4">
-																	<div className="flex items-center text-gray-600">
-																		<MapPin className="w-4 h-4 flex-shrink-0 text-indigo-500" />
-																		<span className="ml-2 text-sm">
-																			{data.address}
-																		</span>
+																<div className="flex flex-row justify-between items-center px-3">
+																	<div className="bg-gray-50 p-4">
+																		<div className="flex items-center text-gray-600">
+																			<MapPin className="w-4 h-4 flex-shrink-0 text-primary" />
+																			<span className="ml-2 text-sm">
+																				{data.address}
+																			</span>
+																		</div>
 																	</div>
+																	<button
+																		disabled={isPending}
+																		onClick={() =>
+																			handleDelete(
+																				isDestination
+																					? 'destination'
+																					: 'banner',
+																				activity.id
+																			)
+																		}
+																	>
+																		{!isPending ? (
+																			<Trash2Icon
+																				className={`text-primary bg-secondary hover:bg-primary hover:cursor-pointer p-1 rounded-full `}
+																			/>
+																		) : (
+																			<Loader2Icon
+																				className={`animate-spin text-primary bg-secondary p-1 rounded-full `}
+																			/>
+																		)}
+																	</button>
 																</div>
 															)}
 														</div>

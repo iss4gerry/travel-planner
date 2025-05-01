@@ -99,3 +99,27 @@ export const createPlan = async (body: CreatePlan) => {
 		handleAxiosError(error, 'fetchPlan');
 	}
 };
+
+export const deleteDestinationFromPlan = async (id: string) => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.delete(`/plans/destinations/${id}`);
+
+		const plans: PlanResponse = data.data;
+		return plans;
+	} catch (error) {
+		handleAxiosError(error, 'deleteDestinationFromPlan');
+	}
+};
+
+export const deleteBannerFromPlan = async (id: string) => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.delete(`/plans/banners/${id}`);
+
+		const plans: PlanResponse = data.data;
+		return plans;
+	} catch (error) {
+		handleAxiosError(error, 'deleteBannerFromPlan');
+	}
+};

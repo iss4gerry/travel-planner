@@ -11,7 +11,10 @@ export default function OverviewView({
 }) {
 	const totalDays = planDetails.length;
 	const totalActivities = planDetails.reduce(
-		(sum, day) => sum + (day.activities?.length || 0),
+		(sum, day) =>
+			sum +
+			(day.activities?.length || 0) +
+			(day.activitiesFromBanner?.length || 0),
 		0
 	);
 
@@ -45,12 +48,6 @@ export default function OverviewView({
 							<h3 className="text-lg font-semibold">Day {day.day}</h3>
 							<p className="text-gray-500">{format(day.date, 'EEE, MMMM d')}</p>
 						</div>
-						<button
-							className="bg-primary text-base-100 px-3 py-1 rounded-md hover:bg-indigo-200 transition"
-							onClick={() => setSelectedDay(day.day)}
-						>
-							View Details
-						</button>
 					</div>
 
 					<div className="space-y-3">
@@ -63,7 +60,6 @@ export default function OverviewView({
 							.slice(0, 3)
 							.map((activity) => {
 								const isDestinationActivity = 'destination' in activity;
-
 								return (
 									<div key={activity.id} className="flex items-center">
 										<div className="bg-gray-200 rounded-full p-2 mr-3">
@@ -86,9 +82,18 @@ export default function OverviewView({
 									</div>
 								);
 							})}
-						{(day.activities?.length || 0) > 3 && (
-							<p className="text-indigo-600 text-sm">
-								+ {day.activities!.length - 3} more activities
+						{(day.activities?.length || 0) +
+							(day.activitiesFromBanner?.length || 0) >
+							3 && (
+							<p
+								className="text-primary text-sm hover:cursor-pointer "
+								onClick={() => setSelectedDay(day.day)}
+							>
+								+{' '}
+								{(day.activities!.length || 0) +
+									(day.activitiesFromBanner?.length || 0) -
+									3}{' '}
+								more activities
 							</p>
 						)}
 					</div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Itinerary, PlanDetailResponse } from '@/types/plan';
+import { Itinerary } from '@/types/plan';
 import { useEffect, useRef, useState } from 'react';
 import OverviewView from './OverviewView';
 import DayView from './DayView';
