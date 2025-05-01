@@ -26,21 +26,26 @@ export default function DayView({
 		);
 	}
 
-	const sortedActivities = [...(dayDetail.activities || [])].sort((a, b) => {
-		const timeA = a.time.split(':').map(Number);
-		const timeB = b.time.split(':').map(Number);
-		return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
+	const activities = dayDetail.activities || [];
+	const activitiesFromBanner = dayDetail.activitiesFromBanner || [];
+
+	const allActivities = [...activities, ...activitiesFromBanner];
+	const mergedActivities = [...(allActivities || [])].sort((a, b) => {
+		const to24Hour = (time: string) => {
+			const [hourMinute, modifier] = time.split(' ');
+			let [hours, minutes] = hourMinute.split(':').map(Number);
+			if (modifier === 'PM' && hours !== 12) {
+				hours += 12;
+			} else if (modifier === 'AM' && hours === 12) {
+				hours = 0;
+			}
+
+			return hours * 60 + minutes;
+		};
+
+		return to24Hour(a.time) - to24Hour(b.time);
 	});
 
-	const sortedActivitiesFromBanner = [
-		...(dayDetail.activitiesFromBanner || []),
-	].sort((a, b) => {
-		const timeA = a.time.split(':').map(Number);
-		const timeB = b.time.split(':').map(Number);
-		return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
-	});
-
-	const mergedActivities = [...sortedActivities, ...sortedActivitiesFromBanner];
 	const toggleActivity = (id: string) => {
 		if (expandedActivity === id) {
 			setExpandedActivity(null);
