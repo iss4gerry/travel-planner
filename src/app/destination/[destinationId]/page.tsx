@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { DestinationResponse } from '@/types/destination';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
 import AddToPlanModal from '@/components/Plan/AddToPlanModal';
 
@@ -21,9 +21,13 @@ export default function DestinationDetails() {
 	const params = useParams<{ destinationId: string }>();
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
+	const router = useRouter();
 	const fetchDestination = async () => {
 		const result = await fetch(`/api/destinations/${params.destinationId}`);
 		if (!result.ok) {
+			if (result.status == 404) {
+				router.push('/not-found');
+			}
 			throw new Error('Something went wrong');
 		}
 

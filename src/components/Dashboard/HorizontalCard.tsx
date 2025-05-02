@@ -1,5 +1,6 @@
 import { DollarSign, MapIcon, MapPin, Wallet, Waypoints } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 type Props = {
 	id: string;
@@ -13,9 +14,22 @@ type Props = {
 	updatedAt: Date;
 };
 
-export default function HorizontalCard({ data }: { data: Props }) {
+export default function HorizontalCard({
+	data,
+	mode,
+}: {
+	data: Props;
+	mode: string;
+}) {
+	const router = useRouter();
+	const handleClick = () => {
+		router.push(`${mode}/${data.id}`);
+	};
 	return (
-		<div className="flex flex-row w-full justify-start bg-base-100 rounded-lg shadow-lg p-2">
+		<div
+			className="flex flex-row w-full justify-start bg-white p-2 border-b border-base-200 hover:bg-base-100 hover:cursor-pointer"
+			onClick={handleClick}
+		>
 			<div className="relative w-40 h-40 overflow-hidden rounded-md shadow-md">
 				<Image
 					src={data.imageUrl || '/placeholder.svg'}

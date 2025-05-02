@@ -64,25 +64,6 @@ const initialBannerAds: BannerResponse[] = [
 		createdAt: new Date('2025-05-03'),
 		updatedAt: new Date('2025-05-03'),
 	},
-	{
-		id: '4',
-		userId: 'user_004',
-		imageUrl:
-			'https://lp-cms-production.imgix.net/2019-06/shutterstock_160155083.jpg',
-		title: 'Jungle Adventure',
-		description: 'Adventure tours in the heart of the jungle',
-		startDate: '2025-08-10',
-		address: 'Amazon Rainforest',
-		cost: 7500000,
-		categoryId: 'cat_nature',
-		targetUrl: 'https://example.com/jungle',
-		bannerDuration: 25,
-		validUntil: new Date('2025-09-04'),
-		isActive: true,
-		isPaid: false,
-		createdAt: new Date('2025-05-04'),
-		updatedAt: new Date('2025-05-04'),
-	},
 ];
 
 const initialDestinations: DestinationResponse[] = [
@@ -137,23 +118,6 @@ const initialDestinations: DestinationResponse[] = [
 			imageUrl: '/placeholder.svg?height=100&width=100',
 		},
 	},
-	{
-		id: '4',
-		imageUrl:
-			'https://lp-cms-production.imgix.net/2019-06/shutterstock_160155083.jpg',
-		name: 'Amazon Rainforest Trek',
-		description: 'Journey into the heart of the jungle and experience wildlife',
-		address: 'Manaus Port',
-		city: 'Amazonas',
-		cost: '7000000',
-		createdAt: new Date('2025-05-04'),
-		updatedAt: new Date('2025-05-04'),
-		categoryId: 'cat_nature',
-		category: {
-			name: 'Nature',
-			imageUrl: '/placeholder.svg?height=100&width=100',
-		},
-	},
 ];
 
 export default function Home() {
@@ -184,9 +148,9 @@ export default function Home() {
 					</button>
 				</div>
 
-				<div className="grid grid-rows-4 gap-4">
+				<div className="rounded-lg shadow divide-y divide-gray-200">
 					{initialBannerAds.map((ad) => (
-						<HorizontalCard key={ad.id} data={ad} />
+						<HorizontalCard key={ad.id} data={ad} mode="destination" />
 					))}
 				</div>
 			</section>
@@ -207,9 +171,13 @@ export default function Home() {
 					</button>
 				</div>
 
-				<div className="grid grid-rows-8 gap-6">
+				<div className="rounded-lg shadow divide-y divide-gray-200">
 					{initialDestinations.map((destination) => (
-						<HorizontalCard key={destination.id} data={destination} />
+						<HorizontalCard
+							key={destination.id}
+							data={destination}
+							mode="banner"
+						/>
 					))}
 				</div>
 			</section>
