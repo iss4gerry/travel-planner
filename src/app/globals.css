@@ -61,3 +61,7 @@
 body {
 	font-family: WorkSans, sans-serif;
 }
+
+html {
+	scroll-behavior: smooth;
+}

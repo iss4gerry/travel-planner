@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 import { Menu, X, Bell } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function NavBar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	return (
@@ -50,7 +48,9 @@ export default function NavBar() {
 						</Link>
 					</li>
 					<li>
-						<a className="font-medium hover:text-primary">Explore</a>
+						<Link className="font-medium hover:text-primary" href="/#explore">
+							Explore
+						</Link>
 					</li>
 					<li>
 						<Link
@@ -61,7 +61,9 @@ export default function NavBar() {
 						</Link>
 					</li>
 					<li>
-						<a className="font-medium hover:text-primary">Destinations</a>
+						<Link className="font-medium hover:text-primary" href="/dashboard">
+							Dashboard
+						</Link>
 					</li>
 				</ul>
 			</div>

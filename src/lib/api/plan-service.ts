@@ -366,7 +366,6 @@ export class PlanService {
 	static async deleteDestinationFromPlan(
 		activityId: string
 	): Promise<ActivityResponse> {
-		await new Promise((Resolve) => setTimeout(Resolve, 3000));
 		return await prisma.activity.delete({
 			where: {
 				id: activityId,

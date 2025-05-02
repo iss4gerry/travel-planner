@@ -32,7 +32,9 @@ export default async function Home({ searchParams }: Props) {
 				<Banner />
 			</Suspense>
 			<div className="w-full mt-5">
-				<p className="text-2xl min-sm:text-3xl font-bold my-3">Explore</p>
+				<p className="text-2xl min-sm:text-3xl font-bold my-3" id="explore">
+					Explore
+				</p>
 				<select className="select w-35">
 					<option defaultValue="true">All City</option>
 					<option>Crimson</option>
