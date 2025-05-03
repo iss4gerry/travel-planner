@@ -78,4 +78,12 @@ export class BannerService {
 			},
 		});
 	}
+
+	static async getBannerByUserId(userId: string) {
+		return await prisma.bannerAds.findMany({
+			where: {
+				userId: userId,
+			},
+		});
+	}
 }

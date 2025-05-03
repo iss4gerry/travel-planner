@@ -37,9 +37,9 @@ export default async function Home({ searchParams }: Props) {
 				</p>
 				<select className="select w-35">
 					<option defaultValue="true">All City</option>
-					<option>Crimson</option>
-					<option>Amber</option>
-					<option>Velvet</option>
+					<option>Jakarta</option>
+					<option>Bali</option>
+					<option>Bandung</option>
 				</select>
 			</div>
 

@@ -5,6 +5,10 @@ import { Plus, UserPlus, X } from 'lucide-react';
 import { BannerResponse } from '@/types/banner';
 import { DestinationResponse } from '@/types/destination';
 import HorizontalCard from '@/components/Dashboard/HorizontalCard';
+import { useSession } from 'next-auth/react';
+import { authOptions } from '../api/auth/[...nextauth]/route';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserDestinations } from '@/lib/services/dashboard-service';
 
 const initialBannerAds: BannerResponse[] = [
 	{
@@ -149,9 +153,7 @@ export default function Home() {
 				</div>
 
 				<div className="rounded-lg shadow divide-y divide-gray-200">
-					{initialBannerAds.map((ad) => (
-						<HorizontalCard key={ad.id} data={ad} mode="destination" />
-					))}
+					<HorizontalCard mode="banner" />
 				</div>
 			</section>
 
@@ -172,13 +174,7 @@ export default function Home() {
 				</div>
 
 				<div className="rounded-lg shadow divide-y divide-gray-200">
-					{initialDestinations.map((destination) => (
-						<HorizontalCard
-							key={destination.id}
-							data={destination}
-							mode="banner"
-						/>
-					))}
+					<HorizontalCard mode="destination" />
 				</div>
 			</section>
 		</main>

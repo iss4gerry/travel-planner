@@ -1,24 +1,59 @@
+import {
+	fetchUserBanners,
+	fetchUserDestinations,
+} from '@/lib/services/dashboard-service';
+import { BannerResponse } from '@/types/banner';
+import { DestinationResponse } from '@/types/destination';
+import { useQuery } from '@tanstack/react-query';
 import { DollarSign, MapIcon, MapPin, Wallet, Waypoints } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import CardSkeleton from './CardSkeleton';
 
-type Props = {
-	id: string;
-	imageUrl: string | null;
-	title?: string;
-	name?: string;
-	description: string;
-	address: string;
-	cost: number | string;
-	createdAt: Date;
-	updatedAt: Date;
-};
+export default function HorizontalCard({ mode }: { mode: string }) {
+	const { data: session } = useSession();
 
-export default function HorizontalCard({
+	const { data: destinationData, isLoading: loadingDestination } = useQuery({
+		queryKey: ['user-destination', session?.user.id],
+		queryFn: fetchUserDestinations,
+		enabled: mode === 'destination',
+	});
+
+	const { data: bannerData, isLoading: loadingBanner } = useQuery({
+		queryKey: ['user-banner', session?.user.id],
+		queryFn: fetchUserBanners,
+		enabled: mode === 'banner',
+	});
+
+	if (loadingDestination || loadingBanner) {
+		return <CardSkeleton />;
+	}
+
+	console.log(bannerData);
+
+	return (
+		<div>
+			{!bannerData || !destinationData ? (
+				<div className="flex items-center justify-center w-full h-80">
+					<p>You haven't created any {mode} yet.</p>
+				</div>
+			) : (
+				<div>
+					{mode === 'destination'
+						? destinationData.map((d) => <Card mode="destination" data={d} />)
+						: bannerData.map((d) => <Card mode="banner" data={d} />)}
+				</div>
+			)}
+		</div>
+	);
+}
+
+function Card({
 	data,
 	mode,
 }: {
-	data: Props;
+	data: DestinationResponse | BannerResponse;
 	mode: string;
 }) {
 	const router = useRouter();
@@ -33,7 +68,11 @@ export default function HorizontalCard({
 			<div className="relative w-40 h-40 overflow-hidden rounded-md shadow-md">
 				<Image
 					src={data.imageUrl || '/placeholder.svg'}
-					alt={data.title || data.name || 'image'}
+					alt={
+						(data as DestinationResponse).name ||
+						(data as BannerResponse).title ||
+						'image'
+					}
 					fill
 					className="object-cover"
 				/>
@@ -42,7 +81,7 @@ export default function HorizontalCard({
 			<div className="flex flex-col pl-4 justify-between">
 				<div>
 					<h1 className="text-2xl font-semibold text-gray-800 truncate">
-						{data.name || data.title}
+						(data as DestinationResponse).name || (data as BannerResponse).title
 					</h1>
 					<p className="text-sm text-gray-600 line-clamp-2 mt-2">
 						{data.description ||

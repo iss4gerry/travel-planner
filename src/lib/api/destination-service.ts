@@ -136,4 +136,12 @@ export class DestinationService {
 			},
 		});
 	}
+
+	static async getDestinationByUserId(userId: string) {
+		return await prisma.destination.findMany({
+			where: {
+				userId: userId,
+			},
+		});
+	}
 }

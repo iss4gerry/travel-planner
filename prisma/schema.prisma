@@ -17,6 +17,7 @@ model User {
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
   isEmailVerified  Boolean      @default(false)
+  destinations     Destination[]
   bannerAds        BannerAds[]
   plans            Plan[]
 }
@@ -72,6 +73,8 @@ model Activity {
 model Destination {
   id            String      @id @default(uuid())
   imageUrl      String?
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   name          String
   description   String
   address       String
