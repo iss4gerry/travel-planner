@@ -1,6 +1,8 @@
 import { BannerResponse } from '@/types/banner';
 import { getAxiosInstance, handleAxiosError } from '../axios';
 import { DestinationResponse } from '@/types/destination';
+import { Category } from '@/types/category';
+import { CreateDestination } from '../validations/destination-schema';
 
 export const fetchUserBanners = async (params: {
 	page: number;
@@ -47,5 +49,29 @@ export const fetchUserDestinations = async (params: {
 		return { response, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchUserDestinations');
+	}
+};
+
+export const fetchCategories = async () => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.get(`/categories`);
+		const response: Category[] = data.data;
+		return response;
+	} catch (error) {
+		handleAxiosError(error, 'fetchCategories');
+	}
+};
+
+export const createDestination = async (body: CreateDestination) => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.post(`/destinations`, {
+			...body,
+		});
+		const response: DestinationResponse = data.data;
+		return response;
+	} catch (error) {
+		handleAxiosError(error, 'createDestination');
 	}
 };

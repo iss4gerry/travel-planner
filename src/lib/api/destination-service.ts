@@ -63,10 +63,11 @@ export class DestinationService {
 	}
 
 	static async createDestination(
-		body: CreateDestination
+		body: CreateDestination,
+		userId: string
 	): Promise<DestinationService> {
 		return await prisma.destination.create({
-			data: body,
+			data: { ...body, userId: userId },
 		});
 	}
 

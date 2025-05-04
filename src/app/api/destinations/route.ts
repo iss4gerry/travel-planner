@@ -36,8 +36,10 @@ export const GET = catchError(async (req: NextRequest) => {
 
 export const POST = catchError(async (req: NextRequest) => {
 	const data: CreateDestination = await req.json();
+	const userId = req.headers.get('x-user-id');
+
 	createDestinationSchema.parse(data);
-	const result = await DestinationService.createDestination(data);
+	const result = await DestinationService.createDestination(data, userId!);
 
 	return NextResponse.json({
 		status: 200,

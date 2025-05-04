@@ -1,62 +1,91 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, UserPlus, X } from 'lucide-react';
+import {
+	Plus,
+	FrameIcon,
+	ImageIcon,
+	MapIcon,
+	LucideImages,
+} from 'lucide-react';
 import HorizontalCard from '@/components/Dashboard/HorizontalCard';
+import CreateDestinationModal from '@/components/Destination/CreateDestination';
 
 export default function Home() {
-	const [isBannerModalOpen, setIsBannerModalOpen] = useState(false);
-	const [isDestinationModalOpen, setIsDestinationModalOpen] = useState(false);
+	const [destinationModalStatus, setDestinationModalStatus] =
+		useState<boolean>(false);
 
+	const [bannerModalStatus, setBannerModalStatus] = useState<boolean>(false);
+
+	const handleCloseDestinationModal = () => {
+		setDestinationModalStatus(false);
+	};
 	return (
 		<main className="container mx-auto px-4 py-8">
+			<CreateDestinationModal
+				modalStatus={destinationModalStatus}
+				onClose={handleCloseDestinationModal}
+			/>
 			<h1 className="text-3xl font-bold text-center mb-4">Dashboard</h1>
 			<p className="text-center text-gray-600 mb-8">
-				Manage your personalized banner ads and travel destinations all in one
+				Manage banner ads and travel destinations created by you, all in one
 				place
 			</p>
 
-			<section className="mb-12">
-				<div className="flex justify-between items-center mb-4">
-					<div>
-						<h2 className="text-2xl font-semibold">Your Banner Ads</h2>
-						<p className="text-sm text-gray-600">
-							These are all the promotional banners you've created
-						</p>
-					</div>
-					<button
-						className="btn btn-primary"
-						onClick={() => setIsBannerModalOpen(true)}
-					>
-						<Plus size={18} className="mr-1" /> Create Banner Ad
-					</button>
+			<div className="tabs tabs-lift">
+				<label className="tab">
+					<input type="radio" name="my_tabs_4" />
+					<LucideImages width={18} className="mr-1" />
+					Banner Ads
+				</label>
+				<div className="tab-content bg-base-100 border-base-300 p-6">
+					<section className="mb-2">
+						<div className="flex justify-between items-center mb-4">
+							<div>
+								<h2 className="text-2xl font-semibold">Your Banner Ads</h2>
+								<p className="text-sm text-gray-600">
+									These are all the promotional banners you've created
+								</p>
+							</div>
+							<button className="btn btn-primary">
+								<Plus size={18} className="mr-1" /> Create Banner Ad
+							</button>
+						</div>
+
+						<div className="rounded-lg divide-y divide-gray-200">
+							<HorizontalCard mode="banner" />
+						</div>
+					</section>
 				</div>
 
-				<div className="rounded-lg divide-y divide-gray-200">
-					<HorizontalCard mode="banner" />
-				</div>
-			</section>
+				<label className="tab">
+					<input type="radio" name="my_tabs_4" defaultChecked />
+					<MapIcon width={18} className="mr-1" />
+					Destinations
+				</label>
+				<div className="tab-content bg-base-100 border-base-300 p-6">
+					<section>
+						<div className="flex justify-between items-center mb-4">
+							<div>
+								<h2 className="text-2xl font-semibold">Your Destination</h2>
+								<p className="text-sm text-gray-600">
+									These are all the destination you've created
+								</p>
+							</div>
+							<button
+								className="btn btn-primary"
+								onClick={() => setDestinationModalStatus(true)}
+							>
+								<Plus size={18} className="mr-1" /> Create Destination
+							</button>
+						</div>
 
-			<section>
-				<div className="flex justify-between items-center mb-4">
-					<div>
-						<h2 className="text-2xl font-semibold">Your Destination</h2>
-						<p className="text-sm text-gray-600">
-							These are all the destination you've created
-						</p>
-					</div>
-					<button
-						className="btn btn-primary"
-						onClick={() => setIsDestinationModalOpen(true)}
-					>
-						<Plus size={18} className="mr-1" /> Create Destination
-					</button>
+						<div className="rounded-lg divide-y divide-gray-200">
+							<HorizontalCard mode="destination" />
+						</div>
+					</section>
 				</div>
-
-				<div className="rounded-lg divide-y divide-gray-200">
-					<HorizontalCard mode="destination" />
-				</div>
-			</section>
+			</div>
 		</main>
 	);
 }
