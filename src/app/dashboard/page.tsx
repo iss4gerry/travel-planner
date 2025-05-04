@@ -1,15 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import {
-	Plus,
-	FrameIcon,
-	ImageIcon,
-	MapIcon,
-	LucideImages,
-} from 'lucide-react';
+import { Plus, MapIcon, LucideImages } from 'lucide-react';
 import HorizontalCard from '@/components/Dashboard/HorizontalCard';
 import CreateDestinationModal from '@/components/Destination/CreateDestination';
+import CreateBannerModal from '@/components/Banner/CreateBannerModal';
 
 export default function Home() {
 	const [destinationModalStatus, setDestinationModalStatus] =
@@ -20,11 +15,20 @@ export default function Home() {
 	const handleCloseDestinationModal = () => {
 		setDestinationModalStatus(false);
 	};
+
+	const handleCloseBannerModal = () => {
+		setBannerModalStatus(false);
+	};
+
 	return (
 		<main className="container mx-auto px-4 py-8">
 			<CreateDestinationModal
 				modalStatus={destinationModalStatus}
 				onClose={handleCloseDestinationModal}
+			/>
+			<CreateBannerModal
+				modalStatus={bannerModalStatus}
+				onClose={handleCloseBannerModal}
 			/>
 			<h1 className="text-3xl font-bold text-center mb-4">Dashboard</h1>
 			<p className="text-center text-gray-600 mb-8">
@@ -47,7 +51,10 @@ export default function Home() {
 									These are all the promotional banners you've created
 								</p>
 							</div>
-							<button className="btn btn-primary">
+							<button
+								className="btn btn-primary"
+								onClick={() => setBannerModalStatus(true)}
+							>
 								<Plus size={18} className="mr-1" /> Create Banner Ad
 							</button>
 						</div>

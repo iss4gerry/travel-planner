@@ -110,7 +110,7 @@ function Card({
 					src={
 						data.imageUrl ||
 						(data as DestinationResponse).category?.imageUrl ||
-						'/placeholder.svg'
+						'https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/117/2023/10/23/55415861-e734-4166-917e-667381f53a57-2908549507.jpg'
 					}
 					alt={
 						(data as DestinationResponse).name ||

@@ -5,6 +5,7 @@ export const createBannerSchema = z
 		title: z.string(),
 		description: z.string(),
 		startDate: z.string(),
+		imageUrl: z.string(),
 		address: z.string(),
 		cost: z.string(),
 		categoryId: z.string(),

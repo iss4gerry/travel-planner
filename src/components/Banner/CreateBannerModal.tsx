@@ -13,17 +13,15 @@ import {
 	TagIcon,
 	BuildingIcon,
 } from 'lucide-react';
-import {
-	CreateDestination,
-	createDestinationSchema,
-} from '@/lib/validations/destination-schema';
-import {
-	createDestination,
-	fetchCategories,
-} from '@/lib/services/dashboard-service';
+import { fetchCategories } from '@/lib/services/dashboard-service';
 import { useSession } from 'next-auth/react';
+import {
+	createBannerSchema,
+	type CreateBanner,
+} from '@/lib/validations/banner-schema';
+import { createBanner } from '@/lib/services/banner-service';
 
-export default function CreateDestinationModal({
+export default function CreateBannerModal({
 	modalStatus,
 	onClose,
 }: {
@@ -33,17 +31,19 @@ export default function CreateDestinationModal({
 }) {
 	const { data: session } = useSession();
 	const queryClient = useQueryClient();
-	const [formData, setFormData] = useState<CreateDestination>({
-		imageUrl: '',
-		name: '',
+	const [formData, setFormData] = useState<CreateBanner>({
+		title: '',
 		description: '',
+		imageUrl: '',
+		startDate: '',
 		address: '',
 		cost: '',
 		categoryId: '',
-		city: '',
+		targetUrl: '',
+		bannerDuration: '3',
 	});
 	const [errors, setErrors] = useState<
-		Partial<Record<keyof CreateDestination, string>>
+		Partial<Record<keyof CreateBanner, string>>
 	>({});
 
 	const { data: categories, isLoading } = useQuery({
@@ -62,7 +62,7 @@ export default function CreateDestinationModal({
 			[name]: value,
 		}));
 
-		if (errors[name as keyof CreateDestination]) {
+		if (errors[name as keyof CreateBanner]) {
 			setErrors((prev) => ({
 				...prev,
 				[name]: undefined,
@@ -70,41 +70,43 @@ export default function CreateDestinationModal({
 		}
 	};
 
-	const createDestinationMutation = useMutation({
-		mutationFn: () => createDestination(formData),
+	const createBannerMutation = useMutation({
+		mutationFn: () => createBanner(formData),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['user-destination', session?.user.id],
+				queryKey: ['user-banner', session?.user.id],
 			});
-			toast.success('Destination created successfully!');
+			toast.success('Banner created successfully!');
 			onClose();
 			setFormData({
-				imageUrl: '',
-				name: '',
+				title: '',
 				description: '',
+				imageUrl: '',
+				startDate: '',
 				address: '',
 				cost: '',
 				categoryId: '',
-				city: '',
+				targetUrl: '',
+				bannerDuration: '3',
 			});
 		},
 		onError: (error) => {
-			console.error('Failed to create destination:', error);
-			toast.error('Failed to create destination. Please try again.');
+			console.error('Failed to create banner:', error);
+			toast.error('Failed to create banner. Please try again.');
 		},
 	});
 
 	const validateForm = () => {
 		try {
-			createDestinationSchema.parse(formData);
+			createBannerSchema.parse(formData);
 			setErrors({});
 			return true;
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				const newErrors: Partial<Record<keyof CreateDestination, string>> = {};
+				const newErrors: Partial<Record<keyof CreateBanner, string>> = {};
 				error.errors.forEach((err) => {
 					if (err.path[0]) {
-						newErrors[err.path[0] as keyof CreateDestination] = err.message;
+						newErrors[err.path[0] as keyof CreateBanner] = err.message;
 					}
 				});
 				setErrors(newErrors);
@@ -117,7 +119,7 @@ export default function CreateDestinationModal({
 		e.preventDefault();
 
 		if (validateForm()) {
-			createDestinationMutation.mutate();
+			createBannerMutation.mutate();
 		} else {
 			toast.error('Please fix the errors in the form');
 		}
@@ -141,22 +143,22 @@ export default function CreateDestinationModal({
 							<div className="form-control">
 								<label htmlFor="name" className="label">
 									<span className="label-text font-medium text-gray-700 dark:text-gray-300">
-										Destination Name
+										Banner Name
 									</span>
 								</label>
 								<input
 									id="name"
-									name="name"
+									name="title"
 									type="text"
 									className={`input input-bordered bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
-										errors.name ? 'border-red-500' : ''
+										errors.title ? 'border-red-500' : ''
 									}`}
 									placeholder="Enter destination name"
-									value={formData.name}
+									value={formData.title}
 									onChange={handleChange}
 								/>
-								{errors.name && (
-									<p className="text-red-500 text-sm mt-1">{errors.name}</p>
+								{errors.title && (
+									<p className="text-red-500 text-sm mt-1">{errors.title}</p>
 								)}
 							</div>
 
@@ -236,25 +238,27 @@ export default function CreateDestinationModal({
 							<div className="form-control">
 								<label htmlFor="city" className="label">
 									<span className="label-text font-medium text-gray-700 dark:text-gray-300">
-										City
+										Target Url
 									</span>
 								</label>
 								<div className="relative">
 									<BuildingIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
 									<input
-										id="city"
-										name="city"
+										id="targetUrl"
+										name="targetUrl"
 										type="text"
 										className={`input input-bordered pl-10 bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
-											errors.city ? 'border-red-500' : ''
+											errors.targetUrl ? 'border-red-500' : ''
 										}`}
-										placeholder="Enter city"
-										value={formData.city}
+										placeholder="Enter Social Media"
+										value={formData.targetUrl}
 										onChange={handleChange}
 									/>
 								</div>
-								{errors.city && (
-									<p className="text-red-500 text-sm mt-1">{errors.city}</p>
+								{errors.targetUrl && (
+									<p className="text-red-500 text-sm mt-1">
+										{errors.targetUrl}
+									</p>
 								)}
 							</div>
 
@@ -331,13 +335,13 @@ export default function CreateDestinationModal({
 							<button
 								type="submit"
 								className={`btn ${
-									createDestinationMutation.isPending
+									createBannerMutation.isPending
 										? 'loading btn-disabled'
 										: 'btn-primary bg-blue-600 hover:bg-blue-700'
 								}`}
-								disabled={createDestinationMutation.isPending}
+								disabled={createBannerMutation.isPending}
 							>
-								{createDestinationMutation.isPending
+								{createBannerMutation.isPending
 									? 'Creating...'
 									: 'Create Destination'}
 							</button>

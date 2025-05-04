@@ -7,29 +7,12 @@ import {
 } from '@/lib/validations/banner-schema';
 
 export const POST = catchError(async (req: NextRequest) => {
-	const formData = await req.formData();
-	const image = formData.get('image') as File;
-	if (!image) {
-		return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
-	}
+	const userId = req.headers.get('x-user-id');
 
-	const reqData = {
-		title: formData.get('title'),
-		description: formData.get('description'),
-		startDate: formData.get('startDate'),
-		address: formData.get('address'),
-		cost: formData.get('cost'),
-		categoryId: formData.get('categoryId'),
-		targetUrl: formData.get('targetUrl'),
-		bannerDuration: formData.get('bannerDuration'),
-	};
+	const body: CreateBanner = await req.json();
+	createBannerSchema.parse(body);
 
-	createBannerSchema.parse(reqData);
-
-	const result = await BannerService.createBanner(
-		reqData as CreateBanner,
-		'9369b04d-f752-4adb-978c-3fdcf82d07e7'
-	);
+	const result = await BannerService.createBanner(body, userId!);
 	return NextResponse.json({
 		status: 200,
 		message: 'Success',

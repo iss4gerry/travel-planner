@@ -4,6 +4,7 @@ import {
 	getAxiosInstance,
 	handleAxiosError,
 } from '../axios';
+import { CreateBanner } from '../validations/banner-schema';
 
 export const fetchBannerServer = async (cookieStore: string) => {
 	try {
@@ -24,5 +25,18 @@ export const fetchBannerClient = async () => {
 		return banners;
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');
+	}
+};
+
+export const createBanner = async (body: CreateBanner) => {
+	try {
+		const axios = getAxiosInstance();
+		const { data } = await axios.post(`/banners`, {
+			...body,
+		});
+		const response: BannerResponse = data.data;
+		return response;
+	} catch (error) {
+		handleAxiosError(error, 'createBanner');
 	}
 };
