@@ -137,11 +137,26 @@ export class DestinationService {
 		});
 	}
 
-	static async getDestinationByUserId(userId: string) {
-		return await prisma.destination.findMany({
-			where: {
-				userId: userId,
-			},
-		});
+	static async getDestinationByUserId(
+		userId: string,
+		query: { page: number; limit: number; sort: string; order: string }
+	) {
+		const offset = (query.page - 1) * query.limit;
+		const [data, total] = await Promise.all([
+			prisma.destination.findMany({
+				where: { userId },
+				skip: offset,
+				take: query.limit,
+				orderBy: {
+					[query.sort]: query.order,
+				},
+			}),
+
+			prisma.destination.count({
+				where: { userId },
+			}),
+		]);
+
+		return { data, total };
 	}
 }

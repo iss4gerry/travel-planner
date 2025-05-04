@@ -8,42 +8,59 @@ import { useQuery } from '@tanstack/react-query';
 import { MapPin, Wallet } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import CardSkeleton from './CardSkeleton';
+import { parseQueryParams } from '@/lib/validations/query-schema';
+import Pagination from '../UI/Pagination';
 
 export default function HorizontalCard({ mode }: { mode: string }) {
 	const { data: session } = useSession();
+	const searchParams = useSearchParams();
+	const page = parseInt(searchParams.get('page') || '1', 10);
+	const limit = parseInt(searchParams.get('limit') || '8', 10);
+	const sort = searchParams.get('sort') || 'createdAt';
+	const order =
+		(searchParams.get('order') || 'desc').toLowerCase() === 'asc'
+			? 'asc'
+			: 'desc';
+	const parseParams = parseQueryParams({ page, limit, sort, order });
 
 	const { data: destinationData, isLoading: loadingDestination } = useQuery({
 		queryKey: ['user-destination', session?.user.id],
-		queryFn: fetchUserDestinations,
+		queryFn: () => fetchUserDestinations(parseParams),
 		enabled: mode === 'destination',
 	});
 
 	const { data: bannerData, isLoading: loadingBanner } = useQuery({
 		queryKey: ['user-banner', session?.user.id],
-		queryFn: fetchUserBanners,
+		queryFn: () => fetchUserBanners(parseParams),
 		enabled: mode === 'banner',
 	});
 
 	if (loadingDestination || loadingBanner) {
 		return <CardSkeleton />;
 	}
-	console.log(destinationData);
+	console.log(destinationData?.pagination);
 
 	return (
 		<div>
 			{mode === 'destination' && (
 				<div>
-					{!destinationData || destinationData.length === 0 ? (
+					{!destinationData || destinationData.response.length === 0 ? (
 						<div className="flex items-center justify-center w-full h-80">
 							<p>You haven't created any destinations yet.</p>
 						</div>
 					) : (
 						<div>
-							{destinationData.map((d, index) => (
-								<Card key={index} mode="destination" data={d} />
-							))}
+							<div className="shadow">
+								{destinationData.response.map((d, index) => (
+									<Card key={index} mode="destination" data={d} />
+								))}
+							</div>
+							<Pagination
+								pagination={destinationData.pagination}
+								url="dashboard"
+							/>
 						</div>
 					)}
 				</div>
@@ -51,15 +68,18 @@ export default function HorizontalCard({ mode }: { mode: string }) {
 
 			{mode === 'banner' && (
 				<div>
-					{!bannerData || bannerData.length === 0 ? (
+					{!bannerData || bannerData.response.length === 0 ? (
 						<div className="flex items-center justify-center w-full h-80">
 							<p>You haven't created any banners yet.</p>
 						</div>
 					) : (
 						<div>
-							{bannerData.map((d, index) => (
-								<Card key={index} mode="banner" data={d} />
-							))}
+							<div className="shadow">
+								{bannerData.response.map((d, index) => (
+									<Card key={index} mode="banner" data={d} />
+								))}
+							</div>
+							<Pagination pagination={bannerData.pagination} url="dashboard" />
 						</div>
 					)}
 				</div>
@@ -84,9 +104,13 @@ function Card({
 			className="flex flex-row w-full justify-start bg-base-100 p-2 border-b border-base-200 hover:bg-base-200 hover:cursor-pointer"
 			onClick={handleClick}
 		>
-			<div className="relative w-40 h-40 overflow-hidden rounded-md shadow-md">
+			<div className="relative max-w-40 max-h-40 min-w-40 min-h-40 overflow-hidden rounded-md shadow-md">
 				<Image
-					src={data.imageUrl || '/placeholder.svg'}
+					src={
+						data.imageUrl ||
+						(data as DestinationResponse).category?.imageUrl ||
+						'/placeholder.svg'
+					}
 					alt={
 						(data as DestinationResponse).name ||
 						(data as BannerResponse).title ||
@@ -103,7 +127,7 @@ function Card({
 						{(data as DestinationResponse).name ||
 							(data as BannerResponse).title}
 					</h1>
-					<p className="text-sm text-gray-600 line-clamp-2 mt-2">
+					<p className="text-sm text-gray-600 line-clamp-1 mt-2">
 						{data.description ||
 							'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident dolorum minima...'}
 					</p>

@@ -152,7 +152,7 @@ export default function Home() {
 					</button>
 				</div>
 
-				<div className="rounded-lg shadow divide-y divide-gray-200">
+				<div className="rounded-lg divide-y divide-gray-200">
 					<HorizontalCard mode="banner" />
 				</div>
 			</section>
@@ -173,7 +173,7 @@ export default function Home() {
 					</button>
 				</div>
 
-				<div className="rounded-lg shadow divide-y divide-gray-200">
+				<div className="rounded-lg divide-y divide-gray-200">
 					<HorizontalCard mode="destination" />
 				</div>
 			</section>

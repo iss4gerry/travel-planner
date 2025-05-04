@@ -79,11 +79,25 @@ export class BannerService {
 		});
 	}
 
-	static async getBannerByUserId(userId: string) {
-		return await prisma.bannerAds.findMany({
-			where: {
-				userId: userId,
-			},
-		});
+	static async getBannerByUserId(
+		userId: string,
+		query: { page: number; limit: number; sort: string; order: string }
+	) {
+		const offset = (query.page - 1) * query.limit;
+		const [data, total] = await Promise.all([
+			prisma.bannerAds.findMany({
+				where: { userId },
+				skip: offset,
+				take: query.limit,
+				orderBy: {
+					[query.sort]: query.order,
+				},
+			}),
+			prisma.bannerAds.count({
+				where: { userId },
+			}),
+		]);
+
+		return { data, total };
 	}
 }
