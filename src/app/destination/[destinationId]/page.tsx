@@ -37,6 +37,7 @@ export default function DestinationDetails() {
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['destinationDetail', params.destinationId],
 		queryFn: fetchDestination,
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const openModal = () => {

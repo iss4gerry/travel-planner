@@ -21,10 +21,10 @@ export default function TravelPlans() {
 			: 'desc';
 
 	const params = parseQueryParams({ page, limit, sort, order });
-
 	const { data } = useSuspenseQuery({
-		queryKey: ['plans', page, limit, sort, order],
+		queryKey: ['plans', params.page, params.limit, params.sort, params.order],
 		queryFn: () => fetchPlan(params),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const { plans, pagination } = data;

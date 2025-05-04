@@ -24,6 +24,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 	const { data: planDetail } = useQuery({
 		queryKey: ['plan', planId],
 		queryFn: () => fetchPlanByIdClient(planId),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const { isLoading: isGeneratingItinerary, refetch: refetchItinerary } =
@@ -32,6 +33,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 			queryFn: () => fetchItinerary(planId),
 			enabled: false,
 			refetchOnWindowFocus: false,
+			staleTime: 1000 * 60 * 5,
 		});
 
 	const { mutate: saveItineraryMutation, isPending: saveItineraryIsPending } =

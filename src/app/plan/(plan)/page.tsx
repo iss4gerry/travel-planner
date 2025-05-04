@@ -26,8 +26,9 @@ export default async function Page({ searchParams }: Props) {
 	const cookieStore = (await cookies()).toString();
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery({
-		queryKey: ['plans', parse.page, parse.limit, parse.sort, parse.order],
+		queryKey: ['plans', parse.page, 8, parse.sort, parse.order],
 		queryFn: () => fetchPlanServer(cookieStore, parse),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const dehydratedState = dehydrate(queryClient);

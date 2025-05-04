@@ -14,6 +14,7 @@ export default async function Banner() {
 	await queryClient.prefetchQuery({
 		queryKey: ['banners'],
 		queryFn: () => fetchBannerServer(cookieStore),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const dehydratedState = dehydrate(queryClient);

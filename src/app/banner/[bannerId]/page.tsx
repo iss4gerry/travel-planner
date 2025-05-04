@@ -27,6 +27,7 @@ export default function BannerDetails() {
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['destinationDetail', params.bannerId],
 		queryFn: fetchDestination,
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const handleOpenModal = () => {

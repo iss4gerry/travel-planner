@@ -23,6 +23,7 @@ export default function DestinationClinet() {
 	const { data } = useSuspenseQuery({
 		queryKey: ['destinations'],
 		queryFn: () => fetchDestination(params),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const { destinations, pagination } = data;

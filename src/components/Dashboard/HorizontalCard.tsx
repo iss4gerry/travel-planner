@@ -29,18 +29,19 @@ export default function HorizontalCard({ mode }: { mode: string }) {
 		queryKey: ['user-destination', session?.user.id],
 		queryFn: () => fetchUserDestinations(parseParams),
 		enabled: mode === 'destination',
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const { data: bannerData, isLoading: loadingBanner } = useQuery({
 		queryKey: ['user-banner', session?.user.id],
 		queryFn: () => fetchUserBanners(parseParams),
 		enabled: mode === 'banner',
+		staleTime: 1000 * 60 * 5,
 	});
 
 	if (loadingDestination || loadingBanner) {
 		return <CardSkeleton />;
 	}
-	console.log(destinationData?.pagination);
 
 	return (
 		<div>

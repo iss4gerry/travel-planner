@@ -19,8 +19,10 @@ export const fetchPlanServer = async (
 		const { data } = await axios.get('/plans', {
 			params: {
 				...params,
+				limit: 8,
 			},
 		});
+
 		const plans: PlanResponse[] = data.data;
 		const pagination: {
 			page: number;
@@ -46,6 +48,7 @@ export const fetchPlan = async (params: {
 		const { data } = await axios.get('/plans', {
 			params: {
 				...params,
+				limit: 8,
 			},
 		});
 
@@ -56,6 +59,7 @@ export const fetchPlan = async (params: {
 			total: number;
 			totalPages: number;
 		} = data.pagination;
+
 		return { plans, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchPlan');

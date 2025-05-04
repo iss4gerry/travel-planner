@@ -37,7 +37,6 @@ const CreateDestination: React.FC = () => {
 		setIsLoading(true);
 
 		try {
-			// Replace with your actual API endpoint
 			await fetch('/api/destinations', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -45,10 +44,8 @@ const CreateDestination: React.FC = () => {
 			});
 
 			router.push('/dashboard');
-			// Show success toast or message
 		} catch (error) {
 			console.error('Error creating destination:', error);
-			// Show error toast or message
 		} finally {
 			setIsLoading(false);
 		}

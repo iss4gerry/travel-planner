@@ -52,6 +52,7 @@ export default function AddToPlanModal({
 		queryKey: ['plan'],
 		queryFn: fetchPlan,
 		enabled: modalStatus,
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const { data: planDetails, isLoading: isPlanDetailsLoading } = useQuery({
@@ -68,6 +69,7 @@ export default function AddToPlanModal({
 			return response.data;
 		},
 		enabled: !!selectedPlan.planId,
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const handlePlanChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

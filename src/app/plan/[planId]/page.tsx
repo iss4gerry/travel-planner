@@ -19,6 +19,7 @@ export default async function Page({
 	await queryClient.prefetchQuery({
 		queryKey: ['plan', planId],
 		queryFn: () => fetchPlanById(cookieStore, planId),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const plan = queryClient.getQueryData<PlanDetailResponse>(['plan', planId]);

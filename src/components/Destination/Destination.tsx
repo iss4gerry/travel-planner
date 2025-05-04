@@ -26,6 +26,7 @@ export default async function Page({ query }: { query: Props }) {
 	await queryClient.prefetchQuery({
 		queryKey: ['destinations'],
 		queryFn: () => fetchDestinationServer(cookieStore, query),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const dehydratedState = dehydrate(queryClient);

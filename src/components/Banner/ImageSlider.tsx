@@ -10,6 +10,7 @@ export const ImageSlider = () => {
 	const { data: banners } = useSuspenseQuery({
 		queryKey: ['banners'],
 		queryFn: fetchBannerClient,
+		staleTime: 1000 * 60 * 5,
 	});
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [visibleDots, setVisibleDots] = useState<number[]>([]);
