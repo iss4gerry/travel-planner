@@ -17,6 +17,8 @@ import AiItinerary from './AiItinerary';
 export default function PlanDetail({ planId }: { planId: string }) {
 	const [selectedDay, setSelectedDay] = useState(1);
 	const [aiItinerary, setAiItinerary] = useState<Itinerary | null>(null);
+	const [loadingGenerateItinerary, setLoadingGenerateItinerary] =
+		useState<boolean>(false);
 	const aiItineraryRef = useRef<HTMLDivElement>(null);
 	const planOverviewRef = useRef<HTMLDivElement>(null);
 	const queryClient = useQueryClient();
@@ -27,14 +29,13 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		staleTime: 1000 * 60 * 5,
 	});
 
-	const { isLoading: isGeneratingItinerary, refetch: refetchItinerary } =
-		useQuery({
-			queryKey: ['itinerary'],
-			queryFn: () => fetchItinerary(planId),
-			enabled: false,
-			refetchOnWindowFocus: false,
-			staleTime: 1000 * 60 * 5,
-		});
+	const { refetch: refetchItinerary } = useQuery({
+		queryKey: ['itinerary'],
+		queryFn: () => fetchItinerary(planId),
+		enabled: false,
+		refetchOnWindowFocus: false,
+		staleTime: 1000 * 60 * 5,
+	});
 
 	const { mutate: saveItineraryMutation, isPending: saveItineraryIsPending } =
 		useMutation({
@@ -66,10 +67,10 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		});
 
 	useEffect(() => {
-		if (!isGeneratingItinerary && aiItinerary) {
+		if (!loadingGenerateItinerary && aiItinerary) {
 			aiItineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
 		}
-	}, [isGeneratingItinerary, aiItinerary]);
+	}, [loadingGenerateItinerary, aiItinerary]);
 
 	if (!planDetail) {
 		return (
@@ -120,10 +121,13 @@ export default function PlanDetail({ planId }: { planId: string }) {
 	};
 
 	const generateAIItinerary = async () => {
+		setLoadingGenerateItinerary(true);
 		const { data } = await refetchItinerary();
 		if (data) {
 			setAiItinerary(data);
 		}
+
+		setLoadingGenerateItinerary(false);
 
 		aiItineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
 	};
@@ -184,12 +188,12 @@ export default function PlanDetail({ planId }: { planId: string }) {
 					<div className="mt-6 flex justify-center">
 						<button
 							onClick={generateAIItinerary}
-							disabled={isGeneratingItinerary}
+							disabled={loadingGenerateItinerary}
 							className={`btn btn-primary btn-lg gap-2 ${
-								isGeneratingItinerary ? 'loading' : ''
+								loadingGenerateItinerary ? 'loading' : ''
 							}`}
 						>
-							{isGeneratingItinerary ? (
+							{loadingGenerateItinerary ? (
 								'Generating Itinerary...'
 							) : (
 								<>
