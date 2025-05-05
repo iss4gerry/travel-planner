@@ -66,7 +66,7 @@ export default function CreatePlanPage({
 			onClose();
 		},
 		onError: () => {
-			toast.success('Failed to create plan');
+			toast.error('Failed to create plan');
 		},
 	});
 

@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { FilterIcon, MapPin, PlusCircle } from 'lucide-react';
+import { FilterIcon, MapPin } from 'lucide-react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchPlan } from '@/lib/services/plan-service';
 import PlanListItem from '@/components/Plan/PlanCard';
 import { useSearchParams } from 'next/navigation';
 import { parseQueryParams } from '@/lib/validations/query-schema';
 import Pagination from '@/components/UI/Pagination';
-import Link from 'next/link';
 
 export default function TravelPlans() {
 	const searchParams = useSearchParams();
