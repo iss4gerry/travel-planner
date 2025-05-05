@@ -219,7 +219,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 				</div>
 			</div>
 
-			<div className="tabs tabs-boxed mb-6 overflow-x-auto flex flex-nowrap">
+			<div className="tabs tabs-boxed mb-6 overflow-x-auto flex flex-nowrap min-h-13 ">
 				<button
 					className={`tab tab-lg ${selectedDay === 0 ? 'tab-active' : ''}`}
 					onClick={() => setSelectedDay(0)}
