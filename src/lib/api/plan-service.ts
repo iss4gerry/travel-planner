@@ -41,7 +41,7 @@ export class PlanService {
 		}
 
 		let days = 0;
-		if (body.endDate >= body.startDate) {
+		if (new Date(body.endDate) > new Date(body.startDate)) {
 			days =
 				Math.ceil(
 					(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -237,7 +237,6 @@ export class PlanService {
 
 			let data = await ItineraryService.geminiRequest(requestData);
 			if (!data) {
-				console.log('groq');
 				data = await ItineraryService.groqRequest(requestData);
 				if (!data) {
 					throw new ApiError(500, 'An error occured while generate itinerary');
@@ -269,7 +268,7 @@ export class PlanService {
 
 		const travelDays = plan.planDetails;
 		const categoriesMap = Object.fromEntries(
-			categories.map((c) => [c.name, c.id])
+			categories.map((c) => [c.name.toLowerCase(), c.id])
 		);
 		const travelDayMap = Object.fromEntries(
 			travelDays.map((d) => [d.day, d.id])
@@ -300,7 +299,7 @@ export class PlanService {
 			const planDetailId = travelDayMap[dayNumber];
 			destinationsList.forEach(
 				({ placeName, description, address, category, cost, time }) => {
-					if (!categoriesMap[category]) {
+					if (!categoriesMap[category.toLowerCase()]) {
 						return;
 					}
 

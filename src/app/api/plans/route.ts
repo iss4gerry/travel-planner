@@ -12,6 +12,7 @@ export const POST = catchError(async (req: NextRequest) => {
 	if (!userId) {
 		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 	}
+	console.log(body);
 	const result = await PlanService.createPlan(body, userId);
 	return NextResponse.json({
 		status: 200,
