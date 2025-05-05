@@ -42,7 +42,7 @@ export default function SignIn() {
 				toast.error(result.error);
 			} else if (result?.ok) {
 				toast.success('Login Success');
-				router.push(callbackUrl);
+				router.push('/');
 			}
 		} catch (error) {
 			if (error instanceof ZodError) {

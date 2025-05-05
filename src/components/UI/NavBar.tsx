@@ -27,16 +27,33 @@ export default function NavBar() {
 					{isMenuOpen && (
 						<ul className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
 							<li>
-								<a className="font-medium">Home</a>
+								<Link className="font-medium hover:text-primary" href={'/'}>
+									Home
+								</Link>
 							</li>
 							<li>
-								<a className="font-medium">Explore</a>
+								<Link
+									className="font-medium hover:text-primary"
+									href="/#explore"
+								>
+									Explore
+								</Link>
 							</li>
 							<li>
-								<a className="font-medium">My Plans</a>
+								<Link
+									className="font-medium hover:text-primary"
+									href="/plan?page=1"
+								>
+									My Plans
+								</Link>
 							</li>
 							<li>
-								<a className="font-medium">Destinations</a>
+								<Link
+									className="font-medium hover:text-primary"
+									href="/dashboard"
+								>
+									Dashboard
+								</Link>
 							</li>
 						</ul>
 					)}

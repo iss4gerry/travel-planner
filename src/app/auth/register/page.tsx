@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
 	const [formData, setFormData] = useState({
 		name: '',
-		profilePicture: '',
+		profilePicture: '1',
 		email: '',
 		password: '',
 	});

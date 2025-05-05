@@ -19,10 +19,12 @@ export default function PfpSelector({
 	const [avatarPage, setAvatarPage] = useState<number>(0);
 
 	const scrollToNext = () => {
+		setFormData((prev) => ({ ...prev, profilePicture: '' }));
 		setAvatarPage((prev) => Math.min(prev + 3, 9));
 	};
 
 	const scrollToPrevious = () => {
+		setFormData((prev) => ({ ...prev, profilePicture: '' }));
 		setAvatarPage((prev) => Math.max(prev - 3, 0));
 	};
 
@@ -46,7 +48,7 @@ export default function PfpSelector({
 							<div
 								key={index}
 								className={`rounded-full overflow-hidden border-2 hover:scale-110 hover:cursor-pointer ease-in duration-125 flex-shrink-0 ${
-									selectedAvatar === index.toString()
+									selectedAvatar === (avatarPage + index).toString()
 										? 'border-primary ring-2 ring-primary ring-offset-2'
 										: 'border-gray-200'
 								}`}
