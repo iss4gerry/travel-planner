@@ -15,10 +15,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" data-theme="cupcake">
-			<body
-				className="flex items-center flex-col w-full min-h-screen min-w-screen"
-				suppressHydrationWarning={true}
-			>
+			<body className="flex items-center flex-col w-full min-h-screen min-w-screen">
 				<div className="w-full mt-3 items-center justify-center flex">
 					<NavBar />
 				</div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -16,33 +16,45 @@ export const ImageSlider = () => {
 	const [visibleDots, setVisibleDots] = useState<number[]>([]);
 	const maxDots = 4;
 
+	const updateVisibleDots = useCallback(
+		(activeIndex: number) => {
+			if (!banners || banners.length <= maxDots) {
+				setVisibleDots(
+					Array.from({ length: banners?.length || 0 }, (_, i) => i)
+				);
+				return;
+			}
+
+			const dots: number[] = [];
+			const halfMaxDots = Math.floor(maxDots / 2);
+
+			let start = Math.max(0, activeIndex - halfMaxDots);
+			const end = Math.min(banners.length - 1, start + maxDots - 1);
+
+			if (end === banners.length - 1) {
+				start = Math.max(0, end - maxDots + 1);
+			}
+
+			for (let i = start; i <= end; i++) {
+				dots.push(i);
+			}
+
+			setVisibleDots(dots);
+		},
+		[banners, maxDots]
+	);
+
 	useEffect(() => {
 		updateVisibleDots(currentIndex);
-	}, [currentIndex, banners]);
+	}, [currentIndex, banners, updateVisibleDots]);
 
-	const updateVisibleDots = (activeIndex: number) => {
-		if (!banners || banners.length <= maxDots) {
-			setVisibleDots(Array.from({ length: banners?.length || 0 }, (_, i) => i));
-			return;
-		}
+	useEffect(() => {
+		const interval = setInterval(() => {
+			handleSlideChange((currentIndex + 1) % banners.length);
+		}, 4500);
 
-		let dots: number[] = [];
-
-		const halfMaxDots = Math.floor(maxDots / 2);
-
-		let start = Math.max(0, activeIndex - halfMaxDots);
-		let end = Math.min(banners.length - 1, start + maxDots - 1);
-
-		if (end === banners.length - 1) {
-			start = Math.max(0, end - maxDots + 1);
-		}
-
-		for (let i = start; i <= end; i++) {
-			dots.push(i);
-		}
-
-		setVisibleDots(dots);
-	};
+		return () => clearInterval(interval);
+	}, [currentIndex, banners.length]);
 
 	const handleSlideChange = (index: number) => {
 		setCurrentIndex(index);
@@ -61,13 +73,6 @@ export const ImageSlider = () => {
 			</div>
 		);
 	}
-	useEffect(() => {
-		const interval = setInterval(() => {
-			handleSlideChange((currentIndex + 1) % banners.length);
-		}, 4500);
-
-		return () => clearInterval(interval);
-	}, [currentIndex, banners.length]);
 
 	return (
 		<div className="relative w-full mx-auto hover:cursor-pointer">

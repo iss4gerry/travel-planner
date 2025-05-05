@@ -61,7 +61,7 @@ export const fetchDestination = async (params: {
 
 export const addDestinationToPlan = async (body: {
 	planDetailId: string;
-	destinationId: string;
+	destinationId?: string;
 	time: string;
 }) => {
 	try {
@@ -78,7 +78,7 @@ export const addDestinationToPlan = async (body: {
 
 export const addBannerToPlan = async (body: {
 	planDetailId: string;
-	bannerId: string;
+	bannerId?: string;
 	time: string;
 }) => {
 	try {

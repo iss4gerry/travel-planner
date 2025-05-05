@@ -3,14 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-	MapPin,
-	Calendar,
-	Heart,
-	Share2,
-	ChevronLeft,
-	LocateIcon,
-} from 'lucide-react';
+import { MapPin, Heart, Share2, ChevronLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { DestinationResponse } from '@/types/destination';
 import { useParams, useRouter } from 'next/navigation';

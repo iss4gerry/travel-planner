@@ -46,7 +46,7 @@ export default function CreateBannerModal({
 		Partial<Record<keyof CreateBanner, string>>
 	>({});
 
-	const { data: categories, isLoading } = useQuery({
+	const { data: categories } = useQuery({
 		queryKey: ['categories'],
 		queryFn: fetchCategories,
 	});

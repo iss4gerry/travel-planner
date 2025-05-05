@@ -56,7 +56,7 @@ export class BannerService {
 	): Promise<BannerResponse> {
 		await this.getBannerById(bannerId);
 		const filteredData = Object.fromEntries(
-			Object.entries(body).filter(([_, v]) => v !== undefined)
+			Object.entries(body).filter(([, v]) => v !== undefined)
 		);
 		return await prisma.bannerAds.update({
 			where: {

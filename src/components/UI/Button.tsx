@@ -14,7 +14,6 @@ export function SaveButton({
 	onSave,
 	isSaved,
 	isPending = false,
-	className,
 }: SaveButtonProps) {
 	const [isLoading, setIsLoading] = useState(isPending);
 

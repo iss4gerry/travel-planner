@@ -1,8 +1,6 @@
 import { PlanService } from '@/lib/api/plan-service';
-import { Itinerary } from '@/types/plan';
 import catchError, { Context } from '@/utils/catchError';
 import { NextRequest, NextResponse } from 'next/server';
-import { json } from 'stream/consumers';
 
 export const GET = catchError(async (req: NextRequest, context: Context) => {
 	const { planId } = await context.params;

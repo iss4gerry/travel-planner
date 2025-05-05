@@ -60,7 +60,7 @@ export default function CreatePlanPage({
 
 	const createPlanMutation = useMutation({
 		mutationFn: () => createPlan(bodyToSend),
-		onSuccess: (data) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['plans'] });
 			toast.success('Plan created successfully');
 			onClose();

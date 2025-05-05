@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Plus, MapIcon, LucideImages } from 'lucide-react';
 import HorizontalCard from '@/components/Dashboard/HorizontalCard';
 import CreateDestinationModal from '@/components/Destination/CreateDestination';
@@ -26,10 +26,12 @@ export default function Home() {
 				modalStatus={destinationModalStatus}
 				onClose={handleCloseDestinationModal}
 			/>
+
 			<CreateBannerModal
 				modalStatus={bannerModalStatus}
 				onClose={handleCloseBannerModal}
 			/>
+
 			<h1 className="text-3xl font-bold text-center mb-4">Dashboard</h1>
 			<p className="text-center text-gray-600 mb-8">
 				Manage banner ads and travel destinations created by you, all in one
@@ -48,7 +50,7 @@ export default function Home() {
 							<div>
 								<h2 className="text-2xl font-semibold">Your Banner Ads</h2>
 								<p className="text-sm text-gray-600">
-									These are all the promotional banners you've created
+									These are all the promotional banners you&apos;ve created
 								</p>
 							</div>
 							<button
@@ -58,10 +60,11 @@ export default function Home() {
 								<Plus size={18} className="mr-1" /> Create Banner Ad
 							</button>
 						</div>
-
-						<div className="rounded-lg divide-y divide-gray-200">
-							<HorizontalCard mode="banner" />
-						</div>
+						<Suspense fallback={<p>Loading</p>}>
+							<div className="rounded-lg divide-y divide-gray-200">
+								<HorizontalCard mode="banner" />
+							</div>
+						</Suspense>
 					</section>
 				</div>
 
@@ -76,7 +79,7 @@ export default function Home() {
 							<div>
 								<h2 className="text-2xl font-semibold">Your Destination</h2>
 								<p className="text-sm text-gray-600">
-									These are all the destination you've created
+									These are all the destination you&apos;ve created
 								</p>
 							</div>
 							<button
@@ -86,10 +89,11 @@ export default function Home() {
 								<Plus size={18} className="mr-1" /> Create Destination
 							</button>
 						</div>
-
-						<div className="rounded-lg divide-y divide-gray-200">
-							<HorizontalCard mode="destination" />
-						</div>
+						<Suspense fallback={<p>Loading</p>}>
+							<div className="rounded-lg divide-y divide-gray-200">
+								<HorizontalCard mode="destination" />
+							</div>
+						</Suspense>
 					</section>
 				</div>
 			</div>

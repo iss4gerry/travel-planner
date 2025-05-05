@@ -4,7 +4,6 @@ import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SignIn() {
-	const [error, setError] = useState<string>('');
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -16,7 +15,6 @@ export default function SignIn() {
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		setError('');
 		const result = await signIn('credentials', {
 			email: credentials.email,
 			password: credentials.password,
@@ -24,7 +22,6 @@ export default function SignIn() {
 		});
 
 		if (result?.error) {
-			setError(result.error);
 		} else if (result?.ok) {
 			router.push(callbackUrl);
 		}

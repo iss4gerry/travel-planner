@@ -50,7 +50,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 					[dayKey]: dayData,
 				});
 			},
-			onSuccess: (data) => {
+			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: ['plan', planId] });
 				setAiItinerary((prev) => {
 					if (!prev) return prev;
@@ -64,6 +64,12 @@ export default function PlanDetail({ planId }: { planId: string }) {
 				planOverviewRef.current?.scrollIntoView({ behavior: 'smooth' });
 			},
 		});
+
+	useEffect(() => {
+		if (!isGeneratingItinerary && aiItinerary) {
+			aiItineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
+		}
+	}, [isGeneratingItinerary, aiItinerary]);
 
 	if (!planDetail) {
 		return (
@@ -112,12 +118,6 @@ export default function PlanDetail({ planId }: { planId: string }) {
 			};
 		});
 	};
-
-	useEffect(() => {
-		if (!isGeneratingItinerary && aiItinerary) {
-			aiItineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
-		}
-	}, [isGeneratingItinerary, aiItinerary]);
 
 	const generateAIItinerary = async () => {
 		const { data } = await refetchItinerary();

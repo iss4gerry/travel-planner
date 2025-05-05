@@ -28,20 +28,6 @@ export default function DayView({
 	const queryClient = useQueryClient();
 	const params = useParams<{ planId: string }>();
 
-	if (!dayDetail) {
-		return (
-			<div className="bg-white rounded-lg shadow-md p-6 flex items-center justify-center h-64">
-				<div className="text-center text-gray-500">
-					<Info className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-					<p className="text-lg font-medium">No day details available</p>
-					<p className="text-sm mt-2">
-						Please select a different day or check back later
-					</p>
-				</div>
-			</div>
-		);
-	}
-
 	const { mutate, isPending } = useMutation({
 		mutationFn: ({
 			type,
@@ -74,7 +60,9 @@ export default function DayView({
 	].sort((a, b) => {
 		const to24Hour = (time: string) => {
 			const [hourMinute, modifier] = time.split(' ');
-			let [hours, minutes] = hourMinute.split(':').map(Number);
+			const [rawHours, minutes] = hourMinute.split(':').map(Number);
+			let hours = rawHours;
+
 			if (modifier === 'PM' && hours !== 12) {
 				hours += 12;
 			} else if (modifier === 'AM' && hours === 12) {
@@ -94,6 +82,19 @@ export default function DayView({
 			setExpandedActivity(id);
 		}
 	};
+	if (!dayDetail) {
+		return (
+			<div className="bg-white rounded-lg shadow-md p-6 flex items-center justify-center h-64">
+				<div className="text-center text-gray-500">
+					<Info className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+					<p className="text-lg font-medium">No day details available</p>
+					<p className="text-sm mt-2">
+						Please select a different day or check back later
+					</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="bg-base-100 rounded-lg shadow-lg overflow-hidden">

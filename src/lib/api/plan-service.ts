@@ -329,9 +329,12 @@ export class PlanService {
 			);
 		});
 
+		/* eslint-disable @typescript-eslint/no-unused-vars */
 		await prisma.destination.createMany({
-			data: destinations.map(({ id, ...d }) => d),
+			data: destinations.map(({ id: _id, ...d }) => d),
 		});
+
+		/* eslint-enable @typescript-eslint/no-unused-vars */
 
 		const newDestination = await prisma.destination.findMany({
 			where: {

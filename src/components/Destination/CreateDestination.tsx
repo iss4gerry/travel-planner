@@ -289,7 +289,7 @@ export default function CreateDestinationModal({
 										Category
 									</span>
 								</label>
-								<div className="relative">
+								<div className={`relative ${isLoading ? 'skeleton' : ''}`}>
 									<TagIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
 									<select
 										id="categoryId"

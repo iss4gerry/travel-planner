@@ -1,14 +1,10 @@
 import {
 	dehydrate,
-	hydrate,
 	HydrationBoundary,
 	QueryClient,
 } from '@tanstack/react-query';
-import DestinationCard from './DestinationCard';
 import { cookies } from 'next/headers';
 import { fetchDestinationServer } from '@/lib/services/destination-service';
-import { DestinationResponse } from '@/types/destination';
-import Pagination from '../UI/Pagination';
 import DestinationClient from './DestinationClient';
 
 type Props = {

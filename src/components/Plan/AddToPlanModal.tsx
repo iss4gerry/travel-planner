@@ -28,13 +28,11 @@ export default function AddToPlanModal({
 		dayId: null,
 	});
 	const [selectedTime, setSelectedTime] = useState('12:00');
-	const [timeFormat, setTimeFormat] = useState<'AM' | 'PM'>('PM');
 
 	useEffect(() => {
 		if (!modalStatus) {
 			setSelectedPlan({ planId: null, dayId: null });
 			setSelectedTime('12:00');
-			setTimeFormat('PM');
 		}
 	}, [modalStatus]);
 
@@ -111,7 +109,7 @@ export default function AddToPlanModal({
 				return addBannerToPlan(data);
 			}
 		},
-		onSuccess: (data) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['plans'] });
 			toast.success(`${mode.toUpperCase()} added to plan successfully!`);
 			onClose();

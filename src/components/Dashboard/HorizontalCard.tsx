@@ -49,7 +49,7 @@ export default function HorizontalCard({ mode }: { mode: string }) {
 				<div>
 					{!destinationData || destinationData.response.length === 0 ? (
 						<div className="flex items-center justify-center w-full h-80">
-							<p>You haven't created any destinations yet.</p>
+							<p>You haven&apos;t created any destinations yet.</p>
 						</div>
 					) : (
 						<div>
@@ -71,7 +71,7 @@ export default function HorizontalCard({ mode }: { mode: string }) {
 				<div>
 					{!bannerData || bannerData.response.length === 0 ? (
 						<div className="flex items-center justify-center w-full h-80">
-							<p>You haven't created any banners yet.</p>
+							<p>You haven&apos;t created any banners yet.</p>
 						</div>
 					) : (
 						<div>

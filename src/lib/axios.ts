@@ -6,7 +6,7 @@ const cookieInstancesMap = new Map<string, AxiosInstance>();
 export const getAxiosInstance = (): AxiosInstance => {
 	if (!axiosInstanceWithoutCookie) {
 		axiosInstanceWithoutCookie = axios.create({
-			baseURL: 'http://localhost:3002/api',
+			baseURL: 'api',
 		});
 	}
 
@@ -19,7 +19,7 @@ export const getAxiosWithCookie = (cookieStore: string): AxiosInstance => {
 	}
 
 	const instance = axios.create({
-		baseURL: 'http://localhost:3002/api',
+		baseURL: 'api',
 		headers: {
 			cookie: cookieStore,
 		},
@@ -32,7 +32,10 @@ export const getAxiosWithCookie = (cookieStore: string): AxiosInstance => {
 export function handleAxiosError(error: unknown, context?: string): never {
 	if (axios.isAxiosError(error)) {
 		const message =
-			error.response?.data?.message || error.message || 'Axios request failed';
+			error.response?.data?.message ||
+			error.message ||
+			context ||
+			'Axios request failed';
 
 		throw new Error(message);
 	}

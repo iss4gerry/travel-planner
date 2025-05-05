@@ -1,4 +1,3 @@
-import { Home, AlertCircle, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function NotFound() {
@@ -15,7 +14,8 @@ export default function NotFound() {
 
 				<h1 className="text-4xl font-bold text-primary mb-2">Page not found</h1>
 				<p className="text-lg text-gray-500 mb-8">
-					Oops! The page you're looking for doesn't exist or has been moved.
+					Oops! The page you&apos;re looking for doesn&apos;t exist or has been
+					moved.
 				</p>
 
 				<div className="flex w-full justify-center items-center">

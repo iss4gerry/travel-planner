@@ -1,12 +1,12 @@
-import NextAuth, { AuthOptions } from 'next-auth';
-import CredentialsProviders from 'next-auth/providers/credentials';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { ApiError } from '@/utils/apiError';
 
-export const authOptions: AuthOptions = {
+const handler = NextAuth({
 	providers: [
-		CredentialsProviders({
+		CredentialsProvider({
 			name: 'Credentials',
 			credentials: {
 				email: { label: 'Email', type: 'email' },
@@ -70,7 +70,6 @@ export const authOptions: AuthOptions = {
 		},
 	},
 	secret: process.env.JWT_SECRET,
-};
+});
 
-const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

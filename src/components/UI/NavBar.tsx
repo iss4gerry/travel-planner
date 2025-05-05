@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Menu, X, Bell } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function NavBar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -103,8 +104,8 @@ export default function NavBar() {
 						className="btn btn-ghost btn-circle avatar online"
 					>
 						<div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-							<img
-								alt="User profile"
+							<Image
+								alt="pfp"
 								src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
 							/>
 						</div>
