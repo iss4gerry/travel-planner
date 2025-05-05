@@ -131,10 +131,10 @@ export default function CreateDestinationModal({
 			<Toaster position="top-center" reverseOrder={false} />
 			<dialog
 				id="create_destination_modal"
-				className="modal modal-bottom sm:modal-middle"
+				className="modal"
 				open={modalStatus}
 			>
-				<div className="modal-box bg-white dark:bg-gray-800 shadow-lg rounded-lg max-h-[90vh] overflow-y-auto">
+				<div className="modal-box bg-white shadow-lg rounded-lg max-sm:max-h-11/12 max-sm:max-w-11/12 h-10/12 overflow-y-auto">
 					<form method="dialog" onSubmit={handleSubmit}>
 						<h3 className="font-bold text-xl mb-6 text-center">
 							Create New Destination
@@ -336,7 +336,7 @@ export default function CreateDestinationModal({
 								className={`btn ${
 									createDestinationMutation.isPending
 										? 'loading btn-disabled'
-										: 'btn-primary bg-blue-600 hover:bg-blue-700'
+										: 'btn-primary'
 								}`}
 								disabled={createDestinationMutation.isPending}
 							>

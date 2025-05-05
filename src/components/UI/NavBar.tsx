@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Menu, X, Bell } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -10,8 +9,6 @@ import { usePathname } from 'next/navigation';
 export default function NavBar() {
 	const url = usePathname();
 	const { data: session } = useSession();
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	if (url.includes('auth')) {
 		return null;

@@ -84,7 +84,7 @@ export default function CreatePlanPage({
 		<div>
 			<Toaster position="top-center" reverseOrder={false} />
 			<dialog id="add_to_plan_modal" className="modal" open={modalStatus}>
-				<div className="modal-box max-w-xl">
+				<div className="modal-box max-w-xl max-h-11/12">
 					<form className="p-6 space-y-6" onSubmit={handleSubmit}>
 						<header className="flex justify-center items-center pb-2 w-full">
 							<h3 className="font-bold text-xl">Create New Travel Plan</h3>
