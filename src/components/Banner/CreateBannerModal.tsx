@@ -76,6 +76,9 @@ export default function CreateBannerModal({
 			queryClient.invalidateQueries({
 				queryKey: ['user-banner', session?.user.id],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ['banners'],
+			});
 			toast.success('Banner created successfully!');
 			onClose();
 			setFormData({

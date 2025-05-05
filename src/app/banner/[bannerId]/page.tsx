@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Heart, Share2, ChevronLeft } from 'lucide-react';
+import { MapPin, Heart, Share2, ChevronLeft, Wallet2Icon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
@@ -56,7 +56,7 @@ export default function BannerDetails() {
 					className="flex items-center text-primary hover:cursor-pointer"
 				>
 					<ChevronLeft size={20} />
-					<span>Back to destinations</span>
+					<span>Back</span>
 				</button>
 			</div>
 
@@ -111,8 +111,8 @@ export default function BannerDetails() {
 				</div>
 
 				<div className="flex items-center bg-base-200 px-4 py-2 rounded-lg">
-					<MapPin size={18} className="text-primary mr-2" />
-					<span className="text-primary ml-1">Bali</span>
+					<Wallet2Icon size={18} className="text-primary mr-2" />
+					<span className="text-primary ml-1">{data.cost}</span>
 				</div>
 			</div>
 

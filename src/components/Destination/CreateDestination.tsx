@@ -76,6 +76,9 @@ export default function CreateDestinationModal({
 			queryClient.invalidateQueries({
 				queryKey: ['user-destination', session?.user.id],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ['destinations'],
+			});
 			toast.success('Destination created successfully!');
 			onClose();
 			setFormData({

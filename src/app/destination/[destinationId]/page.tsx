@@ -59,7 +59,7 @@ export default function DestinationDetails() {
 					className="flex items-center text-primary hover:cursor-pointer"
 				>
 					<ChevronLeft size={20} />
-					<span>Back to destinations</span>
+					<span>Back</span>
 				</button>
 			</div>
 
@@ -115,7 +115,7 @@ export default function DestinationDetails() {
 
 				<div className="flex items-center bg-base-200 px-4 py-2 rounded-lg">
 					<MapPin size={18} className="text-primary mr-2" />
-					<span className="text-primary ml-1">Bali</span>
+					<span className="text-primary ml-1">{data.city}</span>
 				</div>
 			</div>
 
