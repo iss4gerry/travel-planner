@@ -10,14 +10,14 @@ import { formatZodError } from '@/utils/formatZodError';
 
 export default function SignIn() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
+	// const searchParams = useSearchParams();
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
 	});
 	const [showPassword, setShowPassword] = useState(false);
 
-	const callbackUrl = searchParams.get('callbackUrl') || '';
+	// const callbackUrl = searchParams.get('callbackUrl') || '';
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
