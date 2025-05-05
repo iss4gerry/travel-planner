@@ -26,8 +26,6 @@ export default function Pagination({
 		window.location.href = `${url}?${query}`;
 	};
 
-	console.log(pagination);
-
 	return (
 		<>
 			<div className="w-full flex items-center justify-center mt-7">
