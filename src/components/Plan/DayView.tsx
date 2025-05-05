@@ -131,7 +131,7 @@ export default function DayView({
 								return (
 									<div key={activity.id}>
 										<div className="flex">
-											<div className="absolute left-31 top-2 bottom-0 w-0.5 bg-gray-200"></div>
+											<div className="absolute left-29 top-2 bottom-0 w-0.5 bg-gray-200"></div>
 											<div className="flex flex-row w-[13vh] justify-between ">
 												<div className="min-w-20 pr-4 text-right">
 													<span className="font-medium text-gray-700">
@@ -155,7 +155,7 @@ export default function DayView({
 													>
 														<div className="flex items-center space-x-3">
 															<div
-																className="w-10 h-10 rounded-full flex items-center justify-center text-white"
+																className="w-10 h-10 rounded-full flex items-center justify-center text-white max-sm:hidden"
 																style={{
 																	backgroundColor: getThemeHexColor(
 																		data.category.name

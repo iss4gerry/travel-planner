@@ -74,7 +74,7 @@ export default function RegisterPage() {
 	const registerMutation = useMutation({
 		mutationFn: register,
 		onSuccess: () => {
-			toast.success('Login Success');
+			toast.success('Register Success');
 			setTimeout(handleChangePage, 2000);
 		},
 		onError: (error) => {
