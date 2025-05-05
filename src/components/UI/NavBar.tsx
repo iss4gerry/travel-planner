@@ -5,11 +5,17 @@ import { Menu, X, Bell } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 
 export default function NavBar() {
+	const url = usePathname();
 	const { data: session } = useSession();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+	if (url.includes('auth')) {
+		return null;
+	}
 
 	return (
 		<div className="navbar bg-base-100 shadow-sm ">
