@@ -45,6 +45,7 @@ export const fetchDestination = async (params: {
 		const { data } = await axios.get('/destinations', {
 			params: { ...params },
 		});
+
 		const destinations: DestinationResponse[] = data.data;
 		const pagination: {
 			page: number;
@@ -52,7 +53,6 @@ export const fetchDestination = async (params: {
 			total: number;
 			totalPages: number;
 		} = data.pagination;
-
 		return { destinations, pagination };
 	} catch (error) {
 		handleAxiosError(error, 'fetchDestination');

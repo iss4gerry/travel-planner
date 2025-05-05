@@ -38,6 +38,7 @@ const handler = NextAuth({
 				return {
 					id: user.id,
 					email: user.email,
+					pfp: user.profilePicture,
 					name: user.name,
 				};
 			},
@@ -55,6 +56,7 @@ const handler = NextAuth({
 				token.id = user.id;
 				token.email = user.email;
 				token.name = user.name;
+				token.pfp = user.pfp;
 			}
 
 			return token;
@@ -64,6 +66,7 @@ const handler = NextAuth({
 				session.user.id = token.id as string;
 				session.user.email = token.email;
 				session.user.name = token.name;
+				session.user.pfp = token.pfp as string;
 			}
 
 			return session;

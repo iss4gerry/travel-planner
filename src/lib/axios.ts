@@ -6,7 +6,7 @@ const cookieInstancesMap = new Map<string, AxiosInstance>();
 export const getAxiosInstance = (): AxiosInstance => {
 	if (!axiosInstanceWithoutCookie) {
 		axiosInstanceWithoutCookie = axios.create({
-			baseURL: 'api',
+			baseURL: `${process.env.BASE_URL}/api`,
 		});
 	}
 
@@ -19,7 +19,7 @@ export const getAxiosWithCookie = (cookieStore: string): AxiosInstance => {
 	}
 
 	const instance = axios.create({
-		baseURL: 'api',
+		baseURL: `${process.env.BASE_URL}/api`,
 		headers: {
 			cookie: cookieStore,
 		},

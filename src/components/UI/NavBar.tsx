@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Menu, X, Bell } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 export default function NavBar() {
+	const { data: session } = useSession();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -108,7 +110,7 @@ export default function NavBar() {
 								width={20}
 								height={20}
 								alt="pfp"
-								src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+								src={`https://api.dicebear.com/9.x/notionists/svg?seed=${session?.user.pfp}`}
 							/>
 						</div>
 					</div>
