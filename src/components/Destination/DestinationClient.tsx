@@ -27,6 +27,14 @@ export default function DestinationClinet() {
 	});
 
 	const { destinations, pagination } = data;
+
+	if (!destinations || destinations.length < 1) {
+		return (
+			<div className="flex items-center justify-center w-full h-70">
+				<p>No destination found</p>
+			</div>
+		);
+	}
 	return (
 		<div className="flex flex-col w-full my-5">
 			<div className="mt-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

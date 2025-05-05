@@ -105,6 +105,8 @@ export default function NavBar() {
 					>
 						<div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
 							<Image
+								width={20}
+								height={20}
 								alt="pfp"
 								src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
 							/>
