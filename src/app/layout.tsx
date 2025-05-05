@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Provider from '@/components/Provider';
 import NavBar from '@/components/UI/NavBar';
+import Provider from '../components/Provider';
 
 export const metadata: Metadata = {
 	title: 'Twavely',
