@@ -143,9 +143,11 @@ export default function NavBar() {
 					>
 						<li className="mb-2">
 							<div className="flex flex-col items-start gap-1 p-2">
-								<span className="font-bold text-base">mayuyu</span>
+								<span className="font-bold text-base">
+									{session?.user.name}
+								</span>
 								<span className="text-xs text-gray-500">
-									mayuyu@example.com
+									{session?.user.email}
 								</span>
 							</div>
 						</li>
