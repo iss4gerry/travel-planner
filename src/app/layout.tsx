@@ -16,14 +16,14 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" data-theme="cupcake">
-			<body className="flex items-center flex-col w-full min-h-screen min-w-screen">
+			<body className="flex items-center flex-col h-screen w-screen">
 				<Provider>
-					<div className="w-full mt-3 items-center justify-center flex">
+					<div className="w-full mt-3 items-center justify-center flex bg">
 						<Suspense>
 							<NavBar />
 						</Suspense>
 					</div>
-					<div className="w-3/4 max-md:w-10/12 mt-3">{children}</div>
+					<div className="w-3/4 max-md:w-10/12 h-full">{children}</div>
 				</Provider>
 			</body>
 		</html>

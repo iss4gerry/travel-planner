@@ -45,16 +45,18 @@ export default function Home() {
 					Banner Ads
 				</label>
 				<div className="tab-content bg-base-100 border-base-300 p-6">
-					<section className="mb-2">
-						<div className="flex justify-between items-center mb-4">
+					<section className="mb-2 max-sm:flex max-sm:flex-col">
+						<div className="flex justify-between items-center mb-4 max-sm:flex-col gap-2">
 							<div>
-								<h2 className="text-2xl font-semibold">Your Banner Ads</h2>
-								<p className="text-sm text-gray-600">
+								<h2 className="text-2xl font-semibold max-sm:text-center">
+									Your Banner Ads
+								</h2>
+								<p className="text-sm text-gray-600 max-sm:text-center">
 									These are all the promotional banners you&apos;ve created
 								</p>
 							</div>
 							<button
-								className="btn btn-primary"
+								className="btn btn-primary max-sm:w-full"
 								onClick={() => setBannerModalStatus(true)}
 							>
 								<Plus size={18} className="mr-1" /> Create Banner Ad
@@ -74,16 +76,18 @@ export default function Home() {
 					Destinations
 				</label>
 				<div className="tab-content bg-base-100 border-base-300 p-6">
-					<section>
-						<div className="flex justify-between items-center mb-4">
+					<section className="mb-2 max-sm:flex max-sm:flex-col">
+						<div className="flex justify-between items-center mb-4 max-sm:flex-col gap-2">
 							<div>
-								<h2 className="text-2xl font-semibold">Your Destination</h2>
-								<p className="text-sm text-gray-600">
+								<h2 className="text-2xl font-semibold max-sm:text-center">
+									Your Destination
+								</h2>
+								<p className="text-sm text-gray-600 max-sm:text-center">
 									These are all the destination you&apos;ve created
 								</p>
 							</div>
 							<button
-								className="btn btn-primary"
+								className="btn btn-primary max-sm:w-full"
 								onClick={() => setDestinationModalStatus(true)}
 							>
 								<Plus size={18} className="mr-1" /> Create Destination

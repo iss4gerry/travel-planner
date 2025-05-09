@@ -52,7 +52,7 @@ export default function SignIn() {
 		}
 	}
 	return (
-		<div className="min-h-screen flex items-center justify-center px-4 py-12">
+		<div className="h-full w-full flex items-center justify-center px-4 py-12">
 			<Toaster position="top-center" reverseOrder={false} />
 			<div className="max-w-md w-full space-y-8">
 				<div className="card bg-base-100 shadow-sm">
