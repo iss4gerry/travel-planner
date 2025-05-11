@@ -17,7 +17,7 @@ import {
 	deleteDestinationFromPlan,
 } from '@/lib/services/plan-service';
 import toast from 'react-hot-toast';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function DayView({
 	dayDetail,
@@ -25,6 +25,7 @@ export default function DayView({
 	dayDetail: PlanDetailResponse['planDetails'][number];
 }) {
 	const [expandedActivity, setExpandedActivity] = useState<string | null>(null);
+	const router = useRouter();
 	const queryClient = useQueryClient();
 	const params = useParams<{ planId: string }>();
 
@@ -182,7 +183,18 @@ export default function DayView({
 													</div>
 
 													{isExpanded && (
-														<div className="divide-y divide-gray-100">
+														<div
+															className="divide-y divide-gray-100 hover:cursor-pointer"
+															onClick={() => {
+																isDestination
+																	? router.push(
+																			`/destination/${activity.destination.id}`
+																	  )
+																	: router.push(
+																			`/banner/${activity.bannerAds.id}`
+																	  );
+															}}
+														>
 															<div className="p-4">
 																<div className="flex flex-col md:flex-row">
 																	{data.imageUrl && (

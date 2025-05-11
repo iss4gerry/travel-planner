@@ -142,7 +142,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		aiItinerary[`day${selectedDay}`].length > 0;
 
 	return (
-		<div className="min-h-screen w-full pb-8" ref={planOverviewRef}>
+		<div className="min-h-screen w-full pb-8 mt-5" ref={planOverviewRef}>
 			<div className="card bg-base-100 shadow-xl mb-6">
 				<div className="card-body">
 					<div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -169,17 +169,19 @@ export default function PlanDetail({ planId }: { planId: string }) {
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<div className="stat bg-base-200 rounded-box">
 							<div className="stat-title">Location</div>
-							<div className="stat-value text-lg">{planDetail.city}</div>
+							<div className="stat-value text-lg text-primary">
+								{planDetail.city}
+							</div>
 						</div>
 						<div className="stat bg-base-200 rounded-box">
 							<div className="stat-title">Travel Companion</div>
-							<div className="stat-value text-lg">
+							<div className="stat-value text-lg text-primary">
 								{planDetail.travelCompanion}
 							</div>
 						</div>
 						<div className="stat bg-base-200 rounded-box">
 							<div className="stat-title">Budget</div>
-							<div className="stat-value text-lg">
+							<div className="stat-value text-lg text-primary">
 								Rp {planDetail.budget.toLocaleString()}
 							</div>
 						</div>

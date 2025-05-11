@@ -141,6 +141,7 @@ export class PlanService {
 								time: true,
 								destination: {
 									select: {
+										id: true,
 										name: true,
 										imageUrl: true,
 										description: true,
@@ -162,6 +163,7 @@ export class PlanService {
 								time: true,
 								bannerAds: {
 									select: {
+										id: true,
 										title: true,
 										imageUrl: true,
 										description: true,
@@ -334,7 +336,6 @@ export class PlanService {
 		});
 
 		/* eslint-enable @typescript-eslint/no-unused-vars */
-
 		const newDestination = await prisma.destination.findMany({
 			where: {
 				name: { in: destinations.map((d) => d.name) },

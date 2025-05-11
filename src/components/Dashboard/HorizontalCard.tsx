@@ -105,7 +105,7 @@ function Card({
 			className="flex flex-row w-full justify-start bg-base-100 p-2 border-b border-base-200 hover:bg-base-200 hover:cursor-pointer"
 			onClick={handleClick}
 		>
-			<div className="relative max-w-40 max-h-40 min-w-40 min-h-40 overflow-hidden rounded-md shadow-md">
+			<div className="relative max-w-40 max-h-40 min-w-40 min-h-40 max-sm:h-auto max-sm:min-w-30 overflow-hidden rounded-md shadow-md ">
 				<Image
 					src={
 						data.imageUrl ||
@@ -122,9 +122,9 @@ function Card({
 				/>
 			</div>
 
-			<div className="flex flex-col pl-4 justify-between">
+			<div className="flex flex-col pl-4">
 				<div>
-					<h1 className="text-2xl font-semibold text-gray-800 truncate">
+					<h1 className="text-2xl font-semibold text-gray-800 truncate max-sm:text-xl">
 						{(data as DestinationResponse).name ||
 							(data as BannerResponse).title}
 					</h1>
@@ -133,12 +133,12 @@ function Card({
 							'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident dolorum minima...'}
 					</p>
 
-					<div className="flex gap-2 mt-3">
+					<div className="flex gap-2 mt-3 items-center">
 						<MapPin className="text-gray-500" width={20} />
 						<p className="text-sm text-gray-600">{data.address}</p>
 					</div>
 
-					<div className="flex gap-2 mt-2">
+					<div className="flex gap-2 mt-2 items-center">
 						<Wallet className="text-gray-500" width={20} />
 						<p className="text-sm text-gray-600">Rp {data.cost}</p>
 					</div>

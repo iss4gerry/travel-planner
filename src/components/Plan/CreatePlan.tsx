@@ -196,16 +196,16 @@ export default function CreatePlanPage({
 							</div>
 						</div>
 
-						<div className="pt-2 flex justify-end gap-3">
+						<div className="pt-2 flex justify-end gap-3 max-sm:flex max-sm:w-full max-sm:justify-between">
 							<button
-								className="btn btn-outline"
+								className="btn btn-outline basis-1/2"
 								type="button"
 								onClick={onClose}
 							>
 								Cancel
 							</button>
 							<button
-								className="btn btn-primary"
+								className="btn btn-primary basis-1/2"
 								disabled={status === 'pending'}
 								type="submit"
 							>

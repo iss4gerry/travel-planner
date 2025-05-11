@@ -324,10 +324,10 @@ export default function CreateBannerModal({
 							</div>
 						</div>
 
-						<div className="modal-action flex justify-end gap-3 pt-6">
+						<div className="modal-action flex justify-end gap-3 pt-6 max-sm:justify-center max-sm:p-3">
 							<button
 								type="button"
-								className="btn btn-outline border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+								className="btn btn-outline border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 max-sm:basis-1/2"
 								onClick={(e) => {
 									e.preventDefault();
 									onClose();
@@ -337,7 +337,7 @@ export default function CreateBannerModal({
 							</button>
 							<button
 								type="submit"
-								className={`btn ${
+								className={`btn max-sm:basis-1/2 ${
 									createBannerMutation.isPending
 										? 'loading btn-disabled'
 										: 'btn-primary'
