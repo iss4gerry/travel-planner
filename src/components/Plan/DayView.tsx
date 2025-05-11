@@ -55,6 +55,12 @@ export default function DayView({
 		mutate({ type, id });
 	};
 
+	const handleChangePage = (destination: boolean, id: string | undefined) => {
+		destination
+			? router.push(`/destination/${id}`)
+			: router.push(`/banner/${id}`);
+	};
+
 	const mergedActivities = [
 		...(dayDetail.activities || []),
 		...(dayDetail.activitiesFromBanner || []),
@@ -185,15 +191,14 @@ export default function DayView({
 													{isExpanded && (
 														<div
 															className="divide-y divide-gray-100 hover:cursor-pointer"
-															onClick={() => {
-																isDestination
-																	? router.push(
-																			`/destination/${activity.destination.id}`
-																	  )
-																	: router.push(
-																			`/banner/${activity.bannerAds.id}`
-																	  );
-															}}
+															onClick={() =>
+																handleChangePage(
+																	isDestination,
+																	isDestination
+																		? activity.destination.id
+																		: activity.bannerAds.id
+																)
+															}
 														>
 															<div className="p-4">
 																<div className="flex flex-col md:flex-row">
