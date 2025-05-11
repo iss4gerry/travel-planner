@@ -16,6 +16,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" data-theme="cupcake">
+			<head>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			</head>
 			<body className="flex items-center flex-col h-screen w-screen">
 				<Provider>
 					<div className="w-full mt-3 items-center justify-center flex bg">
