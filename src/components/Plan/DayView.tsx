@@ -56,9 +56,11 @@ export default function DayView({
 	};
 
 	const handleChangePage = (destination: boolean, id: string | undefined) => {
-		destination
-			? router.push(`/destination/${id}`)
-			: router.push(`/banner/${id}`);
+		if (destination) {
+			router.push(`/destination/${id}`);
+		} else {
+			router.push(`/banner/${id}`);
+		}
 	};
 
 	const mergedActivities = [
