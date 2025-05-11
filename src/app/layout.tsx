@@ -26,7 +26,7 @@ export default function RootLayout({
 							<NavBar />
 						</Suspense>
 					</div>
-					<div className="w-3/4 max-md:w-10/12 h-full max-sm:w-11/12 bg-amber-600">
+					<div className="w-3/4 max-md:w-10/12 h-full max-sm:w-11/12">
 						{children}
 					</div>
 				</Provider>
