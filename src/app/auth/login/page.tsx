@@ -77,7 +77,7 @@ export default function SignIn() {
 									value={formData.email}
 									onChange={handleChange}
 									placeholder="john.doe@example.com"
-									className="input input-bordered w-full"
+									className="input input-bordered w-full text-xs"
 									required
 								/>
 							</div>
@@ -93,7 +93,7 @@ export default function SignIn() {
 										value={formData.password}
 										onChange={handleChange}
 										placeholder="••••••••"
-										className="input input-bordered rounded-sm w-full pr-10"
+										className="input input-bordered rounded-sm w-full pr-10 text-xl"
 										required
 										minLength={8}
 									/>
