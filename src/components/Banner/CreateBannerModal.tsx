@@ -153,7 +153,7 @@ export default function CreateBannerModal({
 									id="name"
 									name="title"
 									type="text"
-									className={`input input-bordered bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
+									className={`input input-bordered bg-white text-[16px] w-full focus:ring-2 focus:ring-blue-500 ${
 										errors.title ? 'border-red-500' : ''
 									}`}
 									placeholder="Enter destination name"
@@ -174,7 +174,7 @@ export default function CreateBannerModal({
 								<textarea
 									id="description"
 									name="description"
-									className={`textarea textarea-bordered bg-white dark:bg-gray-700 w-full h-24 focus:ring-2 focus:ring-blue-500 ${
+									className={`textarea textarea-bordered bg-white text-[16px] w-full h-24 focus:ring-2 focus:ring-blue-500 ${
 										errors.description ? 'border-red-500' : ''
 									}`}
 									placeholder="Enter destination description"
@@ -200,7 +200,7 @@ export default function CreateBannerModal({
 										id="imageUrl"
 										name="imageUrl"
 										type="text"
-										className={`input input-bordered pl-10 bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
+										className={`input input-bordered pl-10 bg-white text-[16px] w-full focus:ring-2 focus:ring-blue-500 ${
 											errors.imageUrl ? 'border-red-500' : ''
 										}`}
 										placeholder="Enter image URL"
@@ -225,7 +225,7 @@ export default function CreateBannerModal({
 										id="address"
 										name="address"
 										type="text"
-										className={`input input-bordered pl-10 bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
+										className={`input input-bordered pl-10 bg-white text-[16px] w-full focus:ring-2 focus:ring-blue-500 ${
 											errors.address ? 'border-red-500' : ''
 										}`}
 										placeholder="Enter address"
@@ -250,7 +250,7 @@ export default function CreateBannerModal({
 										id="targetUrl"
 										name="targetUrl"
 										type="text"
-										className={`input input-bordered pl-10 bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
+										className={`input input-bordered pl-10 bg-white text-[16px] w-full focus:ring-2 focus:ring-blue-500 ${
 											errors.targetUrl ? 'border-red-500' : ''
 										}`}
 										placeholder="Enter Social Media"
@@ -277,7 +277,7 @@ export default function CreateBannerModal({
 										id="cost"
 										name="cost"
 										type="number"
-										className={`input input-bordered pl-10 bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
+										className={`input input-bordered pl-10 bg-white text-[16px] w-full focus:ring-2 focus:ring-blue-500 ${
 											errors.cost ? 'border-red-500' : ''
 										}`}
 										placeholder="Enter cost"
@@ -301,7 +301,7 @@ export default function CreateBannerModal({
 									<select
 										id="categoryId"
 										name="categoryId"
-										className={`select select-bordered pl-10 bg-white dark:bg-gray-700 w-full focus:ring-2 focus:ring-blue-500 ${
+										className={`select select-bordered pl-10 bg-white text-[16px] w-full focus:ring-2 focus:ring-blue-500 ${
 											errors.categoryId ? 'border-red-500' : ''
 										}`}
 										value={formData.categoryId}
