@@ -52,7 +52,7 @@ export default function SignIn() {
 		}
 	}
 	return (
-		<div className="bg-amber-500 flex items-center justify-center">
+		<div className="h-full flex items-center justify-center">
 			<Toaster position="top-center" reverseOrder={false} />
 			<div className="max-w-md w-full space-y-8">
 				<div className="card bg-base-100 shadow-sm">
@@ -77,7 +77,7 @@ export default function SignIn() {
 									value={formData.email}
 									onChange={handleChange}
 									placeholder="john.doe@example.com"
-									className="input input-bordered w-full text-sm"
+									className="input input-bordered w-full text-[16px]"
 									required
 								/>
 							</div>
@@ -93,7 +93,7 @@ export default function SignIn() {
 										value={formData.password}
 										onChange={handleChange}
 										placeholder="••••••••"
-										className="input input-bordered rounded-sm w-full pr-10 text-sm"
+										className="input input-bordered rounded-sm w-full pr-10 text-[16px]"
 										required
 										minLength={8}
 									/>

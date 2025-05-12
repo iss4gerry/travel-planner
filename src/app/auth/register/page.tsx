@@ -125,7 +125,7 @@ export default function RegisterPage() {
 									value={formData.name}
 									onChange={handleChange}
 									placeholder="John Doe"
-									className="input input-bordered w-full"
+									className="input input-bordered w-full text-[16px]"
 									required
 								/>
 							</div>
@@ -140,7 +140,7 @@ export default function RegisterPage() {
 									value={formData.email}
 									onChange={handleChange}
 									placeholder="john.doe@example.com"
-									className="input input-bordered w-full"
+									className="input input-bordered w-full text-[16px]"
 									required
 								/>
 							</div>
@@ -156,7 +156,7 @@ export default function RegisterPage() {
 										value={formData.password}
 										onChange={handleChange}
 										placeholder="••••••••"
-										className="input input-bordered rounded-sm w-full pr-10"
+										className="input input-bordered rounded-sm w-full pr-10 text-[16px]"
 										required
 										minLength={8}
 									/>

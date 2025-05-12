@@ -60,8 +60,8 @@ export default function PfpSelector({
 								}
 							>
 								<Image
-									width={80}
-									height={80}
+									width={40}
+									height={40}
 									alt={`profile avatar ${index + 1}`}
 									src={`https://api.dicebear.com/9.x/notionists/svg?seed=${
 										avatarPage + index
