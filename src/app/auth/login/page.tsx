@@ -10,6 +10,7 @@ import { formatZodError } from '@/utils/formatZodError';
 
 export default function SignIn() {
 	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	// const searchParams = useSearchParams();
 	const [formData, setFormData] = useState({
 		email: '',
@@ -29,6 +30,7 @@ export default function SignIn() {
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
+		setIsSubmitting(true);
 		try {
 			loginSchema.parse(formData);
 			const result = await signIn('credentials', {
@@ -49,6 +51,8 @@ export default function SignIn() {
 				const errorMessage = formatZodError(error);
 				toast.error(errorMessage!);
 			}
+		} finally {
+			setIsSubmitting(false);
 		}
 	}
 	return (
@@ -143,8 +147,12 @@ export default function SignIn() {
 							</div>
 
 							<div className="form-control mt-6">
-								<button type="submit" className="btn btn-primary w-full">
-									Login
+								<button
+									type="submit"
+									className="btn btn-primary w-full"
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? 'Logging in...' : 'Login'}
 								</button>
 							</div>
 						</form>
