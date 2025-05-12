@@ -17,18 +17,19 @@ export default function RootLayout({
 	return (
 		<html lang="en" data-theme="cupcake">
 			<head>
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<meta
+					name="viewport"
+					content="width=device-width, initial-scale=1, maximum-scale=1"
+				/>
 			</head>
-			<body className="flex items-center flex-col h-screen w-screen">
+			<body className="flex items-center flex-col h-dvh w-screen">
 				<Provider>
 					<div className="w-full mt-3 items-center justify-center flex bg">
 						<Suspense>
 							<NavBar />
 						</Suspense>
 					</div>
-					<div className="w-3/4 max-md:w-10/12 h-full max-sm:w-11/12">
-						{children}
-					</div>
+					<div className="w-3/4 max-md:w-10/12 max-sm:w-11/12">{children}</div>
 				</Provider>
 			</body>
 		</html>
