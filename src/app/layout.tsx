@@ -7,6 +7,9 @@ import { Suspense } from 'react';
 export const metadata: Metadata = {
 	title: 'Twavely',
 	description: 'Travel planner for ya',
+	icons: {
+		icon: '/favicon.ico',
+	},
 };
 
 export default function RootLayout({
