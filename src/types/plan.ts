@@ -75,6 +75,7 @@ export type Destination = {
 	name: string;
 	description: string;
 	address: string;
+	likes: number;
 	cost: string;
 	createdAt?: Date;
 	updatedAt?: Date;
