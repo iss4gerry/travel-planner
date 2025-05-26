@@ -17,3 +17,29 @@ export const POST = catchError(async (req: NextRequest, context: Context) => {
 		data: result,
 	});
 });
+
+export const GET = catchError(async (req: NextRequest, context: Context) => {
+	const userId = req.headers.get('x-user-id');
+	const { destinationId } = await context.params;
+
+	const result = await DestinationService.getLikes(destinationId, userId!);
+
+	return NextResponse.json({
+		status: 200,
+		message: 'Success',
+		data: result,
+	});
+});
+
+export const DELETE = catchError(async (req: NextRequest, context: Context) => {
+	const userId = req.headers.get('x-user-id');
+	const { destinationId } = await context.params;
+
+	const result = await DestinationService.deleteLike(destinationId, userId!);
+
+	return NextResponse.json({
+		status: 200,
+		message: 'Success',
+		data: result,
+	});
+});

@@ -162,10 +162,49 @@ export class DestinationService {
 	}
 
 	static async likeDestination(destinationId: string, userId: string) {
+		const existing = await prisma.like.findFirst({
+			where: { destinationId, userId },
+		});
+
+		if (existing) {
+			throw new ApiError(409, 'User has already liked this destination');
+		}
+
 		return await prisma.like.create({
 			data: {
 				destinationId: destinationId,
 				userId: userId,
+			},
+		});
+	}
+
+	static async getLikes(destinationId: string, userId: string) {
+		const [totalLikes, hasUserLiked] = await Promise.all([
+			prisma.like.count({
+				where: {
+					destinationId: destinationId,
+				},
+			}),
+
+			prisma.like.findFirst({
+				where: {
+					destinationId: destinationId,
+					userId: userId,
+				},
+			}),
+		]);
+
+		return {
+			totalLikes,
+			hasUserLiked: !!hasUserLiked,
+		};
+	}
+
+	static async deleteLike(destinationId: string, userId: string) {
+		return await prisma.like.deleteMany({
+			where: {
+				destinationId,
+				userId,
 			},
 		});
 	}
