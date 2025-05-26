@@ -13,4 +13,7 @@ export type DestinationResponse = {
 		name: string;
 		imageUrl: string | null;
 	};
+	_count: {
+		likes: number;
+	};
 };

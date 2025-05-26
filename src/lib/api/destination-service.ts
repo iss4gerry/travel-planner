@@ -32,6 +32,11 @@ export class DestinationService {
 							imageUrl: true,
 						},
 					},
+					_count: {
+						select: {
+							likes: true,
+						},
+					},
 				},
 			}),
 			prisma.destination.count(),
@@ -40,26 +45,30 @@ export class DestinationService {
 		return { data: destinations, total };
 	}
 
-	static async getDestinationById(destinationId: string) {
-		const destination = await prisma.destination.findUnique({
-			where: {
-				id: destinationId,
-			},
-			include: {
-				category: {
-					select: {
-						name: true,
-						imageUrl: true,
+	static async getDestinationById(destinationId: string, userId: string) {
+		const [destination, totalLikes] = await Promise.all([
+			prisma.destination.findUnique({
+				where: {
+					id: destinationId,
+				},
+				include: {
+					category: {
+						select: {
+							name: true,
+							imageUrl: true,
+						},
 					},
 				},
-			},
-		});
+			}),
+
+			this.getLikes(destinationId, userId),
+		]);
 
 		if (!destination) {
 			throw new ApiError(404, 'Destination not found');
 		}
 
-		return destination;
+		return { destination, totalLikes };
 	}
 
 	static async createDestination(
@@ -75,7 +84,15 @@ export class DestinationService {
 		body: UpdateDestination,
 		destinationId: string
 	): Promise<DestinationResponse> {
-		await this.getDestinationById(destinationId);
+		const destination = await prisma.destination.findFirst({
+			where: {
+				id: destinationId,
+			},
+		});
+
+		if (!destination) {
+			throw new ApiError(404, 'Destination not found');
+		}
 		return await prisma.destination.update({
 			where: {
 				id: destinationId,
@@ -87,7 +104,15 @@ export class DestinationService {
 	static async deleteDestination(
 		destinationId: string
 	): Promise<DestinationResponse> {
-		await this.getDestinationById(destinationId);
+		const destination = await prisma.destination.findFirst({
+			where: {
+				id: destinationId,
+			},
+		});
+
+		if (!destination) {
+			throw new ApiError(404, 'Destination not found');
+		}
 
 		return await prisma.destination.delete({
 			where: {
