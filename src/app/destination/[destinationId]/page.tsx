@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Heart, Share2, ChevronLeft } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DestinationResponse } from '@/types/destination';
 import { useParams, useRouter } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
@@ -15,6 +15,7 @@ export default function DestinationDetails() {
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const fetchDestination = async () => {
 		const result = await fetch(`/api/destinations/${params.destinationId}`);
 		if (!result.ok) {
@@ -25,12 +26,60 @@ export default function DestinationDetails() {
 		}
 
 		const response: { data: DestinationResponse } = await result.json();
+		setIsFavorite(response.data.hasUserLiked!);
 		return response.data;
 	};
+
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['destinationDetail', params.destinationId],
 		queryFn: fetchDestination,
 		staleTime: 1000 * 60 * 5,
+	});
+
+	const likeMutation = useMutation({
+		mutationKey: ['likeDestination', params.destinationId],
+		mutationFn: async () => {
+			const res = await fetch(
+				`/api/destinations/${params.destinationId}/likes`,
+				{
+					method: 'POST',
+				}
+			);
+
+			return res.json();
+		},
+		onError: (error) => {
+			console.log(error);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['destinationDetail', params.destinationId],
+			});
+			setIsFavorite(true);
+		},
+	});
+
+	const unlikeMutation = useMutation({
+		mutationKey: ['unlikeDestination', params.destinationId],
+		mutationFn: async () => {
+			const res = await fetch(
+				`/api/destinations/${params.destinationId}/likes`,
+				{
+					method: 'DELETE',
+				}
+			);
+
+			return res.json();
+		},
+		onError: (error) => {
+			console.log(error);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['destinationDetail', params.destinationId],
+			});
+			setIsFavorite(false);
+		},
 	});
 
 	const openModal = () => {
@@ -67,18 +116,18 @@ export default function DestinationDetails() {
 				<h1 className="text-3xl font-bold">{data.name}</h1>
 				<div className="flex space-x-2">
 					<button
-						onClick={() => setIsFavorite(!isFavorite)}
+						onClick={() =>
+							isFavorite ? unlikeMutation.mutate() : likeMutation.mutate()
+						}
 						className="p-2 rounded-full hover:bg-gray-100 hover:cursor-pointer"
 						aria-label={
-							data.hasUserLiked ? 'Remove from favorites' : 'Add to favorites'
+							isFavorite ? 'Remove from favorites' : 'Add to favorites'
 						}
 					>
 						<Heart
 							size={24}
 							className={
-								data.hasUserLiked
-									? 'fill-red-500 text-red-500'
-									: 'text-gray-500'
+								isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500'
 							}
 						/>
 					</button>
