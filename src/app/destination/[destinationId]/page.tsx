@@ -68,15 +68,17 @@ export default function DestinationDetails() {
 				<div className="flex space-x-2">
 					<button
 						onClick={() => setIsFavorite(!isFavorite)}
-						className="p-2 rounded-full hover:bg-gray-100"
+						className="p-2 rounded-full hover:bg-gray-100 hover:cursor-pointer"
 						aria-label={
-							isFavorite ? 'Remove from favorites' : 'Add to favorites'
+							data.hasUserLiked ? 'Remove from favorites' : 'Add to favorites'
 						}
 					>
 						<Heart
 							size={24}
 							className={
-								isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500'
+								data.hasUserLiked
+									? 'fill-red-500 text-red-500'
+									: 'text-gray-500'
 							}
 						/>
 					</button>
@@ -110,7 +112,7 @@ export default function DestinationDetails() {
 			<div className="flex flex-wrap gap-4 mb-6">
 				<div className="flex items-center bg-base-200 px-4 py-2 rounded-lg">
 					<Heart size={18} className="text-primary mr-2" />
-					<span className="text-primary ml-1">20 Likes</span>
+					<span className="text-primary ml-1">{data.totalLikes} Likes</span>
 				</div>
 
 				<div className="flex items-center bg-base-200 px-4 py-2 rounded-lg">

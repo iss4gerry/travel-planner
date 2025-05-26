@@ -41,7 +41,7 @@ export default function DestinationCard({
 					</div>
 					<div className="flex flex-row items-center justify-center">
 						<Heart className="h4 w-4" />
-						<span className="text-sm ml-1">3</span>
+						<span className="text-sm ml-1">{destination._count?.likes}</span>
 					</div>
 				</div>
 			</div>
