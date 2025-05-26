@@ -39,6 +39,7 @@ export default function DestinationDetails() {
 	const likeMutation = useMutation({
 		mutationKey: ['likeDestination', params.destinationId],
 		mutationFn: async () => {
+			setIsFavorite(true);
 			const res = await fetch(
 				`/api/destinations/${params.destinationId}/likes`,
 				{
@@ -55,13 +56,13 @@ export default function DestinationDetails() {
 			queryClient.invalidateQueries({
 				queryKey: ['destinationDetail', params.destinationId],
 			});
-			setIsFavorite(true);
 		},
 	});
 
 	const unlikeMutation = useMutation({
 		mutationKey: ['unlikeDestination', params.destinationId],
 		mutationFn: async () => {
+			setIsFavorite(false);
 			const res = await fetch(
 				`/api/destinations/${params.destinationId}/likes`,
 				{
@@ -78,7 +79,6 @@ export default function DestinationDetails() {
 			queryClient.invalidateQueries({
 				queryKey: ['destinationDetail', params.destinationId],
 			});
-			setIsFavorite(false);
 		},
 	});
 
