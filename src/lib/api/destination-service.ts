@@ -160,4 +160,13 @@ export class DestinationService {
 
 		return { data, total };
 	}
+
+	static async likeDestination(destinationId: string, userId: string) {
+		return await prisma.like.create({
+			data: {
+				destinationId: destinationId,
+				userId: userId,
+			},
+		});
+	}
 }

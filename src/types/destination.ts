@@ -6,7 +6,6 @@ export type DestinationResponse = {
 	address: string;
 	city: string;
 	cost: string;
-	likes: number;
 	createdAt: Date;
 	updatedAt: Date;
 	categoryId: string;

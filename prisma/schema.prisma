@@ -20,6 +20,7 @@ model User {
   destinations     Destination[]
   bannerAds        BannerAds[]
   plans            Plan[]
+  likes            Like[]
 }
 
 model Plan {
@@ -80,13 +81,23 @@ model Destination {
   address       String
   city          String
   cost          String
-  likes         Int          @default(0)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   categoryId    String
   category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   isAiGenerated Boolean    @default(false)
   activity    Activity[]
+  likes       Like[]
+}
+
+model Like {
+  id                  String      @id @default(uuid())
+  userId              String?
+  user                User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinationId       String
+  destination         Destination    @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, destinationId])
 }
 
 model Category {
