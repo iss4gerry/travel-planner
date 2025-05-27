@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { MapPin, Heart, Share2, ChevronLeft } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DestinationResponse } from '@/types/destination';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
 import AddToPlanModal from '@/components/Plan/AddToPlanModal';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function DestinationDetails() {
 	const params = useParams<{ destinationId: string }>();
+	const pathName = usePathname();
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const router = useRouter();
@@ -59,6 +61,11 @@ export default function DestinationDetails() {
 		},
 	});
 
+	const handleShare = async () => {
+		await navigator.clipboard.writeText(window.location.origin + pathName);
+		toast.success('Link copied to clipboard!');
+	};
+
 	const unlikeMutation = useMutation({
 		mutationKey: ['unlikeDestination', params.destinationId],
 		mutationFn: async () => {
@@ -102,6 +109,7 @@ export default function DestinationDetails() {
 
 	return (
 		<div className="w-full mx-auto px-4 py-6">
+			<Toaster position="top-center" reverseOrder={false} />
 			<div className="flex items-center mb-6">
 				<button
 					onClick={() => window.history.back()}
@@ -132,7 +140,8 @@ export default function DestinationDetails() {
 						/>
 					</button>
 					<button
-						className="p-2 rounded-full hover:bg-gray-100"
+						onClick={handleShare}
+						className="p-2 rounded-full hover:bg-gray-100 hover:cursor-pointer"
 						aria-label="Share"
 					>
 						<Share2 size={24} className="text-gray-500" />
