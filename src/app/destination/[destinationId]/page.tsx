@@ -204,7 +204,7 @@ export default function DestinationDetails() {
 					)}`}
 					className="border border-primary text-primary px-6 py-3 rounded-lg font-medium text-center hover:bg-secondary transition-colors"
 				>
-					Explore Attractions
+					Search on Google Maps
 				</Link>
 			</div>
 		</div>

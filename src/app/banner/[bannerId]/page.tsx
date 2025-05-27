@@ -5,13 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Heart, Share2, ChevronLeft, Wallet2Icon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import DestinationDetailSkeleton from '@/components/Destination/DestinationDetailSkeleton';
 import { BannerResponse } from '@/types/banner';
 import AddToPlanModal from '@/components/Plan/AddToPlanModal';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function BannerDetails() {
 	const params = useParams<{ bannerId: string }>();
+	const pathName = usePathname();
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const fetchDestination = async () => {
@@ -38,6 +40,11 @@ export default function BannerDetails() {
 		setModalStatus(false);
 	};
 
+	const handleShare = async () => {
+		await navigator.clipboard.writeText(window.location.origin + pathName);
+		toast.success('Link copied to clipboard!');
+	};
+
 	if (isLoading) return <DestinationDetailSkeleton />;
 	if (error)
 		return (
@@ -50,6 +57,7 @@ export default function BannerDetails() {
 
 	return (
 		<div className="w-full mx-auto px-4 py-6">
+			<Toaster position="top-center" reverseOrder={false} />
 			<div className="flex items-center mb-6">
 				<button
 					onClick={() => window.history.back()}
@@ -78,7 +86,8 @@ export default function BannerDetails() {
 						/>
 					</button>
 					<button
-						className="p-2 rounded-full hover:bg-gray-100"
+						className="p-2 rounded-full hover:bg-gray-100 hover:cursor-pointer"
+						onClick={handleShare}
 						aria-label="Share"
 					>
 						<Share2 size={24} className="text-gray-500" />
