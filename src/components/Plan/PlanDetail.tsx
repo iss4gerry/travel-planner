@@ -13,6 +13,7 @@ import {
 } from '@/lib/services/itinerary-service';
 import { fetchPlanByIdClient } from '@/lib/services/plan-service';
 import AiItinerary from './AiItinerary';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function PlanDetail({ planId }: { planId: string }) {
 	const [selectedDay, setSelectedDay] = useState(1);
@@ -52,6 +53,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 				});
 			},
 			onSuccess: () => {
+				toast.success('Itinerary successfully saved!');
 				queryClient.invalidateQueries({ queryKey: ['plan', planId] });
 				setAiItinerary((prev) => {
 					if (!prev) return prev;
@@ -124,6 +126,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 		setLoadingGenerateItinerary(true);
 		const { data } = await refetchItinerary();
 		if (data) {
+			toast.success('Itinerary successfully generated!');
 			setAiItinerary(data);
 		}
 
@@ -143,6 +146,7 @@ export default function PlanDetail({ planId }: { planId: string }) {
 
 	return (
 		<div className="min-h-screen w-full pb-8 mt-5" ref={planOverviewRef}>
+			<Toaster position="top-center" reverseOrder={false} />
 			<div className="card bg-base-100 shadow-xl mb-6">
 				<div className="card-body">
 					<div className="flex flex-col md:flex-row md:justify-between md:items-center">
