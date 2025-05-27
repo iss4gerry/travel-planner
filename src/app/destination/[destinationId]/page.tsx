@@ -186,7 +186,7 @@ export default function DestinationDetails() {
 				</div>
 			</div>
 
-			<div className="flex flex-col sm:flex-row gap-4 mt-8">
+			<div className="flex flex-col sm:flex-row gap-1 mt-8">
 				<button
 					className="bg-primary text-white px-6 py-3 rounded-lg font-medium text-center hover:cursor-pointer transition-colors"
 					onClick={openModal}
